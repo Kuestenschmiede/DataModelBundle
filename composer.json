@@ -1,0 +1,56 @@
+{
+  "name": "gutesio/data-model",
+  "type": "contao-bundle",
+  "description": "The shared data-model bundle for gutes.io.",
+  "keywords": ["gutes.io"],
+  "homepage": "https://gutes.io",
+  "license": "LGPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Kuestenschmiede GmbH Software & Design",
+      "homepage": "https://kuestenschmiede.de",
+      "role": "Operator"
+    },
+    {
+      "name": "con4gis community",
+      "homepage": "https://con4gis.org",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "support@con4gis.org",
+    "issues": "https://github.com/Kuestenschmiede/DataModelBundle/issues",
+    "source": "https://github.com/Kuestenschmiede/DataModelBundle"
+  },
+  "require": {
+    "php": "^7.3",
+    "contao/core-bundle": "^4.9",
+    "con4gis/core": "^4.1",
+    "con4gis/maps": "^7.3",
+    "con4gis/framework": "^1.0"
+  },
+  "conflict": {
+    "contao/core": "*",
+    "contao/manager-plugin": "<2.0 || >=3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "gutesio\\DataModelBundle\\": ""
+    },
+    "classmap": [
+      "Resources/contao/"
+    ],
+    "exclude-from-classmap": [
+      "Resources/contao/config/",
+      "Resources/contao/dca/",
+      "Resources/contao/languages/",
+      "Resources/contao/templates/"
+    ]
+  },
+  "config": {
+    "preferred-install": "dist"
+  },
+  "extra": {
+    "contao-manager-plugin": "gutesio\\DataModelBundle\\ContaoManager\\Plugin"
+  }
+}
