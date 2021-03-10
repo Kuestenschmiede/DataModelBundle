@@ -1,12 +1,20 @@
 <?php
+/**
+ * This file belongs to gutes.io and is published exclusively for use
+ * in gutes.io operator or provider pages.
 
+ * @package    gutesio
+ * @copyright  Küstenschmiede GmbH Software & Design (Matthias Eilers)
+ * @link       https://gutes.io
+ */
 namespace gutesio\DataModelBundle\Classes;
 
 use Contao\Database;
 
 class ChildFullTextContentUpdater
 {
-    public function update(int $id = 0) {
+    public function update(int $id = 0)
+    {
         $database = Database::getInstance();
         if ($this->isFullText() !== true) {
             $this->addFullText();
@@ -60,15 +68,18 @@ class ChildFullTextContentUpdater
         }
     }
 
-    public function isFullText() {
+    public function isFullText()
+    {
         $database = Database::getInstance();
         $result = $database->prepare(
             'SHOW INDEX FROM tl_gutesio_data_child WHERE column_name = \'fullTextContent\''
         )->execute()->fetchAssoc();
+
         return (!empty($result) && $result['Index_type'] === 'FULLTEXT');
     }
 
-    public function addFullText() {
+    public function addFullText()
+    {
         $database = Database::getInstance();
         $database->prepare('ALTER TABLE tl_gutesio_data_child ADD FULLTEXT(fullTextContent)')->execute();
     }

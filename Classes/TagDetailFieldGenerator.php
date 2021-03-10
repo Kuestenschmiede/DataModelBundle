@@ -1,19 +1,13 @@
 <?php
 /**
- * This file is part of con4gis,
- * the gis-kit for Contao CMS.
- *
- * @package   	con4gis
- * @version        6
- * @author  	    con4gis contributors (see "authors.txt")
- * @license 	    LGPL-3.0-or-later
- * @copyright 	Küstenschmiede GmbH Software & Design
- * @link              https://www.con4gis.org
- *
+ * This file belongs to gutes.io and is published exclusively for use
+ * in gutes.io operator or provider pages.
+
+ * @package    gutesio
+ * @copyright  Küstenschmiede GmbH Software & Design (Matthias Eilers)
+ * @link       https://gutes.io
  */
-
 namespace gutesio\DataModelBundle\Classes;
-
 
 use con4gis\FrameworkBundle\Classes\DetailFields\DetailHTMLField;
 use con4gis\FrameworkBundle\Classes\DetailFields\DetailLinkField;
@@ -29,56 +23,56 @@ class TagDetailFieldGenerator
     public static function getFieldsForTag(string $technicalKey)
     {
         switch ($technicalKey) {
-            case "tag_delivery":
+            case 'tag_delivery':
                 return static::createFieldForDeliveryTag();
-            case "tag_wheelchair":
+            case 'tag_wheelchair':
                 return static::createFieldForWheelchairTag();
-            case "tag_corona":
+            case 'tag_corona':
                 return static::createFieldForCoronaTag();
-            case "tag_online_reservation":
+            case 'tag_online_reservation':
                 return static::createFieldForOnlineReservationTag();
-            case "tag_onlineshop":
+            case 'tag_onlineshop':
                 return static::createFieldForOnlineshopTag();
-            case "tag_michelin_stars":
+            case 'tag_michelin_stars':
                 return static::createFieldForMichelinStarsTag();
             default:
                 return [];
         }
     }
-    
+
     public static function getFieldsForTags(array $technicalKeys)
     {
         $fields = [];
         foreach ($technicalKeys as $technicalKey) {
             $fields = array_merge($fields, static::getFieldsForTag($technicalKey));
         }
-        
+
         return $fields;
     }
-    
+
     private static function createFieldForDeliveryTag()
     {
         $fields = [];
-        
+
         $field = new DetailLinkField();
         $field->setName('deliveryServiceLink'); // ToDo oder muss weiterhin delivery_conditions heißen?
-        $field->setLabel("Lieferbedingungen");
-        $field->setLinkText("Lieferservice");
+        $field->setLabel('Lieferbedingungen');
+        $field->setLinkText('Lieferservice');
         //$field->setLinkTextName('deliveryServiceLinkLabel');
         $fields[] = $field;
-        
+
         return $fields;
     }
-    
+
     private static function createFieldForWheelchairTag()
     {
         $fields = [];
 
         $field = new DetailHTMLField();
         $field->setName('wheelchairNotes'); // ToDo
-        $field->setLabel("Hinweise zur Rollstuhleignung");
+        $field->setLabel('Hinweise zur Rollstuhleignung');
         $fields[] = $field;
-        
+
         return $fields;
     }
 
@@ -88,12 +82,12 @@ class TagDetailFieldGenerator
 
         $field = new DetailHTMLField();
         $field->setName('coronaNotes'); // ToDo
-        $field->setLabel("Hinweise zur Corona Situation");
+        $field->setLabel('Hinweise zur Corona Situation');
         $fields[] = $field;
 
         return $fields;
     }
-    
+
 //    private static function createFieldForMenuTag()
 //    {
 //        $fields = [];
@@ -107,42 +101,42 @@ class TagDetailFieldGenerator
 //
 //        return $fields;
 //    }
-    
+
     private static function createFieldForOnlineReservationTag()
     {
         $fields = [];
         $field = new DetailLinkField();
         $field->setName('onlineReservationLink'); // ToDo
-        $field->setLabel("Link zur Reservierung");
-        $field->setLinkText("Onlinereservierung");
+        $field->setLabel('Link zur Reservierung');
+        $field->setLinkText('Onlinereservierung');
         //$field->setLinkTextName("onlineReservationLinkLabel");
         $fields[] = $field;
-        
+
         return $fields;
     }
-    
+
     private static function createFieldForOnlineshopTag()
     {
         $fields = [];
         $field = new DetailLinkField();
         $field->setName('onlineShopLink'); // ToDo
-        $field->setLabel("Link zum Onlineshop");
-        $field->setLinkText("Onlineshop");
+        $field->setLabel('Link zum Onlineshop');
+        $field->setLinkText('Onlineshop');
         //$field->setLinkTextName("onlineShopLinkLabel");
         $fields[] = $field;
-        
+
         return $fields;
     }
-    
+
     private static function createFieldForMichelinStarsTag()
     {
         $fields = [];
-    
+
         $field = new DetailTextField();
         $field->setName('michelinStars'); // ToDo
-        $field->setLabel("Michelin-Sterne");
+        $field->setLabel('Michelin-Sterne');
         $fields[] = $field;
-        
+
         return $fields;
     }
 }

@@ -1,20 +1,14 @@
 <?php
-/*
- * This file is part of con4gis,
- * the gis-kit for Contao CMS.
- *
- * @package   	con4gis
- * @version        6
- * @author  	    con4gis contributors (see "authors.txt")
- * @license 	    LGPL-3.0-or-later
- * @copyright 	Küstenschmiede GmbH Software & Design
- * @link              https://www.con4gis.org
- *
- */
+/**
+ * This file belongs to gutes.io and is published exclusively for use
+ * in gutes.io operator or provider pages.
 
+ * @package    gutesio
+ * @copyright  Küstenschmiede GmbH Software & Design (Matthias Eilers)
+ * @link       https://gutes.io
+ */
 namespace gutesio\DataModelBundle\Classes;
 
-use con4gis\GroupsBundle\Resources\contao\models\MemberGroupModel;
 use Contao\Controller;
 use Contao\Database;
 use Contao\FilesModel;
@@ -33,18 +27,19 @@ class ShowcaseResultConverter
 
     private $fileUploadFields = [
         TypeFormFieldGenerator::FIELD_BROCHURE_UPLOAD,
-        TypeFormFieldGenerator::FIELD_MENU_UPLOAD
+        TypeFormFieldGenerator::FIELD_MENU_UPLOAD,
     ];
 
-    private function checkLink($link) {
+    private function checkLink($link)
+    {
         $result = $link;
-        if ($link && (strpos($link, "://") === false)) {
-            $result = "https://".$link;
+        if ($link && (strpos($link, '://') === false)) {
+            $result = 'https://' . $link;
         }
 
         return $result;
     }
-    
+
     /**
      * Converts the data into the format needed by the client.
      * @param $arrResult
@@ -54,7 +49,7 @@ class ShowcaseResultConverter
     public function convertDbResult($arrResult, $arrOptions = []) : array
     {
         $db = Database::getInstance();
-        System::loadLanguageFile("field_translations");
+        System::loadLanguageFile('field_translations');
         $data = [];
         if (count($arrResult) === 0) {
             // no data
@@ -87,12 +82,12 @@ class ShowcaseResultConverter
             $datum['xing'] = $this->checkLink($result['xing']);
             $datum['linkedin'] = $this->checkLink($result['linkedin']);
             $datum['whatsapp'] = $result['whatsapp'];
-            if (strpos($datum['whatsapp'], "https") === false) {
+            if (strpos($datum['whatsapp'], 'https') === false) {
                 // not a link, but a number
                 // check if first digit is a 0, that must be stripped out
-                if (strpos($datum['whatsapp'], "0") === 0) {
+                if (strpos($datum['whatsapp'], '0') === 0) {
                     $datum['whatsapp'] = substr($datum['whatsapp'], 1);
-                    $datum['whatsapp'] = $datum['whatsapp'] ? "https://wa.me/" . $datum['whatsapp'] : $datum['whatsapp'];
+                    $datum['whatsapp'] = $datum['whatsapp'] ? 'https://wa.me/' . $datum['whatsapp'] : $datum['whatsapp'];
                 }
             }
             $datum['published'] = intval($result['published']);
@@ -100,7 +95,7 @@ class ShowcaseResultConverter
             $datum['distance'] = $result['distance'];
             $datum['videoPreview'] = [
                 'videoType' => $result['videoType'],
-                'video' => html_entity_decode($result['videoLink'])
+                'video' => html_entity_decode($result['videoLink']),
             ];
             if ($result['videoPreviewImage']) {
                 $model = FilesModel::findByUuid(StringUtil::deserialize($result['videoPreviewImage']));
@@ -119,46 +114,46 @@ class ShowcaseResultConverter
                 foreach ($result['operators'] as $operator) {
                     $datum['operators'][] = [
                         'value' => $operator['operatorId'],
-                        'label' => $operator['name']
+                        'label' => $operator['name'],
                     ];
                 }
             }
-            
+
             // load types
             $datum['types'] = [];
             $arrTypeIds = $db
-                ->prepare("SELECT typeId FROM tl_gutesio_data_element_type WHERE elementId = ?")
+                ->prepare('SELECT typeId FROM tl_gutesio_data_element_type WHERE elementId = ?')
                 ->execute($result['uuid'])->fetchEach('typeId');
             foreach ($arrTypeIds as $typeId) {
                 if ($this->cachedTypes[$typeId]) {
                     $datum['types'][] = $this->cachedTypes[$typeId];
                 } else {
                     $typeRow = $db
-                        ->prepare("SELECT `id`, `name` FROM tl_gutesio_data_type WHERE uuid = ?")
+                        ->prepare('SELECT `id`, `name` FROM tl_gutesio_data_type WHERE uuid = ?')
                         ->execute($typeId)->fetchAssoc();
                     $type = [
                         'value' => $typeRow['id'],
-                        'label' => $typeRow['name']
+                        'label' => $typeRow['name'],
                     ];
                     if ($type) {
                         $this->cachedTypes[$typeId] = $type;
-                        
+
                         $datum['types'][] = $type;
                     }
                 }
             }
-            
+
             $dietLabels = $GLOBALS['TL_LANG']['gutesio']['diet_options'];
             $cuisineLabels = $GLOBALS['TL_LANG']['gutesio']['cuisine_options'];
             // load type values
-            $sql = "SELECT `typeFieldKey`, `typeFieldValue`, `typeFieldFile` FROM tl_gutesio_data_type_element_values WHERE elementId = ?";
+            $sql = 'SELECT `typeFieldKey`, `typeFieldValue`, `typeFieldFile` FROM tl_gutesio_data_type_element_values WHERE elementId = ?';
             $typeElementValues = $db->prepare($sql)->execute($datum['uuid'])->fetchAllAssoc();
             foreach ($typeElementValues as $typeElementValue) {
                 // check if the value is serialized
                 $fieldKey = $typeElementValue['typeFieldKey'];
                 $fieldValue = StringUtil::deserialize($typeElementValue['typeFieldValue']);
                 if (is_array($fieldValue) && $arrOptions['details']) {
-                    $resultValue = "";
+                    $resultValue = '';
                     foreach ($fieldValue as $key => $value) {
                         // array inside array
                         if (is_array($value)) {
@@ -166,20 +161,20 @@ class ShowcaseResultConverter
                             // we want to display the label
                             $resultValue .= $value['label'];
                         } else {
-                            if ($fieldKey === "cuisine") {
+                            if ($fieldKey === 'cuisine') {
                                 $resultValue .= $cuisineLabels[$value];
-                            } else if ($fieldKey === "diet") {
+                            } elseif ($fieldKey === 'diet') {
                                 $resultValue .= $dietLabels[$value];
                             } else {
                                 $resultValue .= $value;
                             }
                         }
                         if ($key !== array_key_last($fieldValue)) {
-                            $resultValue .= ", ";
+                            $resultValue .= ', ';
                         }
                     }
                     $datum[$fieldKey] = $resultValue;
-                } else if (in_array($fieldKey, $this->fileUploadFields)) {
+                } elseif (in_array($fieldKey, $this->fileUploadFields)) {
                     $uuid = StringUtil::binToUuid($typeElementValue['typeFieldFile']);
                     $fileModel = FilesModel::findByUuid($uuid);
                     if ($fileModel) {
@@ -187,18 +182,18 @@ class ShowcaseResultConverter
                             'data' => [],
                             'name' => $fileModel->name,
                             'changed' => false,
-                            'path' => $fileModel->path
+                            'path' => $fileModel->path,
                         ];
                     }
                 } else {
                     $datum[$fieldKey] = $fieldValue;
                 }
             }
-            
+
             // load tags
             $datum['tags'] = [];
             $arrTagIds = $db
-                ->prepare("SELECT tagId FROM tl_gutesio_data_tag_element WHERE elementId = ?")
+                ->prepare('SELECT tagId FROM tl_gutesio_data_tag_element WHERE elementId = ?')
                 ->execute($result['uuid'])->fetchEach('tagId');
             foreach ($arrTagIds as $tagId) {
                 if ($this->cachedTags[$tagId]) {
@@ -206,7 +201,7 @@ class ShowcaseResultConverter
                 } else {
                     if ($arrOptions['loadTagsComplete']) {
                         $tagRow = $db
-                            ->prepare("SELECT * FROM tl_gutesio_data_tag WHERE published = 1 AND uuid = ?")
+                            ->prepare('SELECT * FROM tl_gutesio_data_tag WHERE published = 1 AND uuid = ?')
                             ->execute($tagId)->fetchAssoc();
                         $tag = $tagRow;
                         $validFrom = intval($tag['validFrom']);
@@ -222,40 +217,42 @@ class ShowcaseResultConverter
                                 switch ($tag['technicalKey']) {
                                     case 'tag_delivery':
                                         $stmt = $db->prepare(
-                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values '.
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
                                         $tag['linkHref'] = $stmt->execute(
                                             $datum['uuid'],
                                             'deliveryServiceLink'
                                         )->fetchAssoc()['tagFieldValue'];
                                         $stmt = $db->prepare(
-                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values '.
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
                                         $tag['linkLabel'] = 'Lieferservice';
+
                                         break;
                                     case 'tag_online_reservation':
                                         $stmt = $db->prepare(
-                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values '.
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
                                         $tag['linkHref'] = $stmt->execute(
                                             $datum['uuid'],
                                             'onlineReservationLink'
                                         )->fetchAssoc()['tagFieldValue'];
                                         $stmt = $db->prepare(
-                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values '.
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
                                         $tag['linkLabel'] = 'Onlinereservierung';
+
                                         break;
                                     case 'tag_onlineshop':
                                         $stmt = $db->prepare(
-                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values '.
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
                                         $tag['linkHref'] = $stmt->execute(
                                             $datum['uuid'],
                                             'onlineShopLink'
                                         )->fetchAssoc()['tagFieldValue'];
                                         $stmt = $db->prepare(
-                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values '.
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
                                         $tag['linkLabel'] = 'Onlineshop';/*$stmt->execute(
                                         $datum['uuid'],
@@ -273,7 +270,7 @@ class ShowcaseResultConverter
                         }
                     } else {
                         $tagRow = $db
-                            ->prepare("SELECT `id`, `name`, `validFrom`, `validUntil` FROM tl_gutesio_data_tag WHERE published = 1 AND uuid = ?")
+                            ->prepare('SELECT `id`, `name`, `validFrom`, `validUntil` FROM tl_gutesio_data_tag WHERE published = 1 AND uuid = ?')
                             ->execute($tagId)->fetchAssoc();
                         $validFrom = intval($tagRow['validFrom']);
                         $validUntil = intval($tagRow['validUntil']);
@@ -282,7 +279,7 @@ class ShowcaseResultConverter
                         ) {
                             $tag = [
                                 'value' => $tagRow['id'],
-                                'label' => $tagRow['name']
+                                'label' => $tagRow['name'],
                             ];
                             if ($tag) {
                                 $this->cachedTags[$tagId] = $tag;
@@ -292,26 +289,26 @@ class ShowcaseResultConverter
                     }
                 }
             }
-            
+
             // load tag values
-            $sql = "SELECT `tagFieldKey`, `tagFieldValue` FROM tl_gutesio_data_tag_element_values WHERE elementId = ?";
+            $sql = 'SELECT `tagFieldKey`, `tagFieldValue` FROM tl_gutesio_data_tag_element_values WHERE elementId = ?';
             $tagElementValues = $db->prepare($sql)->execute($datum['uuid'])->fetchAllAssoc();
             foreach ($tagElementValues as $tagElementValue) {
                 $datum[$tagElementValue['tagFieldKey']] = $tagElementValue['tagFieldValue'];
             }
-            
+
             // load related showcases
             $showcaseIds = StringUtil::deserialize($result['showcaseIds']);
-            if ($showcaseIds && (count($showcaseIds) > 0 || ($showcaseIds !== ""))) {
-                $idString = "(" ;
+            if ($showcaseIds && (count($showcaseIds) > 0 || ($showcaseIds !== ''))) {
+                $idString = '(' ;
                 foreach ($showcaseIds as $key => $showcaseId) {
                     $idString .= "\"$showcaseId\"";
                     if (!(array_key_last($showcaseIds) === $key)) {
-                        $idString .= ",";
+                        $idString .= ',';
                     }
                 }
-                $idString .= ")";
-                if ($idString !== "()") {
+                $idString .= ')';
+                if ($idString !== '()') {
                     $showcases = $db->prepare("SELECT * FROM tl_gutesio_data_element WHERE `uuid` IN $idString")
                         ->execute()->fetchAllAssoc();
                     $idx = 0;
@@ -333,21 +330,20 @@ class ShowcaseResultConverter
                             }
                         }
                     }
-                    
+
                     $datum['showcaseIds'] = $this->convertToOptions($showcases);
                 } else {
                     $datum['showcaseIds'] = [];
                 }
-                
             } else {
                 $datum['showcaseIds'] = [];
             }
-            
+
             $datum['locationCity'] = $result['locationCity'];
             $datum['locationZip'] = $result['locationZip'];
             $datum['locationStreet'] = $result['locationStreet'];
             $datum['locationStreetNumber'] = $result['locationStreetNumber'];
-            
+
             $datum['contactable'] = $result['contactable'];
             $datum['contactName'] = $result['contactName'];
             $datum['contactAdditionalName'] = $result['contactAdditionalName'];
@@ -358,7 +354,7 @@ class ShowcaseResultConverter
             $datum['contactCity'] = $result['contactCity'];
             $datum['contactStreet'] = $result['contactStreet'];
             $datum['contactStreetNumber'] = $result['contactStreetNumber'];
-            
+
             if ($result['image']) {
                 $model = FilesModel::findByUuid(StringUtil::deserialize($result['image']));
                 if ($model !== null) {
@@ -399,7 +395,6 @@ class ShowcaseResultConverter
                         $idx++;
                     }
                 }
-                
             }
             $datum['releaseType'] = $result['releaseType'];
             $datum['foreignLink'] = $result['foreignLink'];
@@ -409,9 +404,10 @@ class ShowcaseResultConverter
 
             $data[] = $datum;
         }
+
         return count($data) > 1 ? $data : $data[0];
     }
-    
+
     /**
      * Converts the given model into a frontend representation.
      * @param FilesModel $model
@@ -429,11 +425,11 @@ class ShowcaseResultConverter
                 'x' => $model->importantPartX,
                 'y' => $model->importantPartY,
                 'width' => $model->importantPartWidth,
-                'height'=> $model->importantPartHeight
-            ]
+                'height' => $model->importantPartHeight,
+            ],
         ];
     }
-    
+
     /**
      * Converts showcase data into the option format for select fields.
      * @param $arrShowcaseData
@@ -445,10 +441,10 @@ class ShowcaseResultConverter
         foreach ($arrShowcaseData as $showcase) {
             $data[] = [
                 'value' => $showcase['uuid'],
-                'label' => $showcase['name']
+                'label' => $showcase['name'],
             ];
         }
-        
+
         return $data;
     }
 }
