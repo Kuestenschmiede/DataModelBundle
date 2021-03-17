@@ -104,6 +104,8 @@ class ShowcaseResultConverter
                     $datum['videoPreviewImage'] = $datum['videoPreview']['videoPreviewImage'];
                 }
             }
+            $datum['youtubeChannelLink'] = $this->checkLink($result['youtubeChannelLink']);
+            $datum['vimeoChannelLink'] = $this->checkLink($result['vimeoChannelLink']);
             $datum['wikipediaLink'] = $this->checkLink($result['wikipediaLink']);
             $datum['opening_hours'] = $result['opening_hours'];
             $datum['opening_hours_additional'] = $result['opening_hours_additional'];
