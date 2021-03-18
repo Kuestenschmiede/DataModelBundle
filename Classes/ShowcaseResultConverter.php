@@ -14,6 +14,7 @@ use Contao\Database;
 use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\System;
+use gutesio\DataModelBundle\Resources\contao\models\GutesioDataElementModel;
 
 /**
  * Class ShowcaseResultConverter
@@ -324,7 +325,12 @@ class ShowcaseResultConverter
                                     if ($showcase['allowLogoDisplay']) {
                                         $logoModel = FilesModel::findByUuid(StringUtil::binToUuid($showcase['logo']));
                                         if ($logoModel) {
-                                            $datum['relatedShowcaseLogos_' . $idx] = $this->createFileDataFromModel($logoModel);
+                                            if (!$datum['relatedShowcaseLogos']) {
+                                                $datum['relatedShowcaseLogos'] = [];
+                                            }
+                                            $logoData = $this->createFileDataFromModel($logoModel);
+                                            $logoData['href'] = $showcase['alias'];
+                                            $datum['relatedShowcaseLogos'][] = $logoData;
                                             $idx++;
                                         }
                                     }
