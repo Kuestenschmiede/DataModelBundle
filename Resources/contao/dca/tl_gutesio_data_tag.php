@@ -53,9 +53,6 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_tag'] = [
         'postals' => [
             'sql' => "TEXT NULL"
         ],
-        'availableInMap' => [
-            'sql' => "int NOT NULL default 0"
-        ],
         'validFrom' => [
             'sql' => "int NULL"
         ],
