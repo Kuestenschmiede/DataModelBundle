@@ -76,7 +76,6 @@ class ShowcaseResultConverter
             $datum['phone'] = html_entity_decode($result['phone']);
             $datum['mobile'] = $result['mobile'];
             $datum['website'] = $this->checkLink($result['website']);
-            //$datum['websiteLabel'] = $result['websiteLabel'];
             $datum['facebook'] = $this->checkLink($result['facebook']);
             $datum['twitter'] = $this->checkLink($result['twitter']);
             $datum['instagram'] = $this->checkLink($result['instagram']);
@@ -158,10 +157,7 @@ class ShowcaseResultConverter
                 if (is_array($fieldValue) && $arrOptions['details']) {
                     $resultValue = '';
                     foreach ($fieldValue as $key => $value) {
-                        // array inside array
                         if (is_array($value)) {
-                            // $value is an option with label and value
-                            // we want to display the label
                             $resultValue .= $value['label'];
                         } else {
                             if ($fieldKey === 'cuisine') {
