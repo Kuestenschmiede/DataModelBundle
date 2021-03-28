@@ -119,7 +119,7 @@ class TypeFormFieldGenerator
         $field->setOptions($cuisineOptions);
         $field->setLabel('Küche');
         $field->setDescription('Wählen Sie die passenden Einträge für Informationen zu Ihrer Küche aus.');
-        $fields[] = $field;
+        $fields['cuisine'] = $field;
 
         $field = new SelectFormField();
         $field->setName('diet');
@@ -127,7 +127,7 @@ class TypeFormFieldGenerator
         $field->setOptions($dietOptions);
         $field->setLabel('Kost');
         $field->setDescription('Wählen Sie die passenden Einträge für Informationen zu Ihrer Kost aus.');
-        $fields[] = $field;
+        $fields['diet'] = $field;
 
         return $fields;
     }
@@ -140,7 +140,7 @@ class TypeFormFieldGenerator
         $field->setName(self::FIELD_MENU_LINK);
         $field->setLabel('Speisekarte (Link)');
         $field->setPattern(RegularExpression::URL);
-        $fields[] = $field;
+        $fields[self::FIELD_MENU_LINK] = $field;
 
         $field = new PDFUploadFormField();
         $field->setTitleFileTooBig('Datei zu groß');
@@ -148,7 +148,7 @@ class TypeFormFieldGenerator
         $field->setName(self::FIELD_MENU_UPLOAD);
         $field->setLabel('Speisekarte (PDF Upload)');
         $field->setDescription('Hier können Sie Ihre Speisekarte als PDF-Datei hochladen.');
-        $fields[] = $field;
+        $fields[self::FIELD_MENU_UPLOAD] = $field;
 
         return $fields;
     }
@@ -162,7 +162,7 @@ class TypeFormFieldGenerator
         $field->setName(self::FIELD_BROCHURE_UPLOAD);
         $field->setLabel('Broschüre (PDF Upload)');
         $field->setDescription('Hier können Sie eine Broschüre als PDF-Datei hochladen.');
-        $fields[] = $field;
+        $fields[self::FIELD_BROCHURE_UPLOAD] = $field;
 
         return $fields;
     }
@@ -177,12 +177,12 @@ class TypeFormFieldGenerator
         $field = new TextFormField();
         $field->setName('maxPersons');
         $field->setLabel($GLOBALS['TL_LANG'][$strName]['maxPersons'] && (count($GLOBALS['TL_LANG'][$strName]['maxPersons']) > 0) ? $GLOBALS['TL_LANG'][$strName]['maxPersons'][0] : '');
-        $fields[] = $field;
+        $fields['maxPersons'] = $field;
 
         $field = new TextFormField();
         $field->setName('technicalEquipment');
         $field->setLabel($GLOBALS['TL_LANG'][$strName]['technicalEquipment'] && (count($GLOBALS['TL_LANG'][$strName]['technicalEquipment']) > 0) ? $GLOBALS['TL_LANG'][$strName]['technicalEquipment'][0] : '');
-        $fields[] = $field;
+        $fields['technicalEquipment'] = $field;
 
         return $fields;
     }
@@ -201,6 +201,6 @@ class TypeFormFieldGenerator
             'locationZip',
         ]);
 
-        return [$field];
+        return ['extraZip'=>$field];
     }
 }
