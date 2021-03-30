@@ -19,4 +19,9 @@ use Contao\Model;
 class GutesioDataElementModel extends Model
 {
     protected static $strTable = "tl_gutesio_data_element";
+
+    public static function findByUuid(string $uuid)
+    {
+        return static::findBy('uuid', $uuid, ['return' => 'Model']);
+    }
 }
