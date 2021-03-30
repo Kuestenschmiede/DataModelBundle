@@ -39,4 +39,9 @@ class GutesioDataChildModel extends Model
             'ORDER BY relevance DESC, fulltextContent asc');
         return static::createCollectionFromDbResult($stmt->execute(), static::$strTable);
     }
+
+    public static function findByUuid(string $uuid)
+    {
+        return static::findBy('uuid', $uuid, ['return' => 'Model']);
+    }
 }
