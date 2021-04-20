@@ -194,6 +194,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         'clickCollect' => [
             'sql' => "int NOT NULL default 0"
         ],
+        'clickPay' => [
+            'sql' => "int NOT NULL default 0"
+        ],
         'published' => [
             'sql' => "int NOT NULL default 0"
         ],
