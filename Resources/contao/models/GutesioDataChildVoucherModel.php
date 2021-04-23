@@ -19,4 +19,9 @@ use Contao\Model;
 class GutesioDataChildVoucherModel extends Model
 {
     protected static $strTable = "tl_gutesio_data_child_voucher";
+
+    public static function findByChildId(string $uuid)
+    {
+        return static::findBy('childId', $uuid, ['return' => 'Model']);
+    }
 }
