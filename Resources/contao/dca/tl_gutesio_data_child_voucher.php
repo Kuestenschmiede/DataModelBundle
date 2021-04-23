@@ -36,10 +36,10 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_voucher'] = [
             'sql' => 'varchar(50) NOT NULL default \'\''
         ],
         'minCredit' => [
-            'sql' => "float NULL"
+            'sql' => "int NOT NULL default 0"
         ],
         'maxCredit' => [
-            'sql' => "float NULL"
+            'sql' => "int NOT NULL default 0"
         ],
         'primaryColour' => [
             'sql' => "varchar(10) NOT NULL default ''"
