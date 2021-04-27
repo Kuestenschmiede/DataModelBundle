@@ -191,6 +191,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         'ownerMemberId' => [
             'sql' => "int NOT NULL default 0"
         ],
+        'updatedBy' => [
+            'sql' => "int NOT NULL default 0"
+        ],
         'clickCollect' => [
             'sql' => "int NOT NULL default 0"
         ],

@@ -97,6 +97,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child'] = [
         'memberId' => [
             'sql' => "int(10) unsigned NOT NULL default 0"
         ],
+        'updatedBy' => [
+            'sql' => "int NOT NULL default 0"
+        ],
         'infoFile' => [
             'sql' => "binary(16) NULL"
         ]
