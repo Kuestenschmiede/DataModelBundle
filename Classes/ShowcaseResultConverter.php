@@ -243,6 +243,34 @@ class ShowcaseResultConverter
                                         $tag['linkLabel'] = 'Onlinereservierung';
 
                                         break;
+                                    case 'tag_clicknmeet':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkHref'] = $stmt->execute(
+                                            $datum['uuid'],
+                                            'clicknmeetLink'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkLabel'] = 'Click & Meet';
+
+                                        break;
+                                    case 'tag_table_reservation':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkHref'] = $stmt->execute(
+                                            $datum['uuid'],
+                                            'tableReservationLink'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkLabel'] = 'Tischreservierung';
+
+                                        break;
                                     case 'tag_onlineshop':
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .

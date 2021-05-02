@@ -141,6 +141,30 @@ class TagFormFieldGenerator
         return $fields;
     }
 
+    private static function createFieldForClicknmeetTag()
+    {
+        $fields = [];
+        $field = new TextFormField();
+        $field->setName('clicknmeetLink');
+        $field->setLabel($GLOBALS['TL_LANG']['form_tag_fields']['clicknmeetLink'][0]);
+        $field->setDescription($GLOBALS['TL_LANG']['form_tag_fields']['clicknmeetLink'][1]);
+        $fields[] = $field;
+
+        return $fields;
+    }
+
+    private static function createFieldForTableReservationTag()
+    {
+        $fields = [];
+        $field = new TextFormField();
+        $field->setName('tableReservationLink');
+        $field->setLabel($GLOBALS['TL_LANG']['form_tag_fields']['tableReservationLink'][0]);
+        $field->setDescription($GLOBALS['TL_LANG']['form_tag_fields']['tableReservationLink'][1]);
+        $fields[] = $field;
+
+        return $fields;
+    }
+
     private static function createFieldForOnlineshopTag()
     {
         $fields = [];

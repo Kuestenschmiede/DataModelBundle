@@ -115,6 +115,30 @@ class TagDetailFieldGenerator
         return $fields;
     }
 
+    private static function createFieldForClicknmeetTag()
+    {
+        $fields = [];
+        $field = new DetailLinkField();
+        $field->setName('clicknmeetLink'); // ToDo
+        $field->setLabel('Link zur Terminreservierung');
+        $field->setLinkText('Click & Meet');
+        $fields[] = $field;
+
+        return $fields;
+    }
+
+    private static function createFieldForTableReservationTag()
+    {
+        $fields = [];
+        $field = new DetailLinkField();
+        $field->setName('tableReservationLink'); // ToDo
+        $field->setLabel('Link zur Tischreservierung');
+        $field->setLinkText('Tischreservierung');
+        $fields[] = $field;
+
+        return $fields;
+    }
+
     private static function createFieldForOnlineshopTag()
     {
         $fields = [];
