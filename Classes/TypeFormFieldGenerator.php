@@ -119,6 +119,7 @@ class TypeFormFieldGenerator
         $field->setOptions($cuisineOptions);
         $field->setLabel('Küche');
         $field->setDescription('Wählen Sie die passenden Einträge für Informationen zu Ihrer Küche aus.');
+        $field->setEmptyOptionLabel('');
         $fields['cuisine'] = $field;
 
         $field = new SelectFormField();
@@ -127,6 +128,7 @@ class TypeFormFieldGenerator
         $field->setOptions($dietOptions);
         $field->setLabel('Kost');
         $field->setDescription('Wählen Sie die passenden Einträge für Informationen zu Ihrer Kost aus.');
+        $field->setEmptyOptionLabel('');
         $fields['diet'] = $field;
 
         return $fields;
