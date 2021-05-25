@@ -12,10 +12,8 @@ namespace gutesio\DataModelBundle\Classes;
 use Contao\Controller;
 use Contao\Database;
 use Contao\FilesModel;
-use Contao\ImagineSvg\Imagine;
 use Contao\StringUtil;
 use Contao\System;
-use gutesio\DataModelBundle\Resources\contao\models\GutesioDataElementModel;
 
 /**
  * Class ShowcaseResultConverter
@@ -454,7 +452,7 @@ class ShowcaseResultConverter
         } else {
             list($width, $height) = getimagesize($model->path);
         }
-        
+
         return [
             'src' => $model->path,
             'path' => $model->path,

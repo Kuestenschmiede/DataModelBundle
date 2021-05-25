@@ -203,6 +203,6 @@ class TypeFormFieldGenerator
             'locationZip',
         ]);
 
-        return ['extraZip'=>$field];
+        return ['extraZip' => $field];
     }
 }
