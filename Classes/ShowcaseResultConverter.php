@@ -14,7 +14,6 @@ use Contao\Database;
 use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\System;
-use gutesio\DataModelBundle\Resources\contao\models\GutesioDataElementModel;
 
 /**
  * Class ShowcaseResultConverter
@@ -209,7 +208,7 @@ class ShowcaseResultConverter
                             if ($tag['image']) {
                                 $filesModel = FilesModel::findByUuid(StringUtil::binToUuid($tag['image']));
                                 if ($filesModel) {
-                                    $tag['image'] = $this->createFileDataFromModel($filesModel);
+                                    $tag['image'] = $this->createFileDataFromModel($filesModel, true);
                                 } else {
                                     $tag['image'] = [];
                                 }
@@ -240,6 +239,34 @@ class ShowcaseResultConverter
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
                                         $tag['linkLabel'] = 'Onlinereservierung';
+
+                                        break;
+                                    case 'tag_clicknmeet':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkHref'] = $stmt->execute(
+                                            $datum['uuid'],
+                                            'clicknmeetLink'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkLabel'] = 'Click & Meet';
+
+                                        break;
+                                    case 'tag_table_reservation':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkHref'] = $stmt->execute(
+                                            $datum['uuid'],
+                                            'tableReservationLink'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkLabel'] = 'Tischreservierung';
 
                                         break;
                                     case 'tag_onlineshop':
@@ -417,14 +444,23 @@ class ShowcaseResultConverter
      * @param FilesModel $model
      * @return array
      */
-    public function createFileDataFromModel(FilesModel $model) : array
+    public function createFileDataFromModel(FilesModel $model, $svg = false) : array
     {
+        if ($svg) {
+            $width = 100;
+            $height = 100;
+        } else {
+            list($width, $height) = getimagesize($model->path);
+        }
+
         return [
             'src' => $model->path,
             'path' => $model->path,
             'uuid' => StringUtil::binToUuid($model->uuid),
             'alt' => $model->meta && unserialize($model->meta)['de'] ? unserialize($model->meta)['de']['alt'] : $model->name,
             'name' => $model->name,
+            'height' => $height,
+            'width' => $width,
             'importantPart' => [
                 'x' => $model->importantPartX,
                 'y' => $model->importantPartY,
