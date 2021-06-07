@@ -385,6 +385,9 @@ class ShowcaseResultConverter
             $datum['contactCity'] = $result['contactCity'];
             $datum['contactStreet'] = $result['contactStreet'];
             $datum['contactStreetNumber'] = $result['contactStreetNumber'];
+            if ($result['directory']) {
+                $datum['directory'] = $result['directory'];
+            }
 
             if ($result['image']) {
                 $model = FilesModel::findByUuid(StringUtil::deserialize($result['image']));

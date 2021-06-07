@@ -22,4 +22,12 @@ class TagFieldUtil
 
         return $fieldNames;
     }
+    
+    public static function getFieldnameForTechnicalKey($key)
+    {
+        // currently only one field per tag
+        $tagFields = TagDetailFieldGenerator::getFieldsForTag($key);
+        $tagField = $tagFields[0];
+        return $tagField->getName();
+    }
 }
