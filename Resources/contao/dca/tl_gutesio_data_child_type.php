@@ -57,6 +57,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_type'] = [
         ],
         'importId' => [
             'sql' => "int(20) unsigned NOT NULL default '0'"
+        ],
+        'extendedSearchTerms' => [
+            'sql' => "varchar(255) NOT NULL default ''"
         ]
     ],
 ];
