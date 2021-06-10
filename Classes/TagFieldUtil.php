@@ -28,6 +28,6 @@ class TagFieldUtil
         // currently only one field per tag
         $tagFields = TagDetailFieldGenerator::getFieldsForTag($key);
         $tagField = $tagFields[0];
-        return $tagField->getName();
+        return $tagField ? $tagField->getName() : '';
     }
 }
