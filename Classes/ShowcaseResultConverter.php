@@ -194,9 +194,9 @@ class ShowcaseResultConverter
                 ->prepare('SELECT tagId FROM tl_gutesio_data_tag_element WHERE elementId = ?')
                 ->execute($result['uuid'])->fetchEach('tagId');
             foreach ($arrTagIds as $tagId) {
-                if ($this->cachedTags[$tagId]) {
-                    $datum['tags'][] = $this->cachedTags[$tagId];
-                } else {
+//                if ($this->cachedTags[$tagId]) {
+//                    $datum['tags'][] = $this->cachedTags[$tagId];
+//                } else {
                     if ($arrOptions['loadTagsComplete']) {
                         $tagRow = $db
                             ->prepare('SELECT * FROM tl_gutesio_data_tag WHERE published = 1 AND uuid = ?')
@@ -313,7 +313,7 @@ class ShowcaseResultConverter
                             }
                         }
                     }
-                }
+             //   }
             }
 
             // load tag values
