@@ -23,7 +23,7 @@ class ShowcaseResultConverter
 {
     private $cachedTypes = [];
 
-    private $cachedTags = [];
+    private $processedTags = [];
 
     private $fileUploadFields = [
         TypeFormFieldGenerator::FIELD_BROCHURE_UPLOAD,
@@ -194,8 +194,8 @@ class ShowcaseResultConverter
                 ->prepare('SELECT tagId FROM tl_gutesio_data_tag_element WHERE elementId = ?')
                 ->execute($result['uuid'])->fetchEach('tagId');
             foreach ($arrTagIds as $tagId) {
-                if ($this->cachedTags[$tagId]) {
-                    $datum['tags'][] = $this->cachedTags[$tagId];
+                if ($this->processedTags[$tagId] && !$arrOptions['loadTagsComplete']) {
+                    $datum['tags'][] = $this->processedTags[$tagId];
                 } else {
                     if ($arrOptions['loadTagsComplete']) {
                         $tagRow = $db
@@ -290,7 +290,7 @@ class ShowcaseResultConverter
                                 }
                             }
                             if ($tag) {
-                                $this->cachedTags[$tagId] = $tag;
+                                $this->processedTags[$tagId] = $tag;
                                 $datum['tags'][] = $tag;
                             }
                         }
@@ -308,7 +308,7 @@ class ShowcaseResultConverter
                                 'label' => $tagRow['name'],
                             ];
                             if ($tag) {
-                                $this->cachedTags[$tagId] = $tag;
+                                $this->processedTags[$tagId] = $tag;
                                 $datum['tags'][] = $tag;
                             }
                         }
@@ -385,6 +385,9 @@ class ShowcaseResultConverter
             $datum['contactCity'] = $result['contactCity'];
             $datum['contactStreet'] = $result['contactStreet'];
             $datum['contactStreetNumber'] = $result['contactStreetNumber'];
+            if ($result['directory']) {
+                $datum['directory'] = $result['directory'];
+            }
 
             if ($result['image']) {
                 $model = FilesModel::findByUuid(StringUtil::deserialize($result['image']));

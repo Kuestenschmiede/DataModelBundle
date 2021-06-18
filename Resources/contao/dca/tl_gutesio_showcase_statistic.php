@@ -4,7 +4,7 @@
  * the gis-kit for Contao CMS.
  *
  * @package   	con4gis
- * @version        7
+ * @version        6
  * @author  	    con4gis contributors (see "authors.txt")
  * @license 	    LGPL-3.0-or-later
  * @copyright 	Küstenschmiede GmbH Software & Design
@@ -12,7 +12,8 @@
  *
  */
 
-$GLOBALS['TL_DCA']['tl_gutesio_data_child_type'] = [
+
+$GLOBALS['TL_DCA']['tl_gutesio_showcase_statistic'] = [
     // Config
     'config' => [
         'sql' => [
@@ -31,36 +32,17 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_type'] = [
         'uuid' => [
             'sql' => 'varchar(50) NOT NULL default \'\''
         ],
-        'tstamp' => [
+        'date' => [
             'sql' => "int NOT NULL default 0"
         ],
-        'parentChildTypeId' => [
+        'showcaseId' => [
             'sql' => 'varchar(50) NOT NULL default \'\''
         ],
-        'type' => [
-            'sql' => "varchar(32) NOT NULL default ''"
+        'visits' => [
+            'sql' => 'int NOT NULL default 0'
         ],
-        'foreignKey' => [
-            'sql' => "varchar(255) NOT NULL default ''"
+        'ownerId' => [
+            'sql' => 'int NOT NULL default 0'
         ],
-        'foreignType' => [
-            'sql' => "varchar(32) NOT NULL default ''"
-        ],
-        'name' => [
-            'sql' => "varchar(100) NOT NULL default ''"
-        ],
-        'description' => [
-            'sql' => "TEXT NULL'"
-        ],
-        'sortFields' => [
-            'sql' => "TEXT NULL'"
-        ],
-        'importId' => [
-            'sql' => "int(20) unsigned NOT NULL default '0'"
-        ],
-        'extendedSearchTerms' => [
-            'sql' => "varchar(255) NOT NULL default ''"
-        ]
     ],
 ];
-

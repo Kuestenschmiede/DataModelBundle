@@ -76,6 +76,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_type'] = [
         ],
         'externalShowcase' => [
             'sql' => "char(1) NOT NULL default ''"
+        ],
+        'extendedSearchTerms' => [
+            'sql' => "varchar(255) NOT NULL default ''"
         ]
     ],
 ];
