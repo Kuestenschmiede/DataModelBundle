@@ -340,12 +340,13 @@ class ShowcaseResultConverter
                     $idx = 0;
                     // check for relation on both sides
                     // if showcases are related on both sides, show the logo of the related showcase
+                    $processedIds = [];
                     foreach ($showcases as $showcase) {
                         $relatedIds = StringUtil::deserialize($showcase['showcaseIds']);
                         if ($relatedIds) {
                             foreach ($relatedIds as $relatedId) {
                                 if ($relatedId === $datum['uuid']) {
-                                    if ($showcase['allowLogoDisplay']) {
+                                    if ($showcase['allowLogoDisplay'] && !in_array($showcase['uuid'], $processedIds)) {
                                         $logoModel = FilesModel::findByUuid(StringUtil::binToUuid($showcase['logo']));
                                         if ($logoModel) {
                                             if (!$datum['relatedShowcaseLogos']) {
@@ -356,6 +357,7 @@ class ShowcaseResultConverter
                                             $datum['relatedShowcaseLogos'][] = $logoData;
                                             $idx++;
                                         }
+                                        $processedIds[] = $showcase['uuid'];
                                     }
                                 }
                             }
