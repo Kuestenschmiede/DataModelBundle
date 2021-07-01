@@ -432,6 +432,16 @@ class ShowcaseResultConverter
                     }
                 }
             }
+            // load imprint data
+            $selectImprintSql = "SELECT * FROM tl_gutesio_data_element_imprint WHERE `showcaseId` = ?";
+            $arrImprintData = $db->prepare($selectImprintSql)->execute($datum['uuid'])->fetchAssoc();
+            if ($arrImprintData) {
+                $datum['tradeID'] = $arrImprintData['tradeID'];
+                $datum['registryCourt'] = $arrImprintData['registryCourt'];
+                $datum['registerNumber'] = $arrImprintData['registerNumber'];
+                $datum['owner'] = $arrImprintData['owner'];
+            }
+            
             $datum['releaseType'] = $result['releaseType'];
             $datum['foreignLink'] = $result['foreignLink'];
             $datum['extraZip'] = $result['extraZip'];
