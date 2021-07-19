@@ -436,10 +436,26 @@ class ShowcaseResultConverter
             $selectImprintSql = "SELECT * FROM tl_gutesio_data_element_imprint WHERE `showcaseId` = ?";
             $arrImprintData = $db->prepare($selectImprintSql)->execute($datum['uuid'])->fetchAssoc();
             if ($arrImprintData) {
+                $datum['imprintData'] = $arrImprintData;
                 $datum['tradeID'] = $arrImprintData['tradeID'];
                 $datum['registryCourt'] = $arrImprintData['registryCourt'];
                 $datum['registerNumber'] = $arrImprintData['registerNumber'];
                 $datum['owner'] = $arrImprintData['owner'];
+                $datum['addressName'] = $arrImprintData['addressName'];
+                $datum['addressStreet'] = $arrImprintData['addressStreet'];
+                $datum['addressStreetNumber'] = $arrImprintData['addressStreetNumber'];
+                $datum['addressZipcode'] = $arrImprintData['addressZipcode'];
+                $datum['addressCity'] = $arrImprintData['addressCity'];
+                $datum['addressCountry'] = $arrImprintData['addressCountry'];
+                $datum['contactEmail'] = $arrImprintData['contactEmail'];
+                $datum['contactPhone'] = $arrImprintData['contactPhone'];
+                $datum['contactFax'] = $arrImprintData['contactFax'];
+                $datum['responsibleName'] = $arrImprintData['responsibleName'];
+                $datum['responsibleStreet'] = $arrImprintData['responsibleStreet'];
+                $datum['responsibleStreetNumber'] = $arrImprintData['responsibleStreetNumber'];
+                $datum['responsibleZipcode'] = $arrImprintData['responsibleZipcode'];
+                $datum['responsibleCity'] = $arrImprintData['responsibleCity'];
+                
             }
             
             $datum['releaseType'] = $result['releaseType'];
