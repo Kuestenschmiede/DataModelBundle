@@ -24,7 +24,7 @@
   },
   "require": {
     "contao/core-bundle": "^4.9",
-    "con4gis/framework": "^1.0.22"
+    "con4gis/framework": "^1.0.23"
   },
   "conflict": {
     "contao/core": "*",
