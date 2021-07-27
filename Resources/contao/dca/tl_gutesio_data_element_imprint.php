@@ -77,6 +77,21 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element_imprint'] = [
         'registerNumber' => [
             'sql' => "varchar(128) NOT NULL default ''"
         ],
+        'companyForm' => [
+            'sql' => "varchar(128) NOT NULL default ''"
+        ],
+        'fundStatement' => [
+            'sql' => "varchar(128) NOT NULL default ''"
+        ],
+        'inspectorate' => [
+            'sql' => "varchar(128) NOT NULL default ''"
+        ],
+        'standeskammer' => [
+            'sql' => "varchar(128) NOT NULL default ''"
+        ],
+        'liquidation' => [
+            'sql' => "varchar(128) NOT NULL default ''"
+        ],
         'responsibleName' => [
             'sql' => "varchar(128) NOT NULL default ''"
         ],
