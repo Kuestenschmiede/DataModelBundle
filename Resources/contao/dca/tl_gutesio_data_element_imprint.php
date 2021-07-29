@@ -57,7 +57,7 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element_imprint'] = [
             'sql' => "varchar(128) NOT NULL default ''"
         ],
         'owner' => [
-            'sql' => "varchar(128) NOT NULL default ''"
+            'sql' => "text NULL default ''"
         ],
         'contactEmail' => [
             'sql' => "varchar(128) NOT NULL default ''"
