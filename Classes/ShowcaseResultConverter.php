@@ -432,6 +432,32 @@ class ShowcaseResultConverter
                     }
                 }
             }
+            // load imprint data
+            $selectImprintSql = "SELECT * FROM tl_gutesio_data_element_imprint WHERE `showcaseId` = ?";
+            $arrImprintData = $db->prepare($selectImprintSql)->execute($datum['uuid'])->fetchAssoc();
+            if ($arrImprintData) {
+                $filledImprintData = [];
+                foreach ($arrImprintData as $key => $value) {
+                    if ($value && !in_array($key, [
+                            'id',
+                            'uuid',
+                            'tstamp',
+                            'showcaseId'
+                        ])
+                    ) {
+                        $filledImprintData[$key] = $value;
+                    }
+                }
+                $filledImprintData['addressStreetAll'] = $filledImprintData['addressStreet'] . " " . $arrImprintData['addressStreetNumber'];
+                $filledImprintData['addressCityAll'] = $filledImprintData['addressZipcode'] . " " . $arrImprintData['addressCity'];
+                $filledImprintData['responsibleStreetAll'] = $filledImprintData['responsibleStreet'] . " " . $arrImprintData['responsibleStreetNumber'];
+                $filledImprintData['responsibleCityAll'] = $filledImprintData['responsibleZipcode'] . " " . $arrImprintData['responsibleCity'];
+                if ($filledImprintData['companyForm'] !== "noImprintRequired") {
+                    $datum['imprintData'] = $filledImprintData;
+                }
+                $datum = array_merge($datum, $filledImprintData);
+            }
+            
             $datum['releaseType'] = $result['releaseType'];
             $datum['foreignLink'] = $result['foreignLink'];
             $datum['extraZip'] = $result['extraZip'];
