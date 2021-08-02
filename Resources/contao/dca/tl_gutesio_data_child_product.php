@@ -66,7 +66,13 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_product'] = [
         ],
         'importId' => [
             'sql' => "int(20) unsigned NOT NULL default '0'"
-        ]
+        ],
+        'ean' => [
+            'sql' => "varchar(32) NOT NULL default ''"
+        ],
+        'brand' => [
+            'sql' => "varchar(100) NOT NULL default ''"
+        ],
     ],
 ];
 
