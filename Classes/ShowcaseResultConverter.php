@@ -320,7 +320,10 @@ class ShowcaseResultConverter
             $sql = 'SELECT `tagFieldKey`, `tagFieldValue` FROM tl_gutesio_data_tag_element_values WHERE elementId = ?';
             $tagElementValues = $db->prepare($sql)->execute($datum['uuid'])->fetchAllAssoc();
             foreach ($tagElementValues as $tagElementValue) {
-                $datum[$tagElementValue['tagFieldKey']] = $tagElementValue['tagFieldValue'];
+                // avoid overriding type values with same key
+                if (!$datum[$tagElementValue['tagFieldKey']]) {
+                    $datum[$tagElementValue['tagFieldKey']] = $tagElementValue['tagFieldValue'];
+                }
             }
 
             // load related showcases
