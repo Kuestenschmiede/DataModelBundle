@@ -27,6 +27,8 @@ class TypeFormFieldGenerator
     const FIELD_MENU_LINK = 'menuLink';
     const FIELD_MENU_UPLOAD = 'menuUpload';
     const FIELD_ALLOW_LOCATION_FOR_ALL = 'allowLocationForAll';
+    
+    const FIELD_ISBN = 'isbn';
 
     public static function getFieldsForType(string $technicalKey)
     {
@@ -41,6 +43,8 @@ class TypeFormFieldGenerator
                 return static::getFieldsForMenu();
             case 'type_brochure_upload':
                 return static::getFieldsForBrochureUpload();
+            case 'type_isbn':
+                return static::getFieldsForIsbn();
             default:
                 return [];
         }
@@ -85,13 +89,15 @@ class TypeFormFieldGenerator
         $extraZipFields = static::getFieldsForExtraZip();
         $menuFields = static::getFieldsForMenu();
         $brochureUploadFields = static::getFieldsForBrochureUpload();
+        $isbnFields = static::getFieldsForIsbn();
 
         return array_merge(
             $dietCuisineFields,
             $eventFields,
             $menuFields,
             $brochureUploadFields,
-            $extraZipFields
+            $extraZipFields,
+            $isbnFields
         );
     }
 
@@ -213,5 +219,16 @@ class TypeFormFieldGenerator
         ]);
 
         return ['extraZip' => $field];
+    }
+    
+    private static function getFieldsForIsbn()
+    {
+        $strName = 'main_instance_offer_form';
+        $field = new TextFormField();
+        $field->setName('isbn');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['isbn'][0]);
+        $field->setDescription($GLOBALS['TL_LANG'][$strName]['isbn'][1]);
+        
+        return ['isbn' => $field];
     }
 }

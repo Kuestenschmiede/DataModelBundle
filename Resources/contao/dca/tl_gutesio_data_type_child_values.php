@@ -12,7 +12,8 @@
  *
  */
 
-$GLOBALS['TL_DCA']['tl_gutesio_data_child_type'] = [
+
+$GLOBALS['TL_DCA']['tl_gutesio_data_type_child_values'] = [
     // Config
     'config' => [
         'sql' => [
@@ -34,36 +35,23 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_type'] = [
         'tstamp' => [
             'sql' => "int NOT NULL default 0"
         ],
-        'parentChildTypeId' => [
+        'childId' => [
             'sql' => 'varchar(50) NOT NULL default \'\''
         ],
-        'type' => [
+        'typeId' => [
+            'sql' => 'varchar(50) NOT NULL default \'\''
+        ],
+        'typeFieldKey' => [
             'sql' => "varchar(32) NOT NULL default ''"
         ],
-        'foreignKey' => [
-            'sql' => "varchar(255) NOT NULL default ''"
+        'typeFieldValue' => [
+            'sql' => "TEXT NULL"
         ],
-        'foreignType' => [
-            'sql' => "varchar(32) NOT NULL default ''"
-        ],
-        'name' => [
-            'sql' => "varchar(100) NOT NULL default ''"
-        ],
-        'description' => [
-            'sql' => "TEXT NULL'"
-        ],
-        'sortFields' => [
-            'sql' => "TEXT NULL'"
+        'typeFieldFile' => [
+            'sql' => "binary(16) NULL"
         ],
         'importId' => [
             'sql' => "int(20) unsigned NOT NULL default '0'"
-        ],
-        'extendedSearchTerms' => [
-            'sql' => "varchar(255) NOT NULL default ''"
-        ],
-        'technicalKey' => [
-            'sql' => "TEXT NULL"
-        ],
+        ]
     ],
 ];
-
