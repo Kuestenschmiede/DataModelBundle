@@ -12,7 +12,8 @@
  *
  */
 
-$GLOBALS['TL_DCA']['tl_gutesio_data_child_product'] = [
+
+$GLOBALS['TL_DCA']['tl_gutesio_data_type_child_values'] = [
     // Config
     'config' => [
         'sql' => [
@@ -37,42 +38,20 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_product'] = [
         'childId' => [
             'sql' => 'varchar(50) NOT NULL default \'\''
         ],
-        'price' => [
-            'sql' => "float NULL"
+        'typeId' => [
+            'sql' => 'varchar(50) NOT NULL default \'\''
         ],
-        'strikePrice' => [
-            'sql' => "float NULL"
-        ],
-        'priceStartingAt' => [
-            'sql' => "char(1) NULL"
-        ],
-        'priceReplacer' => [
-            'sql' => "char(9) NULL"
-        ],
-        'tax' => [
-            'sql' => "varchar(7) NOT NULL default 'regular'"
-        ],
-        'discount' => [
-            'sql' => "float(5,2) NULL"
-        ],
-        'color' => [
-            'sql' => "varchar(100) NULL"
-        ],
-        'size' => [
-            'sql' => "varchar(100) NULL"
-        ],
-        'type' => [
+        'typeFieldKey' => [
             'sql' => "varchar(32) NOT NULL default ''"
+        ],
+        'typeFieldValue' => [
+            'sql' => "TEXT NULL"
+        ],
+        'typeFieldFile' => [
+            'sql' => "binary(16) NULL"
         ],
         'importId' => [
             'sql' => "int(20) unsigned NOT NULL default '0'"
-        ],
-        'ean' => [
-            'sql' => "varchar(32) NOT NULL default ''"
-        ],
-        'brand' => [
-            'sql' => "varchar(100) NOT NULL default ''"
-        ],
+        ]
     ],
 ];
-

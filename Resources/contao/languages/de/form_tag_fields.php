@@ -15,5 +15,6 @@ $GLOBALS['TL_LANG'][$strName]['diet'] = ['Kost', ''];
 $GLOBALS['TL_LANG'][$strName]['cuisine'] = ['Küche', ''];
 $GLOBALS['TL_LANG'][$strName]['maxPersons'] = ['Maximale Anzahl Personen', ''];
 $GLOBALS['TL_LANG'][$strName]['technicalEquipment'] = ['Technische Ausrüstung', ''];
+$GLOBALS['TL_LANG'][$strName]['allowLocationForAll'] = ['Veranstaltungsort für Veranstalter freigeben', 'Wenn diese Checkbox gesetzt ist, kann dieses Schaufenster in allen Veranstaltungen als Veranstaltungsort ausgewählt werden.'];
 $GLOBALS['TL_LANG'][$strName]['frontend']['paragraph'] = "Absatz";
 $GLOBALS['TL_LANG'][$strName]['frontend']['heading'] = ['Titel', 'Untertitel'];

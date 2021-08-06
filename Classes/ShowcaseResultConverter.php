@@ -320,7 +320,10 @@ class ShowcaseResultConverter
             $sql = 'SELECT `tagFieldKey`, `tagFieldValue` FROM tl_gutesio_data_tag_element_values WHERE elementId = ?';
             $tagElementValues = $db->prepare($sql)->execute($datum['uuid'])->fetchAllAssoc();
             foreach ($tagElementValues as $tagElementValue) {
-                $datum[$tagElementValue['tagFieldKey']] = $tagElementValue['tagFieldValue'];
+                // avoid overriding type values with same key
+                if (!$datum[$tagElementValue['tagFieldKey']]) {
+                    $datum[$tagElementValue['tagFieldKey']] = $tagElementValue['tagFieldValue'];
+                }
             }
 
             // load related showcases
@@ -340,12 +343,13 @@ class ShowcaseResultConverter
                     $idx = 0;
                     // check for relation on both sides
                     // if showcases are related on both sides, show the logo of the related showcase
+                    $processedIds = [];
                     foreach ($showcases as $showcase) {
                         $relatedIds = StringUtil::deserialize($showcase['showcaseIds']);
                         if ($relatedIds) {
                             foreach ($relatedIds as $relatedId) {
                                 if ($relatedId === $datum['uuid']) {
-                                    if ($showcase['allowLogoDisplay']) {
+                                    if ($showcase['allowLogoDisplay'] && !in_array($showcase['uuid'], $processedIds)) {
                                         $logoModel = FilesModel::findByUuid(StringUtil::binToUuid($showcase['logo']));
                                         if ($logoModel) {
                                             if (!$datum['relatedShowcaseLogos']) {
@@ -356,6 +360,7 @@ class ShowcaseResultConverter
                                             $datum['relatedShowcaseLogos'][] = $logoData;
                                             $idx++;
                                         }
+                                        $processedIds[] = $showcase['uuid'];
                                     }
                                 }
                             }
@@ -430,6 +435,32 @@ class ShowcaseResultConverter
                     }
                 }
             }
+            // load imprint data
+            $selectImprintSql = "SELECT * FROM tl_gutesio_data_element_imprint WHERE `showcaseId` = ?";
+            $arrImprintData = $db->prepare($selectImprintSql)->execute($datum['uuid'])->fetchAssoc();
+            if ($arrImprintData) {
+                $filledImprintData = [];
+                foreach ($arrImprintData as $key => $value) {
+                    if ($value && !in_array($key, [
+                            'id',
+                            'uuid',
+                            'tstamp',
+                            'showcaseId'
+                        ])
+                    ) {
+                        $filledImprintData[$key] = $value;
+                    }
+                }
+                $filledImprintData['addressStreetAll'] = $filledImprintData['addressStreet'] . " " . $arrImprintData['addressStreetNumber'];
+                $filledImprintData['addressCityAll'] = $filledImprintData['addressZipcode'] . " " . $arrImprintData['addressCity'];
+                $filledImprintData['responsibleStreetAll'] = $filledImprintData['responsibleStreet'] . " " . $arrImprintData['responsibleStreetNumber'];
+                $filledImprintData['responsibleCityAll'] = $filledImprintData['responsibleZipcode'] . " " . $arrImprintData['responsibleCity'];
+                if ($filledImprintData['companyForm'] !== "noImprintRequired") {
+                    $datum['imprintData'] = $filledImprintData;
+                }
+                $datum = array_merge($datum, $filledImprintData);
+            }
+            
             $datum['releaseType'] = $result['releaseType'];
             $datum['foreignLink'] = $result['foreignLink'];
             $datum['extraZip'] = $result['extraZip'];

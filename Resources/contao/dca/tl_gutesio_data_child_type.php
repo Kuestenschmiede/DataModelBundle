@@ -60,7 +60,10 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_type'] = [
         ],
         'extendedSearchTerms' => [
             'sql' => "varchar(255) NOT NULL default ''"
-        ]
+        ],
+        'technicalKey' => [
+            'sql' => "TEXT NULL"
+        ],
     ],
 ];
 

@@ -33,6 +33,8 @@ class TypeDetailFieldGenerator
                 return static::getFieldsForMenu();
             case 'type_brochure_upload':
                 return static::getFieldsForBrochureUpload();
+            case 'type_isbn':
+                return static::getFieldsForIsbn();
             default:
                 return [];
         }
@@ -123,5 +125,15 @@ class TypeDetailFieldGenerator
         $fields[] = $field;
 
         return $fields;
+    }
+    
+    private static function getFieldsForIsbn()
+    {
+        $field = new DetailTextField();
+        $field->setName(TypeFormFieldGenerator::FIELD_ISBN);
+        $field->setLabel("ISBN:");
+        $field->setClass(TypeFormFieldGenerator::FIELD_ISBN);
+        
+        return [$field];
     }
 }

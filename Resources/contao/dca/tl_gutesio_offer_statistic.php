@@ -44,5 +44,8 @@ $GLOBALS['TL_DCA']['tl_gutesio_offer_statistic'] = [
         'ownerId' => [
             'sql' => 'int NOT NULL default 0'
         ],
+        'transferred' => [
+            'sql' => 'int NOT NULL default 0'
+        ],
     ],
 ];

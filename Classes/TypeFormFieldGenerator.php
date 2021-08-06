@@ -9,6 +9,7 @@
  */
 namespace gutesio\DataModelBundle\Classes;
 
+use con4gis\FrameworkBundle\Classes\FormFields\CheckboxFormField;
 use con4gis\FrameworkBundle\Classes\FormFields\PDFUploadFormField;
 use con4gis\FrameworkBundle\Classes\FormFields\SelectFormField;
 use con4gis\FrameworkBundle\Classes\FormFields\TextFormField;
@@ -25,6 +26,9 @@ class TypeFormFieldGenerator
     const FIELD_BROCHURE_UPLOAD = 'brochureUpload';
     const FIELD_MENU_LINK = 'menuLink';
     const FIELD_MENU_UPLOAD = 'menuUpload';
+    const FIELD_ALLOW_LOCATION_FOR_ALL = 'allowLocationForAll';
+    
+    const FIELD_ISBN = 'isbn';
 
     public static function getFieldsForType(string $technicalKey)
     {
@@ -39,6 +43,8 @@ class TypeFormFieldGenerator
                 return static::getFieldsForMenu();
             case 'type_brochure_upload':
                 return static::getFieldsForBrochureUpload();
+            case 'type_isbn':
+                return static::getFieldsForIsbn();
             default:
                 return [];
         }
@@ -83,13 +89,15 @@ class TypeFormFieldGenerator
         $extraZipFields = static::getFieldsForExtraZip();
         $menuFields = static::getFieldsForMenu();
         $brochureUploadFields = static::getFieldsForBrochureUpload();
+        $isbnFields = static::getFieldsForIsbn();
 
         return array_merge(
             $dietCuisineFields,
             $eventFields,
             $menuFields,
             $brochureUploadFields,
-            $extraZipFields
+            $extraZipFields,
+            $isbnFields
         );
     }
 
@@ -185,7 +193,14 @@ class TypeFormFieldGenerator
         $field->setName('technicalEquipment');
         $field->setLabel($GLOBALS['TL_LANG'][$strName]['technicalEquipment'] && (count($GLOBALS['TL_LANG'][$strName]['technicalEquipment']) > 0) ? $GLOBALS['TL_LANG'][$strName]['technicalEquipment'][0] : '');
         $fields['technicalEquipment'] = $field;
-
+    
+        $field = new CheckboxFormField();
+        $field->setName(self::FIELD_ALLOW_LOCATION_FOR_ALL);
+        $field->setLabel($GLOBALS['TL_LANG'][$strName][self::FIELD_ALLOW_LOCATION_FOR_ALL] && (count($GLOBALS['TL_LANG'][$strName][self::FIELD_ALLOW_LOCATION_FOR_ALL]) > 0) ? $GLOBALS['TL_LANG'][$strName][self::FIELD_ALLOW_LOCATION_FOR_ALL][0] : '');
+        $field->setDescription($GLOBALS['TL_LANG'][$strName][self::FIELD_ALLOW_LOCATION_FOR_ALL] && (count($GLOBALS['TL_LANG'][$strName][self::FIELD_ALLOW_LOCATION_FOR_ALL]) > 0) ? $GLOBALS['TL_LANG'][$strName][self::FIELD_ALLOW_LOCATION_FOR_ALL][1] : '');
+        $field->setChecked(true);
+        $fields[self::FIELD_ALLOW_LOCATION_FOR_ALL] = $field;
+        
         return $fields;
     }
 
@@ -204,5 +219,16 @@ class TypeFormFieldGenerator
         ]);
 
         return ['extraZip' => $field];
+    }
+    
+    private static function getFieldsForIsbn()
+    {
+        $strName = 'main_instance_offer_form';
+        $field = new TextFormField();
+        $field->setName('isbn');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['isbn'][0]);
+        $field->setDescription($GLOBALS['TL_LANG'][$strName]['isbn'][1]);
+        
+        return ['isbn' => $field];
     }
 }

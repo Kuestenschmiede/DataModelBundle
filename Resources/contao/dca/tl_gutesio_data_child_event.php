@@ -49,6 +49,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_event'] = [
         'endTime' => [
             'sql' => "int NULL"
         ],
+        'useDifferentLocation' => [
+            'sql' => "char(1) NULL"
+        ],
         'locationElementId' => [
             'sql' => 'varchar(50) NULL'
         ],
