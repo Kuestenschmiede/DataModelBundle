@@ -86,7 +86,7 @@ class ShowcaseResultConverter
                 // check if first digit is a 0, that must be stripped out
                 if (strpos($datum['whatsapp'], '0') === 0) {
                     $datum['whatsapp'] = substr($datum['whatsapp'], 1);
-                    $datum['whatsapp'] = str_replace(" ", "", $datum['whatsapp']);
+                    $datum['whatsapp'] = str_replace(' ', '', $datum['whatsapp']);
                     $datum['whatsapp'] = $datum['whatsapp'] ? 'https://wa.me/' . $datum['whatsapp'] : $datum['whatsapp'];
                 }
             }
@@ -437,7 +437,7 @@ class ShowcaseResultConverter
                 }
             }
             // load imprint data
-            $selectImprintSql = "SELECT * FROM tl_gutesio_data_element_imprint WHERE `showcaseId` = ?";
+            $selectImprintSql = 'SELECT * FROM tl_gutesio_data_element_imprint WHERE `showcaseId` = ?';
             $arrImprintData = $db->prepare($selectImprintSql)->execute($datum['uuid'])->fetchAssoc();
             if ($arrImprintData) {
                 $filledImprintData = [];
@@ -446,22 +446,22 @@ class ShowcaseResultConverter
                             'id',
                             'uuid',
                             'tstamp',
-                            'showcaseId'
+                            'showcaseId',
                         ])
                     ) {
                         $filledImprintData[$key] = $value;
                     }
                 }
-                $filledImprintData['addressStreetAll'] = $filledImprintData['addressStreet'] . " " . $arrImprintData['addressStreetNumber'];
-                $filledImprintData['addressCityAll'] = $filledImprintData['addressZipcode'] . " " . $arrImprintData['addressCity'];
-                $filledImprintData['responsibleStreetAll'] = $filledImprintData['responsibleStreet'] . " " . $arrImprintData['responsibleStreetNumber'];
-                $filledImprintData['responsibleCityAll'] = $filledImprintData['responsibleZipcode'] . " " . $arrImprintData['responsibleCity'];
-                if ($filledImprintData['companyForm'] !== "noImprintRequired") {
+                $filledImprintData['addressStreetAll'] = $filledImprintData['addressStreet'] . ' ' . $arrImprintData['addressStreetNumber'];
+                $filledImprintData['addressCityAll'] = $filledImprintData['addressZipcode'] . ' ' . $arrImprintData['addressCity'];
+                $filledImprintData['responsibleStreetAll'] = $filledImprintData['responsibleStreet'] . ' ' . $arrImprintData['responsibleStreetNumber'];
+                $filledImprintData['responsibleCityAll'] = $filledImprintData['responsibleZipcode'] . ' ' . $arrImprintData['responsibleCity'];
+                if ($filledImprintData['companyForm'] !== 'noImprintRequired') {
                     $datum['imprintData'] = $filledImprintData;
                 }
                 $datum = array_merge($datum, $filledImprintData);
             }
-            
+
             $datum['releaseType'] = $result['releaseType'];
             $datum['foreignLink'] = $result['foreignLink'];
             $datum['extraZip'] = $result['extraZip'];
