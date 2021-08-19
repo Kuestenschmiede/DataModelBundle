@@ -226,9 +226,9 @@ class TypeFormFieldGenerator
         $strName = 'main_instance_offer_form';
         $field = new TextFormField();
         $field->setName('isbn');
-        $field->setLabel("ISBN");
-        $field->setDescription("Geben Sie die ISBN für das Produkt ein.");
-        
+        $field->setLabel('ISBN');
+        $field->setDescription('Geben Sie die ISBN für das Produkt ein.');
+
         return ['isbn' => $field];
     }
 }
