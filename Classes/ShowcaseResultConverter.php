@@ -49,6 +49,7 @@ class ShowcaseResultConverter
     public function convertDbResult($arrResult, $arrOptions = []) : array
     {
         $db = Database::getInstance();
+        $checker = new ImprintConstraintChecker();
         System::loadLanguageFile('field_translations');
         $data = [];
         if (count($arrResult) === 0) {
@@ -452,14 +453,17 @@ class ShowcaseResultConverter
                         $filledImprintData[$key] = $value;
                     }
                 }
-                $filledImprintData['addressStreetAll'] = $filledImprintData['addressStreet'] . ' ' . $arrImprintData['addressStreetNumber'];
-                $filledImprintData['addressCityAll'] = $filledImprintData['addressZipcode'] . ' ' . $arrImprintData['addressCity'];
-                $filledImprintData['responsibleStreetAll'] = $filledImprintData['responsibleStreet'] . ' ' . $arrImprintData['responsibleStreetNumber'];
-                $filledImprintData['responsibleCityAll'] = $filledImprintData['responsibleZipcode'] . ' ' . $arrImprintData['responsibleCity'];
-                if ($filledImprintData['companyForm'] !== 'noImprintRequired') {
-                    $datum['imprintData'] = $filledImprintData;
+                
+                if ($checker->checkIfImprintIsComplete($filledImprintData)) {
+                    $filledImprintData['addressStreetAll'] = $filledImprintData['addressStreet'] . ' ' . $arrImprintData['addressStreetNumber'];
+                    $filledImprintData['addressCityAll'] = $filledImprintData['addressZipcode'] . ' ' . $arrImprintData['addressCity'];
+                    $filledImprintData['responsibleStreetAll'] = $filledImprintData['responsibleStreet'] . ' ' . $arrImprintData['responsibleStreetNumber'];
+                    $filledImprintData['responsibleCityAll'] = $filledImprintData['responsibleZipcode'] . ' ' . $arrImprintData['responsibleCity'];
+                    if ($filledImprintData['companyForm'] !== 'noImprintRequired') {
+                        $datum['imprintData'] = $filledImprintData;
+                    }
+                    $datum = array_merge($datum, $filledImprintData);
                 }
-                $datum = array_merge($datum, $filledImprintData);
             }
 
             $datum['releaseType'] = $result['releaseType'];
