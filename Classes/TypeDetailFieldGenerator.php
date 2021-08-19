@@ -126,14 +126,14 @@ class TypeDetailFieldGenerator
 
         return $fields;
     }
-    
+
     private static function getFieldsForIsbn()
     {
         $field = new DetailTextField();
         $field->setName(TypeFormFieldGenerator::FIELD_ISBN);
-        $field->setLabel("ISBN:");
+        $field->setLabel('ISBN:');
         $field->setClass(TypeFormFieldGenerator::FIELD_ISBN);
-        
+
         return [$field];
     }
 }
