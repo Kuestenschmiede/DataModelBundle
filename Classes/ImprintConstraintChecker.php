@@ -28,8 +28,8 @@ class ImprintConstraintChecker
     
     private function checkFreelancerConstraints()
     {
-        return $this->checkField('inspectorate')
-            && $this->checkField('standeskammer')
+        return /*$this->checkField('inspectorate')
+            && */$this->checkField('standeskammer')
             && $this->checkField('tradeID');
     }
     
@@ -40,26 +40,26 @@ class ImprintConstraintChecker
     
     private function checkSoleProprietorConstraints()
     {
-        return $this->checkField('inspectorate')
-            && $this->checkField('owner')
+        return /*$this->checkField('inspectorate')
+            && */$this->checkField('owner')
             && $this->checkField('tradeID');
     }
     
     private function checkSocietyConstraints()
     {
-        return $this->checkField('inspectorate')
-            && $this->checkField('owner')
+        return /*$this->checkField('inspectorate')
+            && */$this->checkField('owner')
             && $this->checkField('registryCourt')
-            && $this->checkField('registryNumber');
+            && $this->checkField('registerNumber');
     }
     
     private function checkOtherConstraints()
     {
-        return $this->checkField('inspectorate')
-            && $this->checkField('owner')
+        return /*$this->checkField('inspectorate')
+            && */$this->checkField('owner')
             && $this->checkField('tradeID')
             && $this->checkField('registryCourt')
-            && $this->checkField('registryNumber');
+            && $this->checkField('registerNumber');
     }
     
     private function checkField(string $key)
