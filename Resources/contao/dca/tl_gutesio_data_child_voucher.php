@@ -35,11 +35,20 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_voucher'] = [
         'childId' => [
             'sql' => 'varchar(50) NOT NULL default \'\''
         ],
+        'customizableCredit' => [
+            'sql' => "char(1) NOT NULL default ''"
+        ],
+        'credit' => [
+            'sql' => "int NOT NULL default 0"
+        ],
         'minCredit' => [
             'sql' => "int NOT NULL default 0"
         ],
         'maxCredit' => [
             'sql' => "int NOT NULL default 0"
+        ],
+        'interval' => [
+            'sql' => "int NOT NULL default 1"
         ],
         'primaryColour' => [
             'sql' => "varchar(10) NOT NULL default ''"
