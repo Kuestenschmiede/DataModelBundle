@@ -132,11 +132,12 @@ class ShowcaseResultConverter
                     $datum['types'][] = $this->cachedTypes[$typeId];
                 } else {
                     $typeRow = $db
-                        ->prepare('SELECT `id`, `name` FROM tl_gutesio_data_type WHERE uuid = ?')
+                        ->prepare('SELECT `id`, `name`, `uuid` FROM tl_gutesio_data_type WHERE uuid = ?')
                         ->execute($typeId)->fetchAssoc();
                     $type = [
                         'value' => $typeRow['id'],
                         'label' => $typeRow['name'],
+                        'uuid' => $typeRow['uuid'],
                     ];
                     if ($type) {
                         $this->cachedTypes[$typeId] = $type;
