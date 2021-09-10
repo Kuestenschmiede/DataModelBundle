@@ -5,7 +5,7 @@ namespace gutesio\DataModelBundle\Classes;
 class ImprintConstraintChecker
 {
     private $imprintData;
-    
+
     public function checkIfImprintIsComplete(array $imprintData)
     {
         $this->imprintData = $imprintData;
@@ -25,26 +25,26 @@ class ImprintConstraintChecker
                 return false;
         }
     }
-    
+
     private function checkFreelancerConstraints()
     {
         return /*$this->checkField('inspectorate')
             && */$this->checkField('standeskammer')
             && $this->checkField('tradeID');
     }
-    
+
     private function checkSmallBusinessConstraints()
     {
         return $this->checkField('owner');
     }
-    
+
     private function checkSoleProprietorConstraints()
     {
         return /*$this->checkField('inspectorate')
             && */$this->checkField('owner')
             && $this->checkField('tradeID');
     }
-    
+
     private function checkSocietyConstraints()
     {
         return /*$this->checkField('inspectorate')
@@ -52,7 +52,7 @@ class ImprintConstraintChecker
             && $this->checkField('registryCourt')
             && $this->checkField('registerNumber');
     }
-    
+
     private function checkOtherConstraints()
     {
         return /*$this->checkField('inspectorate')
@@ -61,11 +61,11 @@ class ImprintConstraintChecker
             && $this->checkField('registryCourt')
             && $this->checkField('registerNumber');
     }
-    
+
     private function checkField(string $key)
     {
         return array_key_exists($key, $this->imprintData)
-            && $this->imprintData[$key] !== ""
+            && $this->imprintData[$key] !== ''
             && $this->imprintData[$key] !== null;
     }
 }

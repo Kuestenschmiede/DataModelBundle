@@ -454,7 +454,7 @@ class ShowcaseResultConverter
                         $filledImprintData[$key] = $value;
                     }
                 }
-                
+
                 if ($checker->checkIfImprintIsComplete($filledImprintData)) {
                     $filledImprintData['addressStreetAll'] = $filledImprintData['addressStreet'] . ' ' . $arrImprintData['addressStreetNumber'];
                     $filledImprintData['addressCityAll'] = $filledImprintData['addressZipcode'] . ' ' . $arrImprintData['addressCity'];
