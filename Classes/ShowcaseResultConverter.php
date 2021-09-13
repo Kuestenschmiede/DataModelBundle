@@ -238,6 +238,9 @@ class ShowcaseResultConverter
                                             $datum['uuid'],
                                             'onlineReservationLink'
                                         )->fetchAssoc()['tagFieldValue'];
+                                        if (strpos($tag['linkHref'], "@") !== false) {
+                                            $tag['linkHref'] = "mailto:" . $tag['linkHref'];
+                                        }
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
@@ -325,6 +328,13 @@ class ShowcaseResultConverter
             foreach ($tagElementValues as $tagElementValue) {
                 // avoid overriding type values with same key
                 if (!$datum[$tagElementValue['tagFieldKey']]) {
+                    if ($tagElementValue['tagFieldKey'] === "onlineReservationLink") {
+                        if (strpos($tagElementValue['tagFieldValue'], "@") !== false) {
+                            if (strpos($tagElementValue['tagFieldValue'], "mailto:") !== 0) {
+                                $tagElementValue['tagFieldValue'] = "mailto:" . $tagElementValue['tagFieldValue'];
+                            }
+                        }
+                    }
                     $datum[$tagElementValue['tagFieldKey']] = $tagElementValue['tagFieldValue'];
                 }
             }
