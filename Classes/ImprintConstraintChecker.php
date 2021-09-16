@@ -9,21 +9,29 @@ class ImprintConstraintChecker
     public function checkIfImprintIsComplete(array $imprintData)
     {
         $this->imprintData = $imprintData;
-        switch ($imprintData['companyForm']) {
-            case 'freelancer':
-                return $this->checkFreelancerConstraints();
-            case 'smallBusiness':
-                return $this->checkSmallBusinessConstraints();
-            case 'soleProprietor':
-                return $this->checkSoleProprietorConstraints();
-            case 'society':
-                return $this->checkSocietyConstraints();
-            case 'other':
-                return $this->checkOtherConstraints();
-            case 'noImprintRequired':
-            default:
-                return false;
+        if ($imprintData['imprintType'] === "generator") {
+            switch ($imprintData['companyForm']) {
+                case 'freelancer':
+                    return $this->checkFreelancerConstraints();
+                case 'smallBusiness':
+                    return $this->checkSmallBusinessConstraints();
+                case 'soleProprietor':
+                    return $this->checkSoleProprietorConstraints();
+                case 'society':
+                    return $this->checkSocietyConstraints();
+                case 'other':
+                    return $this->checkOtherConstraints();
+                case 'noImprintRequired':
+                default:
+                    return false;
+            }
+        } else if ($imprintData['imprintType'] === "external") {
+            return $imprintData['imprintLink'] !== "";
+        } else {
+            // no valid imprintType set, so imprint is incomplete
+            return false;
         }
+        
     }
 
     private function checkFreelancerConstraints()
