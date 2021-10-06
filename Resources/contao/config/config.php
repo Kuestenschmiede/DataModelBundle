@@ -49,7 +49,7 @@ $GLOBALS['gutesio']['cuisine_options'] = [
     'noodle', //Asiatische Nudeln
     'casserole', //Aufläufe
     'sausages', //Bratwurst
-    'baquette', //Baguette
+    'baguette', //Baguette
     'burger', //Burger
     'curry', //Curry Gerichte
     'kebab', //Döner Kebab
