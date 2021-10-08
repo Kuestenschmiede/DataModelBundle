@@ -1,5 +1,5 @@
-# gutes.io DataModel
-## For gutes.io portal operators
+# gutes.digital DataModel
+## For gutes.digital portal operators
 Please install [gutesio/operator](https://github.com/Kuestenschmiede/OperatorBundle/releases) there is this bundle already integrated.
 
 ## Requirements
@@ -8,4 +8,4 @@ Please install [gutesio/operator](https://github.com/Kuestenschmiede/OperatorBun
 - [con4gis/framework](https://github.com/Kuestenschmiede/FrameworkBundle/releases) (*latest stable release*)
 
 ## Documentation
-Visit [gutes.io](https://gutes.io) for a user documentation. You can also contact us via the support forum there.
+Visit [gutes.digital](https://gutes.digital) for a user documentation. You can also contact us via the support forum there.
