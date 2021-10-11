@@ -26,6 +26,6 @@ $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['sandwich'] = "Sandwiches";
 $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['sausages'] = "Bratwurst";
 $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['soup'] = "Suppen";
 $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['steak'] = "Steak";
-$GLOBALS['TL_LANG']['gutesio']['cuisine_options']['baquette'] = "Baguette";
+$GLOBALS['TL_LANG']['gutesio']['cuisine_options']['baguette'] = "Baguette";
 $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['sushi'] = "Sushi";
 $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['tapas'] = "Tapas";
