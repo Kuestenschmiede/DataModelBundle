@@ -62,7 +62,7 @@ class ShowcaseResultConverter
             if ($result['internal_type']) {
                 $datum['internal_type'] = $result['internal_type'];
             }
-            $datum['name'] = $result['name'];
+            $datum['name'] = html_entity_decode($result['name']);
             $datum['id'] = $result['id'];
             $datum['uuid'] = $result['uuid'];
             $datum['ownerGroupId'] = $result['ownerGroupId'];
