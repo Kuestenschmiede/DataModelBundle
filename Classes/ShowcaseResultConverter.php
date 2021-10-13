@@ -9,6 +9,7 @@
  */
 namespace gutesio\DataModelBundle\Classes;
 
+use con4gis\CoreBundle\Classes\C4GUtils;
 use Contao\Controller;
 use Contao\Database;
 use Contao\FilesModel;
@@ -29,16 +30,6 @@ class ShowcaseResultConverter
         TypeFormFieldGenerator::FIELD_BROCHURE_UPLOAD,
         TypeFormFieldGenerator::FIELD_MENU_UPLOAD,
     ];
-
-    private function checkLink($link)
-    {
-        $result = $link;
-        if ($link && (strpos($link, '://') === false)) {
-            $result = 'https://' . $link;
-        }
-
-        return $result;
-    }
 
     /**
      * Converts the data into the format needed by the client.
@@ -67,21 +58,21 @@ class ShowcaseResultConverter
             $datum['uuid'] = $result['uuid'];
             $datum['ownerGroupId'] = $result['ownerGroupId'];
             $datum['ownerMemberId'] = $result['ownerMemberId'];
-            $datum['description'] = Controller::replaceInsertTags($result['description']);
+            $datum['description'] = html_entity_decode(Controller::replaceInsertTags($result['description']));
             $datum['alias'] = $result['alias'];
             $datum['geox'] = $result['geox'];
             $datum['geoy'] = $result['geoy'];
-            $datum['geojson'] = $result['geojson'];
-            $datum['email'] = $result['email'];
+            $datum['geojson'] = html_entity_decode($result['geojson']);
+            $datum['email'] = html_entity_decode($result['email']);
             $datum['phone'] = html_entity_decode($result['phone']);
-            $datum['mobile'] = $result['mobile'];
-            $datum['website'] = $this->checkLink($result['website']);
-            $datum['facebook'] = $this->checkLink($result['facebook']);
-            $datum['twitter'] = $this->checkLink($result['twitter']);
-            $datum['instagram'] = $this->checkLink($result['instagram']);
-            $datum['xing'] = $this->checkLink($result['xing']);
-            $datum['linkedin'] = $this->checkLink($result['linkedin']);
-            $datum['whatsapp'] = $result['whatsapp'];
+            $datum['mobile'] = html_entity_decode($result['mobile']);
+            $datum['website'] = C4GUtils::addProtocolToLink($result['website']);
+            $datum['facebook'] = C4GUtils::addProtocolToLink($result['facebook']);
+            $datum['twitter'] = C4GUtils::addProtocolToLink($result['twitter']);
+            $datum['instagram'] = C4GUtils::addProtocolToLink($result['instagram']);
+            $datum['xing'] = C4GUtils::addProtocolToLink($result['xing']);
+            $datum['linkedin'] = C4GUtils::addProtocolToLink($result['linkedin']);
+            $datum['whatsapp'] = html_entity_decode($result['whatsapp']);
             if (strpos($datum['whatsapp'], 'https') === false) {
                 // not a link, but a number
                 // check if first digit is a 0, that must be stripped out
@@ -105,11 +96,11 @@ class ShowcaseResultConverter
                     $datum['videoPreviewImage'] = $datum['videoPreview']['videoPreviewImage'];
                 }
             }
-            $datum['youtubeChannelLink'] = $this->checkLink($result['youtubeChannelLink']);
-            $datum['vimeoChannelLink'] = $this->checkLink($result['vimeoChannelLink']);
-            $datum['wikipediaLink'] = $this->checkLink($result['wikipediaLink']);
-            $datum['opening_hours'] = $result['opening_hours'];
-            $datum['opening_hours_additional'] = $result['opening_hours_additional'];
+            $datum['youtubeChannelLink'] = C4GUtils::addProtocolToLink($result['youtubeChannelLink']);
+            $datum['vimeoChannelLink'] = C4GUtils::addProtocolToLink($result['vimeoChannelLink']);
+            $datum['wikipediaLink'] = C4GUtils::addProtocolToLink($result['wikipediaLink']);
+            $datum['opening_hours'] = html_entity_decode($result['opening_hours']);
+            $datum['opening_hours_additional'] = html_entity_decode($result['opening_hours_additional']);
 
             $datum['operators'] = [];
 
@@ -117,7 +108,7 @@ class ShowcaseResultConverter
                 foreach ($result['operators'] as $operator) {
                     $datum['operators'][] = [
                         'value' => $operator['operatorId'],
-                        'label' => $operator['name'],
+                        'label' => html_entity_decode($operator['name']),
                     ];
                 }
             }
@@ -136,7 +127,7 @@ class ShowcaseResultConverter
                         ->execute($typeId)->fetchAssoc();
                     $type = [
                         'value' => $typeRow['id'],
-                        'label' => $typeRow['name'],
+                        'label' => html_entity_decode($typeRow['name']),
                         'uuid' => $typeRow['uuid'],
                     ];
                     if ($type) {
@@ -311,7 +302,7 @@ class ShowcaseResultConverter
                         ) {
                             $tag = [
                                 'value' => $tagRow['id'],
-                                'label' => $tagRow['name'],
+                                'label' => html_entity_decode($tagRow['name']),
                             ];
                             if ($tag) {
                                 $this->processedTags[$tagId] = $tag;
@@ -331,11 +322,11 @@ class ShowcaseResultConverter
                     if ($tagElementValue['tagFieldKey'] === 'onlineReservationLink') {
                         if (strpos($tagElementValue['tagFieldValue'], '@') !== false) {
                             if (strpos($tagElementValue['tagFieldValue'], 'mailto:') !== 0) {
-                                $tagElementValue['tagFieldValue'] = 'mailto:' . $tagElementValue['tagFieldValue'];
+                                $tagElementValue['tagFieldValue'] = 'mailto:' . html_entity_decode($tagElementValue['tagFieldValue']);
                             }
                         }
                     }
-                    $datum[$tagElementValue['tagFieldKey']] = $tagElementValue['tagFieldValue'];
+                    $datum[$tagElementValue['tagFieldKey']] = html_entity_decode($tagElementValue['tagFieldValue']);
                 }
             }
 
@@ -394,8 +385,8 @@ class ShowcaseResultConverter
             $datum['locationStreetNumber'] = $result['locationStreetNumber'];
 
             $datum['contactable'] = $result['contactable'];
-            $datum['contactName'] = $result['contactName'];
-            $datum['contactAdditionalName'] = $result['contactAdditionalName'];
+            $datum['contactName'] = html_entity_decode($result['contactName']);
+            $datum['contactAdditionalName'] = html_entity_decode($result['contactAdditionalName']);
             if (!$datum['contactName'] && !$datum['contactAdditionalName']) {
                 $datum['contactName'] = $datum['name'];
             }
