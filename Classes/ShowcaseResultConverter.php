@@ -49,6 +49,7 @@ class ShowcaseResultConverter
     public function convertDbResult($arrResult, $arrOptions = []) : array
     {
         $db = Database::getInstance();
+        $checker = new ImprintConstraintChecker();
         System::loadLanguageFile('field_translations');
         $data = [];
         if (count($arrResult) === 0) {
@@ -61,7 +62,7 @@ class ShowcaseResultConverter
             if ($result['internal_type']) {
                 $datum['internal_type'] = $result['internal_type'];
             }
-            $datum['name'] = $result['name'];
+            $datum['name'] = html_entity_decode($result['name']);
             $datum['id'] = $result['id'];
             $datum['uuid'] = $result['uuid'];
             $datum['ownerGroupId'] = $result['ownerGroupId'];
@@ -86,6 +87,7 @@ class ShowcaseResultConverter
                 // check if first digit is a 0, that must be stripped out
                 if (strpos($datum['whatsapp'], '0') === 0) {
                     $datum['whatsapp'] = substr($datum['whatsapp'], 1);
+                    $datum['whatsapp'] = str_replace(' ', '', $datum['whatsapp']);
                     $datum['whatsapp'] = $datum['whatsapp'] ? 'https://wa.me/' . $datum['whatsapp'] : $datum['whatsapp'];
                 }
             }
@@ -130,11 +132,12 @@ class ShowcaseResultConverter
                     $datum['types'][] = $this->cachedTypes[$typeId];
                 } else {
                     $typeRow = $db
-                        ->prepare('SELECT `id`, `name` FROM tl_gutesio_data_type WHERE uuid = ?')
+                        ->prepare('SELECT `id`, `name`, `uuid` FROM tl_gutesio_data_type WHERE uuid = ?')
                         ->execute($typeId)->fetchAssoc();
                     $type = [
                         'value' => $typeRow['id'],
                         'label' => $typeRow['name'],
+                        'uuid' => $typeRow['uuid'],
                     ];
                     if ($type) {
                         $this->cachedTypes[$typeId] = $type;
@@ -235,6 +238,9 @@ class ShowcaseResultConverter
                                             $datum['uuid'],
                                             'onlineReservationLink'
                                         )->fetchAssoc()['tagFieldValue'];
+                                        if (strpos($tag['linkHref'], '@') !== false) {
+                                            $tag['linkHref'] = 'mailto:' . $tag['linkHref'];
+                                        }
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
@@ -322,6 +328,13 @@ class ShowcaseResultConverter
             foreach ($tagElementValues as $tagElementValue) {
                 // avoid overriding type values with same key
                 if (!$datum[$tagElementValue['tagFieldKey']]) {
+                    if ($tagElementValue['tagFieldKey'] === 'onlineReservationLink') {
+                        if (strpos($tagElementValue['tagFieldValue'], '@') !== false) {
+                            if (strpos($tagElementValue['tagFieldValue'], 'mailto:') !== 0) {
+                                $tagElementValue['tagFieldValue'] = 'mailto:' . $tagElementValue['tagFieldValue'];
+                            }
+                        }
+                    }
                     $datum[$tagElementValue['tagFieldKey']] = $tagElementValue['tagFieldValue'];
                 }
             }
@@ -436,7 +449,7 @@ class ShowcaseResultConverter
                 }
             }
             // load imprint data
-            $selectImprintSql = "SELECT * FROM tl_gutesio_data_element_imprint WHERE `showcaseId` = ?";
+            $selectImprintSql = 'SELECT * FROM tl_gutesio_data_element_imprint WHERE `showcaseId` = ?';
             $arrImprintData = $db->prepare($selectImprintSql)->execute($datum['uuid'])->fetchAssoc();
             if ($arrImprintData) {
                 $filledImprintData = [];
@@ -445,22 +458,25 @@ class ShowcaseResultConverter
                             'id',
                             'uuid',
                             'tstamp',
-                            'showcaseId'
+                            'showcaseId',
                         ])
                     ) {
                         $filledImprintData[$key] = $value;
                     }
                 }
-                $filledImprintData['addressStreetAll'] = $filledImprintData['addressStreet'] . " " . $arrImprintData['addressStreetNumber'];
-                $filledImprintData['addressCityAll'] = $filledImprintData['addressZipcode'] . " " . $arrImprintData['addressCity'];
-                $filledImprintData['responsibleStreetAll'] = $filledImprintData['responsibleStreet'] . " " . $arrImprintData['responsibleStreetNumber'];
-                $filledImprintData['responsibleCityAll'] = $filledImprintData['responsibleZipcode'] . " " . $arrImprintData['responsibleCity'];
-                if ($filledImprintData['companyForm'] !== "noImprintRequired") {
-                    $datum['imprintData'] = $filledImprintData;
+
+                if ($checker->checkIfImprintIsComplete($filledImprintData)) {
+                    $filledImprintData['addressStreetAll'] = $filledImprintData['addressStreet'] . ' ' . $arrImprintData['addressStreetNumber'];
+                    $filledImprintData['addressCityAll'] = $filledImprintData['addressZipcode'] . ' ' . $arrImprintData['addressCity'];
+                    $filledImprintData['responsibleStreetAll'] = $filledImprintData['responsibleStreet'] . ' ' . $arrImprintData['responsibleStreetNumber'];
+                    $filledImprintData['responsibleCityAll'] = $filledImprintData['responsibleZipcode'] . ' ' . $arrImprintData['responsibleCity'];
+                    if ($filledImprintData['companyForm'] !== 'noImprintRequired') {
+                        $datum['imprintData'] = $filledImprintData;
+                    }
+                    $datum = array_merge($datum, $filledImprintData);
                 }
-                $datum = array_merge($datum, $filledImprintData);
             }
-            
+
             $datum['releaseType'] = $result['releaseType'];
             $datum['foreignLink'] = $result['foreignLink'];
             $datum['extraZip'] = $result['extraZip'];

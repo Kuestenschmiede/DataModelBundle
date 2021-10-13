@@ -107,5 +107,14 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element_imprint'] = [
         'responsibleCity' => [
             'sql' => "varchar(128) NOT NULL default ''"
         ],
+        'importId' => [
+            'sql' => "int(20) unsigned NOT NULL default '0'"
+        ],
+        'imprintType' => [
+            'sql' => 'varchar(50) NOT NULL default \'\''
+        ],
+        'imprintLink' => [
+            'sql' => "varchar(128) NOT NULL default ''"
+        ],
     ],
 ];

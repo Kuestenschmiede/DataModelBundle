@@ -27,7 +27,7 @@ class TypeFormFieldGenerator
     const FIELD_MENU_LINK = 'menuLink';
     const FIELD_MENU_UPLOAD = 'menuUpload';
     const FIELD_ALLOW_LOCATION_FOR_ALL = 'allowLocationForAll';
-    
+
     const FIELD_ISBN = 'isbn';
 
     public static function getFieldsForType(string $technicalKey)
@@ -193,14 +193,14 @@ class TypeFormFieldGenerator
         $field->setName('technicalEquipment');
         $field->setLabel($GLOBALS['TL_LANG'][$strName]['technicalEquipment'] && (count($GLOBALS['TL_LANG'][$strName]['technicalEquipment']) > 0) ? $GLOBALS['TL_LANG'][$strName]['technicalEquipment'][0] : '');
         $fields['technicalEquipment'] = $field;
-    
+
         $field = new CheckboxFormField();
         $field->setName(self::FIELD_ALLOW_LOCATION_FOR_ALL);
         $field->setLabel($GLOBALS['TL_LANG'][$strName][self::FIELD_ALLOW_LOCATION_FOR_ALL] && (count($GLOBALS['TL_LANG'][$strName][self::FIELD_ALLOW_LOCATION_FOR_ALL]) > 0) ? $GLOBALS['TL_LANG'][$strName][self::FIELD_ALLOW_LOCATION_FOR_ALL][0] : '');
         $field->setDescription($GLOBALS['TL_LANG'][$strName][self::FIELD_ALLOW_LOCATION_FOR_ALL] && (count($GLOBALS['TL_LANG'][$strName][self::FIELD_ALLOW_LOCATION_FOR_ALL]) > 0) ? $GLOBALS['TL_LANG'][$strName][self::FIELD_ALLOW_LOCATION_FOR_ALL][1] : '');
         $field->setChecked(true);
         $fields[self::FIELD_ALLOW_LOCATION_FOR_ALL] = $field;
-        
+
         return $fields;
     }
 
@@ -220,15 +220,15 @@ class TypeFormFieldGenerator
 
         return ['extraZip' => $field];
     }
-    
+
     private static function getFieldsForIsbn()
     {
         $strName = 'main_instance_offer_form';
         $field = new TextFormField();
         $field->setName('isbn');
-        $field->setLabel($GLOBALS['TL_LANG'][$strName]['isbn'][0]);
-        $field->setDescription($GLOBALS['TL_LANG'][$strName]['isbn'][1]);
-        
+        $field->setLabel('ISBN');
+        $field->setDescription('Geben Sie die ISBN für das Produkt ein.');
+
         return ['isbn' => $field];
     }
 }
