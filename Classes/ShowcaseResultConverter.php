@@ -67,6 +67,10 @@ class ShowcaseResultConverter
             $datum['phone'] = html_entity_decode($result['phone']);
             $datum['mobile'] = html_entity_decode($result['mobile']);
             $datum['fax'] = html_entity_decode($result['fax']);
+            $datum['contactEmail'] = html_entity_decode($result['contactEmail']);
+            $datum['contactPhone'] = html_entity_decode($result['contactPhone']);
+            $datum['contactMobile'] = html_entity_decode($result['contactMobile']);
+            $datum['contactFax'] = html_entity_decode($result['contactFax']);
             $datum['website'] = C4GUtils::addProtocolToLink($result['website']);
             $datum['facebook'] = C4GUtils::addProtocolToLink($result['facebook']);
             $datum['twitter'] = C4GUtils::addProtocolToLink($result['twitter']);

@@ -113,6 +113,18 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         'email' => [
             'sql' => "varchar(255) NOT NULL default ''"
         ],
+        'contactPhone' => [
+            'sql' => "varchar(50) NOT NULL default ''"
+        ],
+        'contactFax' => [
+            'sql' => "varchar(50) NOT NULL default ''"
+        ],
+        'contactMobile' => [
+            'sql' => "varchar(50) NOT NULL default ''"
+        ],
+        'contactEmail' => [
+            'sql' => "varchar(255) NOT NULL default ''"
+        ],
         'website' => [
             'sql' => "varchar(255) NOT NULL default ''"
         ],
