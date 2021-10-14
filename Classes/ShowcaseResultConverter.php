@@ -388,6 +388,7 @@ class ShowcaseResultConverter
             $datum['locationZip'] = $result['locationZip'];
             $datum['locationStreet'] = $result['locationStreet'];
             $datum['locationStreetNumber'] = $result['locationStreetNumber'];
+            $datum['locationStreetSuffix'] = $result['locationStreetSuffix'];
 
             $datum['contactable'] = $result['contactable'];
             $datum['contactName'] = html_entity_decode($result['contactName']);

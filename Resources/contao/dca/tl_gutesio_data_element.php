@@ -95,6 +95,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         'locationStreetNumber' => [
             'sql' => "varchar(10) NOT NULL default ''"
         ],
+        'locationStreetSuffix' => [
+            'sql' => "varchar(255) NOT NULL default ''"
+        ],
         'locationZip' => [
             'sql' => "varchar(10) NOT NULL default ''"
         ],
