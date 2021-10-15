@@ -68,6 +68,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         'geojson' => [
             'sql' => "TEXT NULL"
         ],
+        'directions' => [
+            'sql' => "TEXT NULL"
+        ],
         'contactable' => [
             'sql' => "tinyint(1) NOT NULL default 0"
         ],
