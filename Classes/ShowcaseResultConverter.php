@@ -59,6 +59,7 @@ class ShowcaseResultConverter
             $datum['ownerGroupId'] = $result['ownerGroupId'];
             $datum['ownerMemberId'] = $result['ownerMemberId'];
             $datum['description'] = html_entity_decode(Controller::replaceInsertTags($result['description']));
+            $datum['directions'] = html_entity_decode($result['directions']);
             $datum['alias'] = $result['alias'];
             $datum['geox'] = $result['geox'];
             $datum['geoy'] = $result['geoy'];
