@@ -106,6 +106,8 @@ class ShowcaseResultConverter
             $datum['youtubeChannelLink'] = C4GUtils::addProtocolToLink($result['youtubeChannelLink']);
             $datum['vimeoChannelLink'] = C4GUtils::addProtocolToLink($result['vimeoChannelLink']);
             $datum['wikipediaLink'] = C4GUtils::addProtocolToLink($result['wikipediaLink']);
+            $datum['deviatingPhoneHours'] = $result['deviatingPhoneHours'];
+            $datum['phoneHours'] = html_entity_decode($result['phoneHours']);
             $datum['opening_hours'] = html_entity_decode($result['opening_hours']);
             $datum['opening_hours_additional'] = html_entity_decode($result['opening_hours_additional']);
 

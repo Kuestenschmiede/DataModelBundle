@@ -176,6 +176,12 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         'opening_hours' => [
             'sql' => "TEXT NULL"
         ],
+        'deviatingPhoneHours' => [
+            'sql' => "tinyint(1) NOT NULL default 0"
+        ],
+        'phoneHours' => [
+            'sql' => "TEXT NULL"
+        ],
         'opening_hours_additional' => [
             'sql' => "TEXT NULL"
         ],
