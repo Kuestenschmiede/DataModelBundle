@@ -24,4 +24,9 @@ class GutesioDataElementModel extends Model
     {
         return static::findBy('uuid', $uuid, ['return' => 'Model']);
     }
+
+    public static function findByAlias(string $alias)
+    {
+        return static::findBy('alias', $alias, ['return' => 'Model']);
+    }
 }
