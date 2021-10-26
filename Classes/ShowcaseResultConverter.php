@@ -183,15 +183,17 @@ class ShowcaseResultConverter
                     }
                     $datum[$fieldKey] = $resultValue;
                 } elseif (in_array($fieldKey, $this->fileUploadFields)) {
-                    $uuid = StringUtil::binToUuid($typeElementValue['typeFieldFile']);
-                    $fileModel = FilesModel::findByUuid($uuid);
-                    if ($fileModel) {
-                        $datum[$fieldKey] = [
-                            'data' => [],
-                            'name' => $fileModel->name,
-                            'changed' => false,
-                            'path' => $fileModel->path,
-                        ];
+                    if ($typeElementValue['typeFieldFile']) {
+                        $uuid = StringUtil::binToUuid($typeElementValue['typeFieldFile']);
+                        $fileModel = FilesModel::findByUuid($uuid);
+                        if ($fileModel) {
+                            $datum[$fieldKey] = [
+                                'data' => [],
+                                'name' => $fileModel->name,
+                                'changed' => false,
+                                'path' => $fileModel->path,
+                            ];
+                        }
                     }
                 } else {
                     $datum[$fieldKey] = $fieldValue;
@@ -246,7 +248,9 @@ class ShowcaseResultConverter
                                             'onlineReservationLink'
                                         )->fetchAssoc()['tagFieldValue'];
                                         if (strpos($tag['linkHref'], '@') !== false) {
-                                            $tag['linkHref'] = 'mailto:' . $tag['linkHref'];
+                                            if (strpos($tag['linkHref'], 'mailto:') !== 0) {
+                                                $tag['linkHref'] = 'mailto:' . $tag['linkHref'];
+                                            }
                                         }
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
@@ -293,10 +297,97 @@ class ShowcaseResultConverter
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkLabel'] = 'Onlineshop';/*$stmt->execute(
-                                        $datum['uuid'],
-                                        'onlineShopLinkLabel'
-                                    )->fetchAssoc()['tagFieldValue'];*/
+                                        $tag['linkLabel'] = 'Onlineshop';
+                                        break;
+                                    case 'tag_help_support':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkHref'] = $stmt->execute(
+                                            $datum['uuid'],
+                                            'helpSupport'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkLabel'] = 'Hilfe / Support';
+                                        break;
+                                    case 'tag_discussion_forum':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkHref'] = $stmt->execute(
+                                            $datum['uuid'],
+                                            'discussionForum'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkLabel'] = 'Diskussionsforum';
+                                        break;
+                                    case 'tag_ios_app':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkHref'] = $stmt->execute(
+                                            $datum['uuid'],
+                                            'iosApp'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkLabel'] = 'iOS-App';
+                                        break;
+                                    case 'tag_android_app':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkHref'] = $stmt->execute(
+                                            $datum['uuid'],
+                                            'androidApp'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkLabel'] = 'Android-App';
+                                        break;
+                                    case 'tag_online_counseling':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkHref'] = $stmt->execute(
+                                            $datum['uuid'],
+                                            'onlineCounseling'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkLabel'] = 'Online-Beratung';
+                                        break;
+                                    case 'tag_online_chat':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkHref'] = $stmt->execute(
+                                            $datum['uuid'],
+                                            'onlineChat'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkLabel'] = 'Online-Chat';
+                                        break;
+                                    case 'tag_online_video_forum':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkHref'] = $stmt->execute(
+                                            $datum['uuid'],
+                                            'onlineVideoForum'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkLabel'] = 'Online-Videoforum';
+                                        break;
+                                    case 'tag_online_therapy_program':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkHref'] = $stmt->execute(
+                                            $datum['uuid'],
+                                            'onlineTherapyProgram'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkLabel'] = 'Online-Therapieprogramm';
+                                        break;
+                                    case 'tag_tariff_calculator':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkHref'] = $stmt->execute(
+                                            $datum['uuid'],
+                                            'tariffCalculator'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkLabel'] = 'Tarifrechner';
                                         break;
                                     default:
                                         break;
