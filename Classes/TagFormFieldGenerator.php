@@ -34,6 +34,24 @@ class TagFormFieldGenerator
                 return static::createFieldForOnlineshopTag();
             case 'tag_michelin_stars':
                 return static::createFieldForMichelinStarsTag();
+            case 'tag_help_support':
+                return static::createFieldForHelpSupport();
+            case 'tag_discussion_forum':
+                return static::createFieldForDiscussionForum();
+            case 'tag_ios_app':
+                return static::createFieldForIOSApp();
+            case 'tag_android_app':
+                return static::createFieldForAndroidApp();
+            case 'tag_online_counseling':
+                return static::createFieldForOnlineCounseling();
+            case 'tag_online_chat':
+                return static::createFieldForOnlineChat();
+            case 'tag_online_video_forum':
+                return static::createFieldForOnlineVideoForum();
+            case 'tag_online_therapy_program':
+                return static::createFieldForOnlineTherapyProgram();
+            case 'tag_tariff_calculator':
+                return static::createFieldForTariffCalculator();
             default:
                 return [];
         }
@@ -186,6 +204,62 @@ class TagFormFieldGenerator
         $field->setDescription($GLOBALS['TL_LANG']['form_tag_fields']['michelinStars'][1]);
         $fields[] = $field;
 
+        return $fields;
+    }
+    
+    private static function createFieldForHelpSupport()
+    {
+        return static::createLinkField("helpSupport", "helpSupport");
+    }
+    
+    private static function createFieldForDiscussionForum()
+    {
+        return static::createLinkField("discussionForum", "discussionForum");
+    }
+    
+    private static function createFieldForIOSApp()
+    {
+        return static::createLinkField("iosApp", "iosApp");
+    }
+    
+    private static function createFieldForAndroidApp()
+    {
+        return static::createLinkField("androidApp", "androidApp");
+    }
+    
+    private static function createFieldForOnlineCounseling()
+    {
+        return static::createLinkField("onlineCounseling", "onlineCounseling");
+    }
+    
+    private static function createFieldForOnlineChat()
+    {
+        return static::createLinkField("onlineChat", "onlineChat");
+    }
+    
+    private static function createFieldForOnlineVideoForum()
+    {
+        return static::createLinkField("onlineVideoForum", "onlineVideoForum");
+    }
+    
+    private static function createFieldForOnlineTherapyProgram()
+    {
+        return static::createLinkField("onlineTherapyProgram", "onlineTherapyProgram");
+    }
+    
+    private static function createFieldForTariffCalculator()
+    {
+        return static::createLinkField("tariffCalculator", "tariffCalculator");
+    }
+    
+    private static function createLinkField($fieldName, $langKey)
+    {
+        $fields = [];
+        $field = new TextFormField();
+        $field->setName($fieldName);
+        $field->setLabel($GLOBALS['TL_LANG']['form_tag_fields'][$langKey][0]);
+        $fields[] = $field;
+    
         return $fields;
     }
 }

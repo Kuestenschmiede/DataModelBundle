@@ -149,6 +149,11 @@ class ShowcaseResultConverter
 
             $dietLabels = $GLOBALS['TL_LANG']['gutesio']['diet_options'];
             $cuisineLabels = $GLOBALS['TL_LANG']['gutesio']['cuisine_options'];
+            $otherLabels = $GLOBALS['TL_LANG']['gutesio'];
+            $otherFields = [
+                'selfHelpFocus',
+                'contactInfoAdviceFocus'
+            ];
             // load type values
             $sql = 'SELECT `typeFieldKey`, `typeFieldValue`, `typeFieldFile` FROM tl_gutesio_data_type_element_values WHERE elementId = ?';
             $typeElementValues = $db->prepare($sql)->execute($datum['uuid'])->fetchAllAssoc();
@@ -166,6 +171,8 @@ class ShowcaseResultConverter
                                 $resultValue .= $cuisineLabels[$value];
                             } elseif ($fieldKey === 'diet') {
                                 $resultValue .= $dietLabels[$value];
+                            } else if (in_array($fieldKey, $otherFields)) {
+                                $resultValue .= $otherLabels[$fieldKey. 'Options'][$value];
                             } else {
                                 $resultValue .= $value;
                             }
