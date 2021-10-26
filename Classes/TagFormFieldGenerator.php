@@ -206,52 +206,52 @@ class TagFormFieldGenerator
 
         return $fields;
     }
-    
+
     private static function createFieldForHelpSupport()
     {
-        return static::createLinkField("helpSupport", "helpSupport");
+        return static::createLinkField('helpSupport', 'helpSupport');
     }
-    
+
     private static function createFieldForDiscussionForum()
     {
-        return static::createLinkField("discussionForum", "discussionForum");
+        return static::createLinkField('discussionForum', 'discussionForum');
     }
-    
+
     private static function createFieldForIOSApp()
     {
-        return static::createLinkField("iosApp", "iosApp");
+        return static::createLinkField('iosApp', 'iosApp');
     }
-    
+
     private static function createFieldForAndroidApp()
     {
-        return static::createLinkField("androidApp", "androidApp");
+        return static::createLinkField('androidApp', 'androidApp');
     }
-    
+
     private static function createFieldForOnlineCounseling()
     {
-        return static::createLinkField("onlineCounseling", "onlineCounseling");
+        return static::createLinkField('onlineCounseling', 'onlineCounseling');
     }
-    
+
     private static function createFieldForOnlineChat()
     {
-        return static::createLinkField("onlineChat", "onlineChat");
+        return static::createLinkField('onlineChat', 'onlineChat');
     }
-    
+
     private static function createFieldForOnlineVideoForum()
     {
-        return static::createLinkField("onlineVideoForum", "onlineVideoForum");
+        return static::createLinkField('onlineVideoForum', 'onlineVideoForum');
     }
-    
+
     private static function createFieldForOnlineTherapyProgram()
     {
-        return static::createLinkField("onlineTherapyProgram", "onlineTherapyProgram");
+        return static::createLinkField('onlineTherapyProgram', 'onlineTherapyProgram');
     }
-    
+
     private static function createFieldForTariffCalculator()
     {
-        return static::createLinkField("tariffCalculator", "tariffCalculator");
+        return static::createLinkField('tariffCalculator', 'tariffCalculator');
     }
-    
+
     private static function createLinkField($fieldName, $langKey)
     {
         $fields = [];
@@ -259,7 +259,7 @@ class TagFormFieldGenerator
         $field->setName($fieldName);
         $field->setLabel($GLOBALS['TL_LANG']['form_tag_fields'][$langKey][0]);
         $fields[] = $field;
-    
+
         return $fields;
     }
 }

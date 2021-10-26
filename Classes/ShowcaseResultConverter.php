@@ -152,7 +152,7 @@ class ShowcaseResultConverter
             $otherLabels = $GLOBALS['TL_LANG']['gutesio'];
             $otherFields = [
                 'selfHelpFocus',
-                'contactInfoAdviceFocus'
+                'contactInfoAdviceFocus',
             ];
             // load type values
             $sql = 'SELECT `typeFieldKey`, `typeFieldValue`, `typeFieldFile` FROM tl_gutesio_data_type_element_values WHERE elementId = ?';
@@ -171,8 +171,8 @@ class ShowcaseResultConverter
                                 $resultValue .= $cuisineLabels[$value];
                             } elseif ($fieldKey === 'diet') {
                                 $resultValue .= $dietLabels[$value];
-                            } else if (in_array($fieldKey, $otherFields)) {
-                                $resultValue .= $otherLabels[$fieldKey. 'Options'][$value];
+                            } elseif (in_array($fieldKey, $otherFields)) {
+                                $resultValue .= $otherLabels[$fieldKey . 'Options'][$value];
                             } else {
                                 $resultValue .= $value;
                             }
@@ -298,6 +298,7 @@ class ShowcaseResultConverter
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
                                         $tag['linkLabel'] = 'Onlineshop';
+
                                         break;
                                     case 'tag_help_support':
                                         $stmt = $db->prepare(
@@ -308,6 +309,7 @@ class ShowcaseResultConverter
                                             'helpSupport'
                                         )->fetchAssoc()['tagFieldValue'];
                                         $tag['linkLabel'] = 'Hilfe / Support';
+
                                         break;
                                     case 'tag_discussion_forum':
                                         $stmt = $db->prepare(
@@ -318,6 +320,7 @@ class ShowcaseResultConverter
                                             'discussionForum'
                                         )->fetchAssoc()['tagFieldValue'];
                                         $tag['linkLabel'] = 'Diskussionsforum';
+
                                         break;
                                     case 'tag_ios_app':
                                         $stmt = $db->prepare(
@@ -328,6 +331,7 @@ class ShowcaseResultConverter
                                             'iosApp'
                                         )->fetchAssoc()['tagFieldValue'];
                                         $tag['linkLabel'] = 'iOS-App';
+
                                         break;
                                     case 'tag_android_app':
                                         $stmt = $db->prepare(
@@ -338,6 +342,7 @@ class ShowcaseResultConverter
                                             'androidApp'
                                         )->fetchAssoc()['tagFieldValue'];
                                         $tag['linkLabel'] = 'Android-App';
+
                                         break;
                                     case 'tag_online_counseling':
                                         $stmt = $db->prepare(
@@ -348,6 +353,7 @@ class ShowcaseResultConverter
                                             'onlineCounseling'
                                         )->fetchAssoc()['tagFieldValue'];
                                         $tag['linkLabel'] = 'Online-Beratung';
+
                                         break;
                                     case 'tag_online_chat':
                                         $stmt = $db->prepare(
@@ -358,6 +364,7 @@ class ShowcaseResultConverter
                                             'onlineChat'
                                         )->fetchAssoc()['tagFieldValue'];
                                         $tag['linkLabel'] = 'Online-Chat';
+
                                         break;
                                     case 'tag_online_video_forum':
                                         $stmt = $db->prepare(
@@ -368,6 +375,7 @@ class ShowcaseResultConverter
                                             'onlineVideoForum'
                                         )->fetchAssoc()['tagFieldValue'];
                                         $tag['linkLabel'] = 'Online-Videoforum';
+
                                         break;
                                     case 'tag_online_therapy_program':
                                         $stmt = $db->prepare(
@@ -378,6 +386,7 @@ class ShowcaseResultConverter
                                             'onlineTherapyProgram'
                                         )->fetchAssoc()['tagFieldValue'];
                                         $tag['linkLabel'] = 'Online-Therapieprogramm';
+
                                         break;
                                     case 'tag_tariff_calculator':
                                         $stmt = $db->prepare(
@@ -388,6 +397,7 @@ class ShowcaseResultConverter
                                             'tariffCalculator'
                                         )->fetchAssoc()['tagFieldValue'];
                                         $tag['linkLabel'] = 'Tarifrechner';
+
                                         break;
                                     default:
                                         break;

@@ -237,37 +237,37 @@ class TypeFormFieldGenerator
 
         return ['isbn' => $field];
     }
-    
+
     private static function getFieldsForDoctorReferral()
     {
         $strName = 'main_instance_offer_form';
         $fields = [];
-        
+
         $field = new CheckboxFormField();
-        $field->setName("doctorReferral");
-        $field->setLabel($GLOBALS['TL_LANG'][$strName]["doctorReferral"] && (count($GLOBALS['TL_LANG'][$strName]["doctorReferral"]) > 0) ? $GLOBALS['TL_LANG'][$strName]["doctorReferral"][0] : '');
-        $field->setDescription($GLOBALS['TL_LANG'][$strName]["doctorReferral"] && (count($GLOBALS['TL_LANG'][$strName]["doctorReferral"]) > 0) ? $GLOBALS['TL_LANG'][$strName]["doctorReferral"][1] : '');
+        $field->setName('doctorReferral');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['doctorReferral'] && (count($GLOBALS['TL_LANG'][$strName]['doctorReferral']) > 0) ? $GLOBALS['TL_LANG'][$strName]['doctorReferral'][0] : '');
+        $field->setDescription($GLOBALS['TL_LANG'][$strName]['doctorReferral'] && (count($GLOBALS['TL_LANG'][$strName]['doctorReferral']) > 0) ? $GLOBALS['TL_LANG'][$strName]['doctorReferral'][1] : '');
         $field->setChecked(true);
-        $fields["doctorReferral"] = $field;
-        
+        $fields['doctorReferral'] = $field;
+
         return $fields;
     }
-    
+
     private static function getFieldsForSelfHelpFocus()
     {
         $fields = [];
         $options = [];
-        
+
         System::loadLanguageFile('field_translations', 'de');
         $language = $GLOBALS['TL_LANG']['gutesio'];
-    
+
         foreach ($language['selfHelpFocusOptions'] as $key => $entry) {
             $options[] = [
                 'value' => $key,
                 'label' => $entry,
             ];
         }
-        
+
         $field = new SelectFormField();
         $field->setMultiple(true);
         $field->setName('selfHelpFocus');
@@ -276,25 +276,25 @@ class TypeFormFieldGenerator
         $field->setDescription('Wählen Sie die passenden Einträge für Informationen zu Ihren Schwerpunkten aus.');
         $field->setEmptyOptionLabel('');
         $fields['selfHelpFocus'] = $field;
-        
+
         return $fields;
     }
-    
+
     private static function getFieldsForContactInfoAdviceFocus()
     {
         System::loadLanguageFile('field_translations', 'de');
         $language = $GLOBALS['TL_LANG']['gutesio'];
-        
+
         $fields = [];
         $options = [];
-    
+
         foreach ($language['contactInfoAdviceFocusOptions'] as $key => $entry) {
             $options[] = [
                 'value' => $key,
                 'label' => $entry,
             ];
         }
-    
+
         $field = new SelectFormField();
         $field->setMultiple(true);
         $field->setName('contactInfoAdviceFocus');
@@ -303,7 +303,7 @@ class TypeFormFieldGenerator
         $field->setDescription('Wählen Sie die passenden Einträge für Informationen zu Ihren Schwerpunkten aus.');
         $field->setEmptyOptionLabel('');
         $fields['contactInfoAdviceFocus'] = $field;
-    
+
         return $fields;
     }
 }
