@@ -588,6 +588,7 @@ class ShowcaseResultConverter
 
             $datum['releaseType'] = $result['releaseType'];
             $datum['foreignLink'] = $result['foreignLink'];
+            $datum['directLink'] = $result['foreignLink'] ? "1" : "0";
             $datum['extraZip'] = $result['extraZip'];
             $datum['published_title'] = $result['published'] === '1' ? 'Ja' : 'Nein';
             $datum['clickCollect'] = $result['clickCollect'] === '1';
