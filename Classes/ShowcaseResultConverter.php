@@ -235,6 +235,7 @@ class ShowcaseResultConverter
                                         )->fetchAssoc()['tagFieldValue'];
                                         $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
                                         $tag['linkLabel'] = 'Lieferservice';
+
                                         break;
                                     case 'tag_online_reservation':
                                         $stmt = $db->prepare(
@@ -252,7 +253,7 @@ class ShowcaseResultConverter
                                             $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
                                         }
                                         $tag['linkLabel'] = 'Onlinereservierung';
-                                        
+
                                         break;
                                     case 'tag_clicknmeet':
                                         $stmt = $db->prepare(
@@ -587,7 +588,7 @@ class ShowcaseResultConverter
 
             $datum['releaseType'] = $result['releaseType'];
             $datum['foreignLink'] = $result['foreignLink'];
-            $datum['directLink'] = $result['foreignLink'] ? "1" : "0";
+            $datum['directLink'] = $result['foreignLink'] ? '1' : '0';
             $datum['extraZip'] = $result['extraZip'];
             $datum['published_title'] = $result['published'] === '1' ? 'Ja' : 'Nein';
             $datum['clickCollect'] = $result['clickCollect'] === '1';
