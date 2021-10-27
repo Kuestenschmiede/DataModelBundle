@@ -229,46 +229,40 @@ class ShowcaseResultConverter
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkHref'] = $stmt->execute(
+                                        $tagLink = $stmt->execute(
                                             $datum['uuid'],
                                             'deliveryServiceLink'
                                         )->fetchAssoc()['tagFieldValue'];
-                                        $stmt = $db->prepare(
-                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
-                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
                                         $tag['linkLabel'] = 'Lieferservice';
-
                                         break;
                                     case 'tag_online_reservation':
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkHref'] = $stmt->execute(
+                                        $tagLink = $stmt->execute(
                                             $datum['uuid'],
                                             'onlineReservationLink'
                                         )->fetchAssoc()['tagFieldValue'];
-                                        if (strpos($tag['linkHref'], '@') !== false) {
-                                            if (strpos($tag['linkHref'], 'mailto:') !== 0) {
-                                                $tag['linkHref'] = 'mailto:' . $tag['linkHref'];
+                                        if (strpos($tagLink, '@') !== false) {
+                                            if (strpos($tagLink, 'mailto:') !== 0) {
+                                                $tag['linkHref'] = 'mailto:' . $tagLink;
                                             }
+                                        } else {
+                                            $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
                                         }
-                                        $stmt = $db->prepare(
-                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
-                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
                                         $tag['linkLabel'] = 'Onlinereservierung';
-
+                                        
                                         break;
                                     case 'tag_clicknmeet':
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkHref'] = $stmt->execute(
+                                        $tagLink = $stmt->execute(
                                             $datum['uuid'],
                                             'clicknmeetLink'
                                         )->fetchAssoc()['tagFieldValue'];
-                                        $stmt = $db->prepare(
-                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
-                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
                                         $tag['linkLabel'] = 'Click & Meet';
 
                                         break;
@@ -276,13 +270,11 @@ class ShowcaseResultConverter
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkHref'] = $stmt->execute(
+                                        $tagLink = $stmt->execute(
                                             $datum['uuid'],
                                             'tableReservationLink'
                                         )->fetchAssoc()['tagFieldValue'];
-                                        $stmt = $db->prepare(
-                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
-                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
                                         $tag['linkLabel'] = 'Tischreservierung';
 
                                         break;
@@ -290,13 +282,11 @@ class ShowcaseResultConverter
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkHref'] = $stmt->execute(
+                                        $tagLink = $stmt->execute(
                                             $datum['uuid'],
                                             'onlineShopLink'
                                         )->fetchAssoc()['tagFieldValue'];
-                                        $stmt = $db->prepare(
-                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
-                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
                                         $tag['linkLabel'] = 'Onlineshop';
 
                                         break;
@@ -304,10 +294,11 @@ class ShowcaseResultConverter
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkHref'] = $stmt->execute(
+                                        $tagLink = $stmt->execute(
                                             $datum['uuid'],
                                             'helpSupport'
                                         )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
                                         $tag['linkLabel'] = 'Hilfe / Support';
 
                                         break;
@@ -315,10 +306,11 @@ class ShowcaseResultConverter
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkHref'] = $stmt->execute(
+                                        $tagLink = $stmt->execute(
                                             $datum['uuid'],
                                             'discussionForum'
                                         )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
                                         $tag['linkLabel'] = 'Diskussionsforum';
 
                                         break;
@@ -326,10 +318,11 @@ class ShowcaseResultConverter
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkHref'] = $stmt->execute(
+                                        $tagLink = $stmt->execute(
                                             $datum['uuid'],
                                             'iosApp'
                                         )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
                                         $tag['linkLabel'] = 'iOS-App';
 
                                         break;
@@ -337,10 +330,11 @@ class ShowcaseResultConverter
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkHref'] = $stmt->execute(
+                                        $tagLink = $stmt->execute(
                                             $datum['uuid'],
                                             'androidApp'
                                         )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
                                         $tag['linkLabel'] = 'Android-App';
 
                                         break;
@@ -348,10 +342,11 @@ class ShowcaseResultConverter
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkHref'] = $stmt->execute(
+                                        $tagLink = $stmt->execute(
                                             $datum['uuid'],
                                             'onlineCounseling'
                                         )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
                                         $tag['linkLabel'] = 'Online-Beratung';
 
                                         break;
@@ -359,10 +354,11 @@ class ShowcaseResultConverter
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkHref'] = $stmt->execute(
+                                        $tagLink = $stmt->execute(
                                             $datum['uuid'],
                                             'onlineChat'
                                         )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
                                         $tag['linkLabel'] = 'Online-Chat';
 
                                         break;
@@ -370,10 +366,11 @@ class ShowcaseResultConverter
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkHref'] = $stmt->execute(
+                                        $tagLink = $stmt->execute(
                                             $datum['uuid'],
                                             'onlineVideoForum'
                                         )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
                                         $tag['linkLabel'] = 'Online-Videoforum';
 
                                         break;
@@ -381,10 +378,11 @@ class ShowcaseResultConverter
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkHref'] = $stmt->execute(
+                                        $tagLink = $stmt->execute(
                                             $datum['uuid'],
                                             'onlineTherapyProgram'
                                         )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
                                         $tag['linkLabel'] = 'Online-Therapieprogramm';
 
                                         break;
@@ -392,10 +390,11 @@ class ShowcaseResultConverter
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkHref'] = $stmt->execute(
+                                        $tagLink = $stmt->execute(
                                             $datum['uuid'],
                                             'tariffCalculator'
                                         )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
                                         $tag['linkLabel'] = 'Tarifrechner';
 
                                         break;
