@@ -51,6 +51,8 @@ class TypeFormFieldGenerator
                 return static::getFieldsForSelfHelpFocus();
             case 'type_contact_info_advice_focus':
                 return static::getFieldsForContactInfoAdviceFocus();
+            case 'type_administration':
+                return static::getFieldsForAdministration();
             default:
                 return [];
         }
@@ -305,5 +307,15 @@ class TypeFormFieldGenerator
         $fields['contactInfoAdviceFocus'] = $field;
 
         return $fields;
+    }
+    
+    private static function getFieldsForAdministration()
+    {
+        $field = new TextFormField();
+        $field->setName('administration');
+        $field->setLabel('Leitende Person');
+        $field->setDescription('Geben Sie den Namen der leitenden Person an.');
+    
+        return ['administration' => $field];
     }
 }
