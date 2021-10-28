@@ -36,12 +36,12 @@ $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['fears'] = "Ängste";
 $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['chronicMentalIllness'] = "chronische psychische Erkrankung";
 $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['bipolar'] = "bipolare Erkrankung";
 
-$GLOBALS['TL_LANG']['gutesio']['contactInfoAdviceFocus']['mentalIssues'] = "psychische Beeinträchtigung";
-$GLOBALS['TL_LANG']['gutesio']['contactInfoAdviceFocus']['psychologicalAdvice'] = "Psychologische Beratung";
-$GLOBALS['TL_LANG']['gutesio']['contactInfoAdviceFocus']['legalAdvice'] = "Rechtsberatung";
-$GLOBALS['TL_LANG']['gutesio']['contactInfoAdviceFocus']['socialAdvice'] = "Sozialberatung";
-$GLOBALS['TL_LANG']['gutesio']['contactInfoAdviceFocus']['marriageCounseling'] = "Eheberatung";
-$GLOBALS['TL_LANG']['gutesio']['contactInfoAdviceFocus']['familyCounseling'] = "Familienberatung";
-$GLOBALS['TL_LANG']['gutesio']['contactInfoAdviceFocus']['lifeCounseling'] = "Lebensberatung";
+$GLOBALS['TL_LANG']['gutesio']['contactInfoAdviceFocusOptions']['mentalIssues'] = "psychische Beeinträchtigung";
+$GLOBALS['TL_LANG']['gutesio']['contactInfoAdviceFocusOptions']['psychologicalAdvice'] = "Psychologische Beratung";
+$GLOBALS['TL_LANG']['gutesio']['contactInfoAdviceFocusOptions']['legalAdvice'] = "Rechtsberatung";
+$GLOBALS['TL_LANG']['gutesio']['contactInfoAdviceFocusOptions']['socialAdvice'] = "Sozialberatung";
+$GLOBALS['TL_LANG']['gutesio']['contactInfoAdviceFocusOptions']['marriageCounseling'] = "Eheberatung";
+$GLOBALS['TL_LANG']['gutesio']['contactInfoAdviceFocusOptions']['familyCounseling'] = "Familienberatung";
+$GLOBALS['TL_LANG']['gutesio']['contactInfoAdviceFocusOptions']['lifeCounseling'] = "Lebensberatung";
 
 
