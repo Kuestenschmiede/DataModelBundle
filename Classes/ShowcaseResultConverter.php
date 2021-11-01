@@ -476,9 +476,19 @@ class ShowcaseResultConverter
                                             if (!$datum['relatedShowcaseLogos']) {
                                                 $datum['relatedShowcaseLogos'] = [];
                                             }
+                                            // this array is needed to restrict the options for the type filter correctly
+                                            if (!$datum['relatedShowcases']) {
+                                                $datum['relatedShowcases'] = [];
+                                            }
                                             $logoData = $this->createFileDataFromModel($logoModel);
                                             $logoData['href'] = $showcase['alias'];
                                             $datum['relatedShowcaseLogos'][] = $logoData;
+                                            $datum['relatedShowcases'][] = [
+                                                'uuid' => $showcase['uuid'],
+                                                'foreignLink' => $showcase['foreignLink'],
+                                                'releaseType' => $showcase['releaseType'],
+                                                'name' => $showcase['name']
+                                            ];
                                             $idx++;
                                         }
                                         $processedIds[] = $showcase['uuid'];
