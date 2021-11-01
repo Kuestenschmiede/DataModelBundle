@@ -487,7 +487,7 @@ class ShowcaseResultConverter
                                                 'uuid' => $showcase['uuid'],
                                                 'foreignLink' => $showcase['foreignLink'],
                                                 'releaseType' => $showcase['releaseType'],
-                                                'name' => $showcase['name']
+                                                'name' => $showcase['name'],
                                             ];
                                             $idx++;
                                         }

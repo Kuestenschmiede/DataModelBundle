@@ -308,14 +308,14 @@ class TypeFormFieldGenerator
 
         return $fields;
     }
-    
+
     private static function getFieldsForAdministration()
     {
         $field = new TextFormField();
         $field->setName('administration');
         $field->setLabel('Leitende Person');
         $field->setDescription('Geben Sie den Namen der leitenden Person an.');
-    
+
         return ['administration' => $field];
     }
 }
