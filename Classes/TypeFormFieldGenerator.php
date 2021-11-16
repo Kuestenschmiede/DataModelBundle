@@ -39,6 +39,8 @@ class TypeFormFieldGenerator
                 return static::getFieldsForEventLocation();
             case 'type_extra_zip':
                 return static::getFieldsForExtraZip();
+            case 'type_surr_zip':
+                return static::getFieldsForSurroundingZip();
             case 'type_menu':
                 return static::getFieldsForMenu();
             case 'type_brochure_upload':
@@ -95,6 +97,7 @@ class TypeFormFieldGenerator
         $dietCuisineFields = static::getFieldsForDietCuisine();
         $eventFields = static::getFieldsForEventLocation();
         $extraZipFields = static::getFieldsForExtraZip();
+        $surrZipFields = static::getFieldsForSurroundingZip();
         $menuFields = static::getFieldsForMenu();
         $brochureUploadFields = static::getFieldsForBrochureUpload();
         $isbnFields = static::getFieldsForIsbn();
@@ -105,6 +108,7 @@ class TypeFormFieldGenerator
             $menuFields,
             $brochureUploadFields,
             $extraZipFields,
+            $surrZipFields,
             $isbnFields
         );
     }
@@ -216,7 +220,7 @@ class TypeFormFieldGenerator
     {
         $field = new TextFormField();
         $field->setName('extraZip');
-        $field->setLabel($GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip'] && (count($GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip']) > 0) ? $GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip'][0] : '');
+        $field->setLabel($GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip']     && (count($GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip']) > 0) ? $GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip'][0] : '');
         $field->setDescription($GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip'] && (count($GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip']) > 0) ? $GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip'][1] : '');
         $field->setPattern('^[0-9]{5}(,[0-9]{5})*$');
         $field->setDynamicFieldlist(true);
@@ -227,6 +231,16 @@ class TypeFormFieldGenerator
         ]);
 
         return ['extraZip' => $field];
+    }
+    private static function getFieldsForSurroundingZip()
+    {
+        $field = new TextFormField();
+        $field->setName('surrZip');
+        $field->setLabel($GLOBALS['TL_LANG']['tl_gutesio_data_element']['surrZip']     && (count($GLOBALS['TL_LANG']['tl_gutesio_data_element']['surrZip']) > 0) ? $GLOBALS['TL_LANG']['tl_gutesio_data_element']['surrZip'][0] : '');
+        $field->setDescription($GLOBALS['TL_LANG']['tl_gutesio_data_element']['surrZip'] && (count($GLOBALS['TL_LANG']['tl_gutesio_data_element']['surrZip']) > 0) ? $GLOBALS['TL_LANG']['tl_gutesio_data_element']['surrZip'][1] : '');
+        $field->setPattern('^[0-9]{5}(,[0-9]{5})*$');
+
+        return ['surrZip' => $field];
     }
 
     private static function getFieldsForIsbn()
