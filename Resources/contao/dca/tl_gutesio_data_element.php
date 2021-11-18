@@ -66,6 +66,12 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         'geojson' => [
             'sql' => "TEXT NULL"
         ],
+        'directions' => [
+            'sql' => "TEXT NULL"
+        ],
+        'importantNotes' => [
+            'sql' => "TEXT NULL"
+        ],
         'contactable' => [
             'sql' => "tinyint(1) NOT NULL default 0"
         ],
@@ -93,6 +99,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         'locationStreetNumber' => [
             'sql' => "varchar(10) NOT NULL default ''"
         ],
+        'locationStreetSuffix' => [
+            'sql' => "varchar(255) NOT NULL default ''"
+        ],
         'locationZip' => [
             'sql' => "varchar(10) NOT NULL default ''"
         ],
@@ -109,6 +118,18 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
             'sql' => "varchar(50) NOT NULL default ''"
         ],
         'email' => [
+            'sql' => "varchar(255) NOT NULL default ''"
+        ],
+        'contactPhone' => [
+            'sql' => "varchar(50) NOT NULL default ''"
+        ],
+        'contactFax' => [
+            'sql' => "varchar(50) NOT NULL default ''"
+        ],
+        'contactMobile' => [
+            'sql' => "varchar(50) NOT NULL default ''"
+        ],
+        'contactEmail' => [
             'sql' => "varchar(255) NOT NULL default ''"
         ],
         'website' => [
@@ -151,6 +172,12 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
             'sql' => "binary(16) NULL"
         ],
         'opening_hours' => [
+            'sql' => "TEXT NULL"
+        ],
+        'deviatingPhoneHours' => [
+            'sql' => "tinyint(1) NOT NULL default 0"
+        ],
+        'phoneHours' => [
             'sql' => "TEXT NULL"
         ],
         'opening_hours_additional' => [

@@ -53,7 +53,7 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_type'] = [
         'loctype' => [
             'sql' => "varchar(255) NOT NULL default 'POI'"
         ],
-        'editorProfile' => [
+        'editorConfig' => [
             'sql' => "int unsigned NOT NULL default 0"
         ],
         'osmKey' => [

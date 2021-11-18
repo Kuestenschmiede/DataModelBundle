@@ -9,6 +9,7 @@
  */
 namespace gutesio\DataModelBundle\Classes;
 
+use con4gis\CoreBundle\Classes\C4GUtils;
 use Contao\Controller;
 use Contao\Database;
 use Contao\FilesModel;
@@ -29,16 +30,6 @@ class ShowcaseResultConverter
         TypeFormFieldGenerator::FIELD_BROCHURE_UPLOAD,
         TypeFormFieldGenerator::FIELD_MENU_UPLOAD,
     ];
-
-    private function checkLink($link)
-    {
-        $result = $link;
-        if ($link && (strpos($link, '://') === false)) {
-            $result = 'https://' . $link;
-        }
-
-        return $result;
-    }
 
     /**
      * Converts the data into the format needed by the client.
@@ -63,25 +54,35 @@ class ShowcaseResultConverter
                 $datum['internal_type'] = $result['internal_type'];
             }
             $datum['name'] = html_entity_decode($result['name']);
+            //hotfix special char
+            $datum['name'] = str_replace('&#39;', "'", $datum["name"]);
+
             $datum['id'] = $result['id'];
             $datum['uuid'] = $result['uuid'];
             $datum['ownerGroupId'] = $result['ownerGroupId'];
             $datum['ownerMemberId'] = $result['ownerMemberId'];
-            $datum['description'] = Controller::replaceInsertTags($result['description']);
+            $datum['description'] = html_entity_decode(Controller::replaceInsertTags($result['description']));
+            $datum['directions'] = html_entity_decode($result['directions']);
+            $datum['importantNotes'] = html_entity_decode($result['importantNotes']);
             $datum['alias'] = $result['alias'];
             $datum['geox'] = $result['geox'];
             $datum['geoy'] = $result['geoy'];
-            $datum['geojson'] = $result['geojson'];
-            $datum['email'] = $result['email'];
+            $datum['geojson'] = html_entity_decode($result['geojson']);
+            $datum['email'] = html_entity_decode($result['email']);
             $datum['phone'] = html_entity_decode($result['phone']);
-            $datum['mobile'] = $result['mobile'];
-            $datum['website'] = $this->checkLink($result['website']);
-            $datum['facebook'] = $this->checkLink($result['facebook']);
-            $datum['twitter'] = $this->checkLink($result['twitter']);
-            $datum['instagram'] = $this->checkLink($result['instagram']);
-            $datum['xing'] = $this->checkLink($result['xing']);
-            $datum['linkedin'] = $this->checkLink($result['linkedin']);
-            $datum['whatsapp'] = $result['whatsapp'];
+            $datum['mobile'] = html_entity_decode($result['mobile']);
+            $datum['fax'] = html_entity_decode($result['fax']);
+            $datum['contactEmail'] = html_entity_decode($result['contactEmail']);
+            $datum['contactPhone'] = html_entity_decode($result['contactPhone']);
+            $datum['contactMobile'] = html_entity_decode($result['contactMobile']);
+            $datum['contactFax'] = html_entity_decode($result['contactFax']);
+            $datum['website'] = C4GUtils::addProtocolToLink($result['website']);
+            $datum['facebook'] = C4GUtils::addProtocolToLink($result['facebook']);
+            $datum['twitter'] = C4GUtils::addProtocolToLink($result['twitter']);
+            $datum['instagram'] = C4GUtils::addProtocolToLink($result['instagram']);
+            $datum['xing'] = C4GUtils::addProtocolToLink($result['xing']);
+            $datum['linkedin'] = C4GUtils::addProtocolToLink($result['linkedin']);
+            $datum['whatsapp'] = html_entity_decode($result['whatsapp']);
             if (strpos($datum['whatsapp'], 'https') === false) {
                 // not a link, but a number
                 // check if first digit is a 0, that must be stripped out
@@ -105,11 +106,13 @@ class ShowcaseResultConverter
                     $datum['videoPreviewImage'] = $datum['videoPreview']['videoPreviewImage'];
                 }
             }
-            $datum['youtubeChannelLink'] = $this->checkLink($result['youtubeChannelLink']);
-            $datum['vimeoChannelLink'] = $this->checkLink($result['vimeoChannelLink']);
-            $datum['wikipediaLink'] = $this->checkLink($result['wikipediaLink']);
-            $datum['opening_hours'] = $result['opening_hours'];
-            $datum['opening_hours_additional'] = $result['opening_hours_additional'];
+            $datum['youtubeChannelLink'] = C4GUtils::addProtocolToLink($result['youtubeChannelLink']);
+            $datum['vimeoChannelLink'] = C4GUtils::addProtocolToLink($result['vimeoChannelLink']);
+            $datum['wikipediaLink'] = C4GUtils::addProtocolToLink($result['wikipediaLink']);
+            $datum['deviatingPhoneHours'] = $result['deviatingPhoneHours'];
+            $datum['phoneHours'] = html_entity_decode($result['phoneHours']);
+            $datum['opening_hours'] = html_entity_decode($result['opening_hours']);
+            $datum['opening_hours_additional'] = html_entity_decode($result['opening_hours_additional']);
 
             $datum['operators'] = [];
 
@@ -117,7 +120,7 @@ class ShowcaseResultConverter
                 foreach ($result['operators'] as $operator) {
                     $datum['operators'][] = [
                         'value' => $operator['operatorId'],
-                        'label' => $operator['name'],
+                        'label' => html_entity_decode($operator['name']),
                     ];
                 }
             }
@@ -136,7 +139,7 @@ class ShowcaseResultConverter
                         ->execute($typeId)->fetchAssoc();
                     $type = [
                         'value' => $typeRow['id'],
-                        'label' => $typeRow['name'],
+                        'label' => html_entity_decode($typeRow['name']),
                         'uuid' => $typeRow['uuid'],
                     ];
                     if ($type) {
@@ -149,6 +152,11 @@ class ShowcaseResultConverter
 
             $dietLabels = $GLOBALS['TL_LANG']['gutesio']['diet_options'];
             $cuisineLabels = $GLOBALS['TL_LANG']['gutesio']['cuisine_options'];
+            $otherLabels = $GLOBALS['TL_LANG']['gutesio'];
+            $otherFields = [
+                'selfHelpFocus',
+                'contactInfoAdviceFocus',
+            ];
             // load type values
             $sql = 'SELECT `typeFieldKey`, `typeFieldValue`, `typeFieldFile` FROM tl_gutesio_data_type_element_values WHERE elementId = ?';
             $typeElementValues = $db->prepare($sql)->execute($datum['uuid'])->fetchAllAssoc();
@@ -166,6 +174,8 @@ class ShowcaseResultConverter
                                 $resultValue .= $cuisineLabels[$value];
                             } elseif ($fieldKey === 'diet') {
                                 $resultValue .= $dietLabels[$value];
+                            } elseif (in_array($fieldKey, $otherFields)) {
+                                $resultValue .= $otherLabels[$fieldKey . 'Options'][$value];
                             } else {
                                 $resultValue .= $value;
                             }
@@ -176,15 +186,17 @@ class ShowcaseResultConverter
                     }
                     $datum[$fieldKey] = $resultValue;
                 } elseif (in_array($fieldKey, $this->fileUploadFields)) {
-                    $uuid = StringUtil::binToUuid($typeElementValue['typeFieldFile']);
-                    $fileModel = FilesModel::findByUuid($uuid);
-                    if ($fileModel) {
-                        $datum[$fieldKey] = [
-                            'data' => [],
-                            'name' => $fileModel->name,
-                            'changed' => false,
-                            'path' => $fileModel->path,
-                        ];
+                    if ($typeElementValue['typeFieldFile']) {
+                        $uuid = StringUtil::binToUuid($typeElementValue['typeFieldFile']);
+                        $fileModel = FilesModel::findByUuid($uuid);
+                        if ($fileModel) {
+                            $datum[$fieldKey] = [
+                                'data' => [],
+                                'name' => $fileModel->name,
+                                'changed' => false,
+                                'path' => $fileModel->path,
+                            ];
+                        }
                     }
                 } else {
                     $datum[$fieldKey] = $fieldValue;
@@ -220,13 +232,11 @@ class ShowcaseResultConverter
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkHref'] = $stmt->execute(
+                                        $tagLink = $stmt->execute(
                                             $datum['uuid'],
                                             'deliveryServiceLink'
                                         )->fetchAssoc()['tagFieldValue'];
-                                        $stmt = $db->prepare(
-                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
-                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
                                         $tag['linkLabel'] = 'Lieferservice';
 
                                         break;
@@ -234,16 +244,17 @@ class ShowcaseResultConverter
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkHref'] = $stmt->execute(
+                                        $tagLink = $stmt->execute(
                                             $datum['uuid'],
                                             'onlineReservationLink'
                                         )->fetchAssoc()['tagFieldValue'];
-                                        if (strpos($tag['linkHref'], '@') !== false) {
-                                            $tag['linkHref'] = 'mailto:' . $tag['linkHref'];
+                                        if (strpos($tagLink, '@') !== false) {
+                                            if (strpos($tagLink, 'mailto:') !== 0) {
+                                                $tag['linkHref'] = 'mailto:' . $tagLink;
+                                            }
+                                        } else {
+                                            $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
                                         }
-                                        $stmt = $db->prepare(
-                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
-                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
                                         $tag['linkLabel'] = 'Onlinereservierung';
 
                                         break;
@@ -251,13 +262,11 @@ class ShowcaseResultConverter
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkHref'] = $stmt->execute(
+                                        $tagLink = $stmt->execute(
                                             $datum['uuid'],
                                             'clicknmeetLink'
                                         )->fetchAssoc()['tagFieldValue'];
-                                        $stmt = $db->prepare(
-                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
-                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
                                         $tag['linkLabel'] = 'Click & Meet';
 
                                         break;
@@ -265,13 +274,11 @@ class ShowcaseResultConverter
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkHref'] = $stmt->execute(
+                                        $tagLink = $stmt->execute(
                                             $datum['uuid'],
                                             'tableReservationLink'
                                         )->fetchAssoc()['tagFieldValue'];
-                                        $stmt = $db->prepare(
-                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
-                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
                                         $tag['linkLabel'] = 'Tischreservierung';
 
                                         break;
@@ -279,17 +286,121 @@ class ShowcaseResultConverter
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkHref'] = $stmt->execute(
+                                        $tagLink = $stmt->execute(
                                             $datum['uuid'],
                                             'onlineShopLink'
                                         )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
+                                        $tag['linkLabel'] = 'Onlineshop';
+
+                                        break;
+                                    case 'tag_help_support':
                                         $stmt = $db->prepare(
                                             'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
                                             'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
-                                        $tag['linkLabel'] = 'Onlineshop';/*$stmt->execute(
-                                        $datum['uuid'],
-                                        'onlineShopLinkLabel'
-                                    )->fetchAssoc()['tagFieldValue'];*/
+                                        $tagLink = $stmt->execute(
+                                            $datum['uuid'],
+                                            'helpSupport'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
+                                        $tag['linkLabel'] = 'Hilfe / Support';
+
+                                        break;
+                                    case 'tag_discussion_forum':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tagLink = $stmt->execute(
+                                            $datum['uuid'],
+                                            'discussionForum'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
+                                        $tag['linkLabel'] = 'Diskussionsforum';
+
+                                        break;
+                                    case 'tag_ios_app':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tagLink = $stmt->execute(
+                                            $datum['uuid'],
+                                            'iosApp'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
+                                        $tag['linkLabel'] = 'iOS-App';
+
+                                        break;
+                                    case 'tag_android_app':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tagLink = $stmt->execute(
+                                            $datum['uuid'],
+                                            'androidApp'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
+                                        $tag['linkLabel'] = 'Android-App';
+
+                                        break;
+                                    case 'tag_online_counseling':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tagLink = $stmt->execute(
+                                            $datum['uuid'],
+                                            'onlineCounseling'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
+                                        $tag['linkLabel'] = 'Online-Beratung';
+
+                                        break;
+                                    case 'tag_online_chat':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tagLink = $stmt->execute(
+                                            $datum['uuid'],
+                                            'onlineChat'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
+                                        $tag['linkLabel'] = 'Online-Chat';
+
+                                        break;
+                                    case 'tag_online_video_forum':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tagLink = $stmt->execute(
+                                            $datum['uuid'],
+                                            'onlineVideoForum'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
+                                        $tag['linkLabel'] = 'Online-Videoforum';
+
+                                        break;
+                                    case 'tag_online_therapy_program':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tagLink = $stmt->execute(
+                                            $datum['uuid'],
+                                            'onlineTherapyProgram'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
+                                        $tag['linkLabel'] = 'Online-Therapieprogramm';
+
+                                        break;
+                                    case 'tag_tariff_calculator':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tagLink = $stmt->execute(
+                                            $datum['uuid'],
+                                            'tariffCalculator'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
+                                        $tag['linkLabel'] = 'Tarifrechner';
+
                                         break;
                                     default:
                                         break;
@@ -311,7 +422,7 @@ class ShowcaseResultConverter
                         ) {
                             $tag = [
                                 'value' => $tagRow['id'],
-                                'label' => $tagRow['name'],
+                                'label' => html_entity_decode($tagRow['name']),
                             ];
                             if ($tag) {
                                 $this->processedTags[$tagId] = $tag;
@@ -331,11 +442,11 @@ class ShowcaseResultConverter
                     if ($tagElementValue['tagFieldKey'] === 'onlineReservationLink') {
                         if (strpos($tagElementValue['tagFieldValue'], '@') !== false) {
                             if (strpos($tagElementValue['tagFieldValue'], 'mailto:') !== 0) {
-                                $tagElementValue['tagFieldValue'] = 'mailto:' . $tagElementValue['tagFieldValue'];
+                                $tagElementValue['tagFieldValue'] = 'mailto:' . html_entity_decode($tagElementValue['tagFieldValue']);
                             }
                         }
                     }
-                    $datum[$tagElementValue['tagFieldKey']] = $tagElementValue['tagFieldValue'];
+                    $datum[$tagElementValue['tagFieldKey']] = html_entity_decode($tagElementValue['tagFieldValue']);
                 }
             }
 
@@ -368,9 +479,19 @@ class ShowcaseResultConverter
                                             if (!$datum['relatedShowcaseLogos']) {
                                                 $datum['relatedShowcaseLogos'] = [];
                                             }
+                                            // this array is needed to restrict the options for the type filter correctly
+                                            if (!$datum['relatedShowcases']) {
+                                                $datum['relatedShowcases'] = [];
+                                            }
                                             $logoData = $this->createFileDataFromModel($logoModel);
                                             $logoData['href'] = $showcase['alias'];
                                             $datum['relatedShowcaseLogos'][] = $logoData;
+                                            $datum['relatedShowcases'][] = [
+                                                'uuid' => $showcase['uuid'],
+                                                'foreignLink' => $showcase['foreignLink'],
+                                                'releaseType' => $showcase['releaseType'],
+                                                'name' => html_entity_decode($showcase['name']),
+                                            ];
                                             $idx++;
                                         }
                                         $processedIds[] = $showcase['uuid'];
@@ -392,10 +513,11 @@ class ShowcaseResultConverter
             $datum['locationZip'] = $result['locationZip'];
             $datum['locationStreet'] = $result['locationStreet'];
             $datum['locationStreetNumber'] = $result['locationStreetNumber'];
+            $datum['locationStreetSuffix'] = $result['locationStreetSuffix'];
 
             $datum['contactable'] = $result['contactable'];
-            $datum['contactName'] = $result['contactName'];
-            $datum['contactAdditionalName'] = $result['contactAdditionalName'];
+            $datum['contactName'] = html_entity_decode($result['contactName']);
+            $datum['contactAdditionalName'] = html_entity_decode($result['contactAdditionalName']);
             if (!$datum['contactName'] && !$datum['contactAdditionalName']) {
                 $datum['contactName'] = $datum['name'];
             }
@@ -479,6 +601,7 @@ class ShowcaseResultConverter
 
             $datum['releaseType'] = $result['releaseType'];
             $datum['foreignLink'] = $result['foreignLink'];
+            $datum['directLink'] = $result['foreignLink'] ? '1' : '0';
             $datum['extraZip'] = $result['extraZip'];
             $datum['published_title'] = $result['published'] === '1' ? 'Ja' : 'Nein';
             $datum['clickCollect'] = $result['clickCollect'] === '1';
