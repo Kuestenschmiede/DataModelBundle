@@ -14,7 +14,6 @@
 
 
 $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
-    // Config
     'config' => [
         'sql' => [
             'keys' => [
@@ -23,8 +22,7 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
             ],
         ],
     ],
-    
-    // Fields
+
     'fields' => [
         'id' => [
             'sql' => 'int unsigned NOT NULL auto_increment',
@@ -196,6 +194,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         ],
         'clickPay' => [
             'sql' => "int NOT NULL default 0"
+        ],
+        'allowedPaymentMethods' => [
+            'sql' => "TEXT NULL"
         ],
         'published' => [
             'sql' => "int NOT NULL default 0"
