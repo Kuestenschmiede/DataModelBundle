@@ -54,6 +54,9 @@ class ShowcaseResultConverter
                 $datum['internal_type'] = $result['internal_type'];
             }
             $datum['name'] = html_entity_decode($result['name']);
+            //hotfix special char
+            $datum['name'] = str_replace('&#39;', "'", $datum["name"]);
+
             $datum['id'] = $result['id'];
             $datum['uuid'] = $result['uuid'];
             $datum['ownerGroupId'] = $result['ownerGroupId'];
@@ -487,7 +490,7 @@ class ShowcaseResultConverter
                                                 'uuid' => $showcase['uuid'],
                                                 'foreignLink' => $showcase['foreignLink'],
                                                 'releaseType' => $showcase['releaseType'],
-                                                'name' => $showcase['name'],
+                                                'name' => html_entity_decode($showcase['name']),
                                             ];
                                             $idx++;
                                         }
