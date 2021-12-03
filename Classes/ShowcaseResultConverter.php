@@ -113,6 +113,7 @@ class ShowcaseResultConverter
             $datum['phoneHours'] = html_entity_decode($result['phoneHours']);
             $datum['opening_hours'] = html_entity_decode($result['opening_hours']);
             $datum['opening_hours_additional'] = html_entity_decode($result['opening_hours_additional']);
+            $datum['legalTextSet'] = $result['legalTextSet'];
 
             $datum['operators'] = [];
 
