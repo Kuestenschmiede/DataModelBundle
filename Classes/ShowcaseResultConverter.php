@@ -114,7 +114,7 @@ class ShowcaseResultConverter
             $datum['opening_hours'] = html_entity_decode($result['opening_hours']);
             $datum['opening_hours_additional'] = html_entity_decode($result['opening_hours_additional']);
             $datum['legalTextSet'] = $result['legalTextSet'];
-
+            $datum['cashOnlyIfPickup'] = $result['cashOnlyIfPickup'];
             $datum['operators'] = [];
 
             if ($result['operators'] && is_array($result['operators'])) {

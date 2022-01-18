@@ -219,6 +219,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         'legalTextSet' => [
             'sql' => "int NOT NULL default 0"
         ],
+        'cashOnlyIfPickup' => [
+            'sql' => "char(1) NOT NULL default ''"
+        ],
         'allowedPaymentMethods' => [
             'sql' => "TEXT NULL"
         ],
