@@ -22,7 +22,6 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
             ],
         ],
     ],
-
     'fields' => [
         'id' => [
             'sql' => 'int unsigned NOT NULL auto_increment',

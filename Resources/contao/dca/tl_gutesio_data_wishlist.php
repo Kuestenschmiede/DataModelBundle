@@ -1,6 +1,5 @@
 <?php
 $GLOBALS['TL_DCA']['tl_gutesio_data_wishlist'] = [
-    // Config
     'config' => [
         'sql' => [
             'keys' => [
@@ -9,8 +8,6 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_wishlist'] = [
             ],
         ],
     ],
-    
-    // Fields
     'fields' => [
         'id' => [
             'sql' => 'int unsigned NOT NULL auto_increment',

@@ -14,7 +14,6 @@
 
 
 $GLOBALS['TL_DCA']['tl_gutesio_offer_statistic'] = [
-    // Config
     'config' => [
         'sql' => [
             'keys' => [
@@ -23,8 +22,6 @@ $GLOBALS['TL_DCA']['tl_gutesio_offer_statistic'] = [
             ],
         ],
     ],
-    
-    // Fields
     'fields' => [
         'id' => [
             'sql' => 'int unsigned NOT NULL auto_increment',

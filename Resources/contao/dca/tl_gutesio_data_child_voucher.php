@@ -21,7 +21,6 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_voucher'] = [
             ],
         ],
     ],
-
     'fields' => [
         'id' => [
             'sql' => 'int unsigned NOT NULL auto_increment',
