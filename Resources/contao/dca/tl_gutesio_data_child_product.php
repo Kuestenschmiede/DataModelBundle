@@ -72,6 +72,12 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_product'] = [
         ],
         'availableAmount' => [
             'sql' => "int NOT NULL default 1"
+        ],
+        'basePriceUnit' => [
+            'sql' => "varchar(10) NOT NULL default ''"
+        ],
+        'basePriceUnitPerPiece' => [
+            'sql' => "float NOT NULL default 0"
         ]
     ],
 ];
