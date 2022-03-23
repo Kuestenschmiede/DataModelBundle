@@ -19,7 +19,8 @@ $GLOBALS['TL_DCA']['tl_gutesio_offer_statistic'] = [
         'sql' => [
             'keys' => [
                 'id' => 'primary',
-                'uuid' => 'index'
+                'uuid' => 'index',
+                'offerId' => 'index'
             ],
         ],
     ],
