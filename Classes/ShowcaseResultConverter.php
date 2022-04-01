@@ -50,7 +50,7 @@ class ShowcaseResultConverter
         foreach ($arrResult as $result) {
             $datum = [];
             // for wishlist
-            if ($result['internal_type']) {
+            if (key_exists('internal_type',$result)) {
                 $datum['internal_type'] = $result['internal_type'];
             }
             $datum['name'] = html_entity_decode($result['name']);
@@ -67,7 +67,7 @@ class ShowcaseResultConverter
             $datum['alias'] = $result['alias'];
             $datum['geox'] = $result['geox'];
             $datum['geoy'] = $result['geoy'];
-            $datum['geojson'] = html_entity_decode($result['geojson']);
+            $datum['geojson'] = key_exists('geojson',$result) ? html_entity_decode($result['geojson']) : '';
             $datum['email'] = html_entity_decode($result['email']);
             $datum['phone'] = html_entity_decode($result['phone']);
             $datum['mobile'] = html_entity_decode($result['mobile']);
@@ -94,7 +94,7 @@ class ShowcaseResultConverter
             }
             $datum['published'] = intval($result['published']);
             $datum['allowLogoDisplay'] = intval($result['allowLogoDisplay']);
-            $datum['distance'] = $result['distance'];
+            $datum['distance'] = key_exists('distance',$result) ? $result['distance'] : '';
             $datum['videoPreview'] = [
                 'videoType' => $result['videoType'],
                 'video' => html_entity_decode($result['videoLink']),
@@ -116,7 +116,7 @@ class ShowcaseResultConverter
 
             $datum['operators'] = [];
 
-            if ($result['operators'] && is_array($result['operators'])) {
+            if (key_exists('operators',$result)) {
                 foreach ($result['operators'] as $operator) {
                     $datum['operators'][] = [
                         'value' => $operator['operatorId'],
@@ -131,17 +131,26 @@ class ShowcaseResultConverter
                 ->prepare('SELECT typeId FROM tl_gutesio_data_element_type WHERE elementId = ?')
                 ->execute($result['uuid'])->fetchEach('typeId');
             foreach ($arrTypeIds as $typeId) {
-                if ($this->cachedTypes[$typeId]) {
+                if (key_exists($typeId,$this->cachedTypes)) {
                     $datum['types'][] = $this->cachedTypes[$typeId];
                 } else {
                     $typeRow = $db
                         ->prepare('SELECT `id`, `name`, `uuid` FROM tl_gutesio_data_type WHERE uuid = ?')
                         ->execute($typeId)->fetchAssoc();
-                    $type = [
-                        'value' => $typeRow['id'],
-                        'label' => html_entity_decode($typeRow['name']),
-                        'uuid' => $typeRow['uuid'],
-                    ];
+
+                    $type = false;
+                    if ($typeRow) {
+                        $value = key_exists('id', $typeRow) ? $typeRow['id'] : '';
+                        $label = key_exists('name',$typeRow) ? html_entity_decode($typeRow['name']) : '';
+                        $uuid = key_exists('id',$typeRow) ? $typeRow['uuid'] : '';
+
+                        $type = [
+                            'value' => $value,
+                            'label' => $label,
+                            'uuid' => $uuid,
+                        ];
+                    }
+
                     if ($type) {
                         $this->cachedTypes[$typeId] = $type;
 
@@ -602,7 +611,7 @@ class ShowcaseResultConverter
             $datum['releaseType'] = $result['releaseType'];
             $datum['foreignLink'] = $result['foreignLink'];
             $datum['directLink'] = $result['foreignLink'] ? '1' : '0';
-            $datum['extraZip'] = $result['extraZip'];
+            $datum['extraZip'] = key_exists('extraZip', $result) ? $result['extraZip'] : '';
             $datum['published_title'] = $result['published'] === '1' ? 'Ja' : 'Nein';
             $datum['clickCollect'] = $result['clickCollect'] === '1';
 
