@@ -260,6 +260,12 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         'releaseType' => [
             'sql' => "varchar(13) NOT NULL default ''"
         ],
+        'foreignKeyLocation' => [
+            'sql' => "varchar(255) NOT NULL default ''"
+        ],
+        'foreignKeyOrganizer' => [
+            'sql' => "varchar(255) NOT NULL default ''"
+        ],
         'importId' => [
             'sql' => "int(20) unsigned NOT NULL default '0'"
         ]

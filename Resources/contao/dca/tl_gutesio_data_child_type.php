@@ -40,6 +40,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_type'] = [
         'foreignKey' => [
             'sql' => "varchar(255) NOT NULL default ''"
         ],
+        'foreignKeyList' => [
+            'sql' => "varchar(255) NOT NULL default ''"
+        ],
         'foreignType' => [
             'sql' => "varchar(32) NOT NULL default ''"
         ],
