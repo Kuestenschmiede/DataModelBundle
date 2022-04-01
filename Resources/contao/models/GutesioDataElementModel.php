@@ -14,6 +14,7 @@
 
 namespace gutesio\DataModelBundle\Resources\contao\models;
 
+use Contao\Database;
 use Contao\Model;
 
 class GutesioDataElementModel extends Model
@@ -28,5 +29,15 @@ class GutesioDataElementModel extends Model
     public static function findByAlias(string $alias)
     {
         return static::findBy('alias', $alias, ['return' => 'Model']);
+    }
+
+    public static function findByChildModel(GutesioDataChildModel $childModel)
+    {
+        $database = Database::getInstance();
+        $statement = $database->prepare(
+            'SELECT DISTINCT elementId FROM tl_gutesio_data_child_connection WHERE childId = ? LIMIT 1'
+        );
+        $result = $statement->execute($childModel->uuid)->fetchAssoc();
+        return self::findByUuid($result['elementId']);
     }
 }
