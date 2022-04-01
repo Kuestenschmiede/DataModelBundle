@@ -9,7 +9,7 @@ class ImprintConstraintChecker
     public function checkIfImprintIsComplete(array $imprintData)
     {
         $this->imprintData = $imprintData;
-        if ($imprintData['imprintType'] === 'generator') {
+        if ($imprintData && key_exists('imprintType', $imprintData) && ($imprintData['imprintType'] === 'generator')) {
             switch ($imprintData['companyForm']) {
                 case 'freelancer':
                     return $this->checkFreelancerConstraints();
@@ -25,7 +25,7 @@ class ImprintConstraintChecker
                 default:
                     return false;
             }
-        } elseif ($imprintData['imprintType'] === 'external') {
+        } elseif ($imprintData && key_exists('imprintType', $imprintData) && ($imprintData['imprintType'] === 'external')) {
             return $imprintData['imprintLink'] !== '';
         } else {
             // no valid imprintType set, so imprint is incomplete
