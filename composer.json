@@ -23,6 +23,7 @@
     "source": "https://github.com/Kuestenschmiede/DataModelBundle"
   },
   "require": {
+    "php": ">=8.0",
     "contao/core-bundle": "^4.9",
     "con4gis/framework": "^1.1.0"
   },
