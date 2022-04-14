@@ -89,6 +89,9 @@ class ShowcaseResultConverter
                 if (strpos($datum['whatsapp'], '0') === 0) {
                     $datum['whatsapp'] = substr($datum['whatsapp'], 1);
                     $datum['whatsapp'] = str_replace(' ', '', $datum['whatsapp']);
+                    $datum['whatsapp'] = $datum['whatsapp'] ? 'https://wa.me/+49' . $datum['whatsapp'] : $datum['whatsapp'];
+                } else if (strpos($datum['whatsapp'], '+') === 0) {
+                    $datum['whatsapp'] = str_replace(' ', '', $datum['whatsapp']);
                     $datum['whatsapp'] = $datum['whatsapp'] ? 'https://wa.me/' . $datum['whatsapp'] : $datum['whatsapp'];
                 }
             }
