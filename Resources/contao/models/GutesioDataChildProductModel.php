@@ -19,4 +19,9 @@ use Contao\Model;
 class GutesioDataChildProductModel extends Model
 {
     protected static $strTable = "tl_gutesio_data_child_product";
+
+    public static function findByChildId(string $uuid)
+    {
+        return static::findBy('childId', $uuid, ['return' => 'Model']);
+    }
 }
