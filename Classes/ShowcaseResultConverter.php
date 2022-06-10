@@ -486,7 +486,7 @@ class ShowcaseResultConverter
                         if ($relatedIds) {
                             foreach ($relatedIds as $relatedId) {
                                 if ($relatedId === $datum['uuid']) {
-                                    if ($showcase['allowLogoDisplay'] && !in_array($showcase['uuid'], $processedIds)) {
+                                    if ($showcase['allowLogoDisplay'] && $showcase['logo'] && !in_array($showcase['uuid'], $processedIds)) {
                                         $logoModel = FilesModel::findByUuid(StringUtil::binToUuid($showcase['logo']));
                                         if ($logoModel) {
                                             if (!$datum['relatedShowcaseLogos']) {
