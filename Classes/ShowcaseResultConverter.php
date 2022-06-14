@@ -200,7 +200,11 @@ class ShowcaseResultConverter
                     $datum[$fieldKey] = $resultValue;
                 } elseif (in_array($fieldKey, $this->fileUploadFields)) {
                     if ($typeElementValue['typeFieldFile']) {
-                        $uuid = StringUtil::binToUuid($typeElementValue['typeFieldFile']);
+                        if (C4GUtils::isBinary($typeElementValue['typeFieldFile'])) {
+                            $uuid = StringUtil::binToUuid($typeElementValue['typeFieldFile']);
+                        } else {
+                            $uuid = $typeElementValue['typeFieldFile'];
+                        }
                         $fileModel = FilesModel::findByUuid($uuid);
                         if ($fileModel) {
                             $datum[$fieldKey] = [
