@@ -13,7 +13,6 @@
  */
 
 $GLOBALS['TL_DCA']['tl_gutesio_data_child_tag'] = [
-    // Config
     'config' => [
         'sql' => [
             'keys' => [
@@ -22,8 +21,6 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_tag'] = [
             ],
         ],
     ],
-    
-    // Fields
     'fields' => [
         'id' => [
             'sql' => 'int unsigned NOT NULL auto_increment',

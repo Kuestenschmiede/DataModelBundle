@@ -1,11 +1,11 @@
 <?php
 /**
- * This file belongs to gutes.io and is published exclusively for use
- * in gutes.io operator or provider pages.
+ * This file belongs to gutes.digital and is published exclusively for use
+ * in gutes.digital operator or provider pages.
 
  * @package    gutesio
  * @copyright  Küstenschmiede GmbH Software & Design (Matthias Eilers)
- * @link       https://gutes.io
+ * @link       https://gutes.digital
  */
 namespace gutesio\DataModelBundle\Classes;
 
@@ -89,6 +89,9 @@ class ShowcaseResultConverter
                 if (strpos($datum['whatsapp'], '0') === 0) {
                     $datum['whatsapp'] = substr($datum['whatsapp'], 1);
                     $datum['whatsapp'] = str_replace(' ', '', $datum['whatsapp']);
+                    $datum['whatsapp'] = $datum['whatsapp'] ? 'https://wa.me/+49' . $datum['whatsapp'] : $datum['whatsapp'];
+                } else if (strpos($datum['whatsapp'], '+') === 0) {
+                    $datum['whatsapp'] = str_replace(' ', '', $datum['whatsapp']);
                     $datum['whatsapp'] = $datum['whatsapp'] ? 'https://wa.me/' . $datum['whatsapp'] : $datum['whatsapp'];
                 }
             }
@@ -113,7 +116,8 @@ class ShowcaseResultConverter
             $datum['phoneHours'] = html_entity_decode($result['phoneHours']);
             $datum['opening_hours'] = html_entity_decode($result['opening_hours']);
             $datum['opening_hours_additional'] = html_entity_decode($result['opening_hours_additional']);
-
+            $datum['legalTextSet'] = $result['legalTextSet'];
+            $datum['cashOnlyIfPickup'] = $result['cashOnlyIfPickup'];
             $datum['operators'] = [];
 
             if (key_exists('operators',$result)) {
@@ -196,7 +200,11 @@ class ShowcaseResultConverter
                     $datum[$fieldKey] = $resultValue;
                 } elseif (in_array($fieldKey, $this->fileUploadFields)) {
                     if ($typeElementValue['typeFieldFile']) {
-                        $uuid = StringUtil::binToUuid($typeElementValue['typeFieldFile']);
+                        if (C4GUtils::isBinary($typeElementValue['typeFieldFile'])) {
+                            $uuid = StringUtil::binToUuid($typeElementValue['typeFieldFile']);
+                        } else {
+                            $uuid = $typeElementValue['typeFieldFile'];
+                        }
                         $fileModel = FilesModel::findByUuid($uuid);
                         if ($fileModel) {
                             $datum[$fieldKey] = [
@@ -482,7 +490,7 @@ class ShowcaseResultConverter
                         if ($relatedIds) {
                             foreach ($relatedIds as $relatedId) {
                                 if ($relatedId === $datum['uuid']) {
-                                    if ($showcase['allowLogoDisplay'] && !in_array($showcase['uuid'], $processedIds)) {
+                                    if ($showcase['allowLogoDisplay'] && $showcase['logo'] && !in_array($showcase['uuid'], $processedIds)) {
                                         $logoModel = FilesModel::findByUuid(StringUtil::binToUuid($showcase['logo']));
                                         if ($logoModel) {
                                             if (!$datum['relatedShowcaseLogos']) {

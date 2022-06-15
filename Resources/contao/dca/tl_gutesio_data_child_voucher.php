@@ -12,8 +12,7 @@
  *
  */
 
-
-$GLOBALS['TL_DCA']['tl_gutesio_data_type_child_values'] = [
+$GLOBALS['TL_DCA']['tl_gutesio_data_child_voucher'] = [
     'config' => [
         'sql' => [
             'keys' => [
@@ -35,16 +34,40 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_type_child_values'] = [
         'childId' => [
             'sql' => 'varchar(50) NOT NULL default \'\''
         ],
-        'typeId' => [
-            'sql' => 'varchar(50) NOT NULL default \'\''
+        'customizableCredit' => [
+            'sql' => "char(1) NOT NULL default ''"
         ],
-        'typeFieldKey' => [
-            'sql' => "varchar(32) NOT NULL default ''"
+        'credit' => [
+            'sql' => "int NOT NULL default 0"
         ],
-        'typeFieldValue' => [
-            'sql' => "TEXT NULL"
+        'minCredit' => [
+            'sql' => "int NOT NULL default 0"
         ],
-        'typeFieldFile' => [
+        'maxCredit' => [
+            'sql' => "int NOT NULL default 0"
+        ],
+        'interval' => [
+            'sql' => "int NOT NULL default 1"
+        ],
+        'primaryColour' => [
+            'sql' => "varchar(10) NOT NULL default ''"
+        ],
+        'secondaryColour' => [
+            'sql' => "varchar(10) NOT NULL default ''"
+        ],
+        'title' => [
+            'sql' => "varchar(50) NOT NULL default ''"
+        ],
+        'abbreviation' => [
+            'sql' => "varchar(10) NOT NULL default ''"
+        ],
+        'text' => [
+            'sql' => "varchar(255) NOT NULL default ''"
+        ],
+        'footer' => [
+            'sql' => "varchar(255) NOT NULL default ''"
+        ],
+        'logo' => [
             'sql' => "binary(16) NULL"
         ],
         'importId' => [
@@ -52,3 +75,4 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_type_child_values'] = [
         ]
     ],
 ];
+

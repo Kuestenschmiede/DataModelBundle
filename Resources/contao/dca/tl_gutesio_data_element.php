@@ -14,7 +14,6 @@
 
 
 $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
-    // Config
     'config' => [
         'sql' => [
             'keys' => [
@@ -23,8 +22,6 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
             ],
         ],
     ],
-    
-    // Fields
     'fields' => [
         'id' => [
             'sql' => 'int unsigned NOT NULL auto_increment',
@@ -218,8 +215,14 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         'ownerMemberId' => [
             'sql' => "int NOT NULL default 0"
         ],
-        'clickCollect' => [
+        'legalTextSet' => [
             'sql' => "int NOT NULL default 0"
+        ],
+        'cashOnlyIfPickup' => [
+            'sql' => "char(1) NOT NULL default ''"
+        ],
+        'allowedPaymentMethods' => [
+            'sql' => "TEXT NULL"
         ],
         'published' => [
             'sql' => "int NOT NULL default 0"

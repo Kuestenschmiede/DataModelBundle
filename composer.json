@@ -1,9 +1,9 @@
 {
   "name": "gutesio/data-model",
   "type": "contao-bundle",
-  "description": "The shared data-model bundle for gutes.io.",
-  "keywords": ["gutes.io"],
-  "homepage": "https://gutes.io",
+  "description": "The shared data-model bundle for gutes.digital.",
+  "keywords": ["gutes.digital"],
+  "homepage": "https://gutes.digital",
   "license": "LGPL-3.0-or-later",
   "authors": [
     {
@@ -23,8 +23,9 @@
     "source": "https://github.com/Kuestenschmiede/DataModelBundle"
   },
   "require": {
+    "php": ">=8.0",
     "contao/core-bundle": "^4.9",
-    "con4gis/framework": "^v1.0.33"
+    "con4gis/framework": "^1.1.0"
   },
   "conflict": {
     "contao/core": "*",

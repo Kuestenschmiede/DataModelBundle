@@ -13,7 +13,6 @@
  */
 
 $GLOBALS['TL_DCA']['tl_gutesio_data_child_product'] = [
-    // Config
     'config' => [
         'sql' => [
             'keys' => [
@@ -22,8 +21,6 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_product'] = [
             ],
         ],
     ],
-    
-    // Fields
     'fields' => [
         'id' => [
             'sql' => 'int unsigned NOT NULL auto_increment',
@@ -73,6 +70,18 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_product'] = [
         'brand' => [
             'sql' => "varchar(100) NOT NULL default ''"
         ],
+        'availableAmount' => [
+            'sql' => "int NOT NULL default 1"
+        ],
+        'basePriceRequired' => [
+            'sql' => "char(1) NULL"
+        ],
+        'basePriceUnit' => [
+            'sql' => "varchar(10) NOT NULL default ''"
+        ],
+        'basePriceUnitPerPiece' => [
+            'sql' => "float NOT NULL default 0"
+        ]
     ],
 ];
 

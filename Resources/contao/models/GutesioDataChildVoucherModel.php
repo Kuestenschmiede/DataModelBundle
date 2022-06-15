@@ -16,9 +16,9 @@ namespace gutesio\DataModelBundle\Resources\contao\models;
 
 use Contao\Model;
 
-class GutesioDataChildProductModel extends Model
+class GutesioDataChildVoucherModel extends Model
 {
-    protected static $strTable = "tl_gutesio_data_child_product";
+    protected static $strTable = "tl_gutesio_data_child_voucher";
 
     public static function findByChildId(string $uuid)
     {
