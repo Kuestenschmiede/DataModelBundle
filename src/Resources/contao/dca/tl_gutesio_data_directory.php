@@ -34,9 +34,6 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_directory'] = [
         'name' => [
             'sql' => "varchar(64) NOT NULL default ''"
         ],
-        'image' => [
-            'sql' => "binary(16) NULL"
-        ],
         'description' => [
             'sql' => "text NULL"
         ],
