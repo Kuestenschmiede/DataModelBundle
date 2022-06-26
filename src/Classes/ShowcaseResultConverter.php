@@ -620,7 +620,7 @@ class ShowcaseResultConverter
             $datum['foreignLink'] = $result['foreignLink'];
             $datum['directLink'] = $result['foreignLink'] ? '1' : '0';
             $datum['extraZip'] = key_exists('extraZip', $result) ? $result['extraZip'] : '';
-            $datum['published_title'] = $result['published'] === '1' ? 'Ja' : 'Nein';
+            $datum['published_title'] = $result['published'] ? 'Ja' : 'Nein'; //ToDo
 
             $data[] = $datum;
         }
