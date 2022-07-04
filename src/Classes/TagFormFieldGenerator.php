@@ -52,6 +52,8 @@ class TagFormFieldGenerator
                 return static::createFieldForOnlineTherapyProgram();
             case 'tag_tariff_calculator':
                 return static::createFieldForTariffCalculator();
+            case 'tag_donation':
+                return static::createFieldForDonationTag();
             default:
                 return [];
         }

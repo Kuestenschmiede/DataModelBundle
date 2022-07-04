@@ -35,6 +35,8 @@ class TagDetailFieldGenerator
                 return static::createFieldForOnlineshopTag();
             case 'tag_michelin_stars':
                 return static::createFieldForMichelinStarsTag();
+            case 'tag_donation':
+                return static::createFieldForDonationTag();
             default:
                 return [];
         }

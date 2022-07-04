@@ -419,6 +419,18 @@ class ShowcaseResultConverter
                                         $tag['linkLabel'] = 'Tarifrechner';
 
                                         break;
+                                    case 'tag_donation':
+                                        $stmt = $db->prepare(
+                                            'SELECT tagFieldValue FROM tl_gutesio_data_tag_element_values ' .
+                                            'WHERE elementId = ? AND tagFieldKey = ? ORDER BY id ASC');
+                                        $tagLink = $stmt->execute(
+                                            $datum['uuid'],
+                                            'donationLink'
+                                        )->fetchAssoc()['tagFieldValue'];
+                                        $tag['linkHref'] = C4GUtils::addProtocolToLink($tagLink);
+                                        $tag['linkLabel'] = 'Spendenlink';
+
+                                        break;
                                     default:
                                         break;
                                 }
