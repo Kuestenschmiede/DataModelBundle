@@ -61,6 +61,7 @@ class TagDetailFieldGenerator
         $field->setLabel('Lieferbedingungen');
         $field->setLinkText('Lieferservice');
         //$field->setLinkTextName('deliveryServiceLinkLabel');
+        $field->setTargetBlank(true);
         $fields[] = $field;
 
         return $fields;
@@ -111,6 +112,7 @@ class TagDetailFieldGenerator
         $field->setName('onlineReservationLink'); // ToDo
         $field->setLabel('Link zur Reservierung');
         $field->setLinkText('Onlinereservierung');
+        $field->setTargetBlank(true);
         //$field->setLinkTextName("onlineReservationLinkLabel");
         $fields[] = $field;
 
@@ -124,6 +126,7 @@ class TagDetailFieldGenerator
         $field->setName('clicknmeetLink'); // ToDo
         $field->setLabel('Link zur Terminreservierung');
         $field->setLinkText('Click & Meet');
+        $field->setTargetBlank(true);
         $fields[] = $field;
 
         return $fields;
@@ -136,6 +139,7 @@ class TagDetailFieldGenerator
         $field->setName('tableReservationLink'); // ToDo
         $field->setLabel('Link zur Tischreservierung');
         $field->setLinkText('Tischreservierung');
+        $field->setTargetBlank(true);
         $fields[] = $field;
 
         return $fields;
@@ -148,6 +152,7 @@ class TagDetailFieldGenerator
         $field->setName('onlineShopLink'); // ToDo
         $field->setLabel('Link zum Onlineshop');
         $field->setLinkText('Onlineshop');
+        $field->setTargetBlank(true);
         //$field->setLinkTextName("onlineShopLinkLabel");
         $fields[] = $field;
 

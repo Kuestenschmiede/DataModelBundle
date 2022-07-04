@@ -27,3 +27,4 @@ $GLOBALS['TL_LANG'][$strName]['onlineChat'] = ['Link zum Online-Chat', ''];
 $GLOBALS['TL_LANG'][$strName]['onlineVideoForum'] = ['Link zum Online-Video-Forum', ''];
 $GLOBALS['TL_LANG'][$strName]['onlineTherapyProgram'] = ['Link zur Online-Therapie', ''];
 $GLOBALS['TL_LANG'][$strName]['tariffCalculator'] = ['Link zum Tarifrechner', ''];
+$GLOBALS['TL_LANG'][$strName]['donationLink'] = ['Spendenlink', 'Die URL zur Spendenmöglichkeit.'];

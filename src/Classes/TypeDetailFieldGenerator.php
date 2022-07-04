@@ -101,6 +101,7 @@ class TypeDetailFieldGenerator
         $field->setLabel('Speisekarte (Link)');
         $field->setLinkText('Speisekarte');
         $field->setClass(TypeFormFieldGenerator::FIELD_MENU_LINK);
+        $field->setTargetBlank(true);
         $fields[] = $field;
 
         $field = new PDFDetailField();

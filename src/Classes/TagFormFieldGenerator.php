@@ -197,6 +197,18 @@ class TagFormFieldGenerator
         return $fields;
     }
 
+    private static function createFieldForDonationTag()
+    {
+        $fields = [];
+        $field = new TextFormField();
+        $field->setName('donationLink');
+        $field->setLabel($GLOBALS['TL_LANG']['form_tag_fields']['donationLink'][0]);
+        $field->setDescription($GLOBALS['TL_LANG']['form_tag_fields']['donationLink'][1]);
+        $fields[] = $field;
+
+        return $fields;
+    }
+
     private static function createFieldForMichelinStarsTag()
     {
         $fields = [];
