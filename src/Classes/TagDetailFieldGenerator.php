@@ -159,6 +159,19 @@ class TagDetailFieldGenerator
         return $fields;
     }
 
+    private static function createFieldForDonationTag()
+    {
+        $fields = [];
+        $field = new DetailLinkField();
+        $field->setName('donationLink'); // ToDo
+        $field->setLabel('Spendenlink');
+        $field->setLinkText('Spendenlink');
+        $field->setTargetBlank(true);
+        $fields[] = $field;
+
+        return $fields;
+    }
+
     private static function createFieldForMichelinStarsTag()
     {
         $fields = [];
