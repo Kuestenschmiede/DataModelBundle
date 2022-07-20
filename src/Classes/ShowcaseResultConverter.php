@@ -436,6 +436,7 @@ class ShowcaseResultConverter
                                 }
                             }
                             if ($tag) {
+                                $tag['value'] = $tagId;
                                 $this->processedTags[$tagId] = $tag;
                                 $datum['tags'][] = $tag;
                             }
@@ -450,7 +451,7 @@ class ShowcaseResultConverter
                             && (($validUntil === 0) || ($validUntil <= time()))
                         ) {
                             $tag = [
-                                'value' => $tagRow['id'],
+                                'value' => $tagId,
                                 'label' => html_entity_decode($tagRow['name']),
                             ];
                             if ($tag) {
@@ -460,6 +461,20 @@ class ShowcaseResultConverter
                         }
                     }
                 }
+            }
+
+            $checkTagList = [];
+            foreach($datum['tags'] as $tag) {
+                if ($tag['value']) {
+                    $checkTagList[$tag['value']] = $tag;
+                } else {
+                    $checkTagList[] = $tag;
+                }
+            }
+
+            $datum['tags'] = [];
+            foreach ($checkTagList as $tag) {
+                $datum['tags'][] = $tag;
             }
 
             // load tag values
