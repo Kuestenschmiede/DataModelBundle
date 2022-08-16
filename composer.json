@@ -49,6 +49,9 @@
     "preferred-install": "dist"
   },
   "extra": {
-    "contao-manager-plugin": "gutesio\\DataModelBundle\\ContaoManager\\Plugin"
+    "contao-manager-plugin": "gutesio\\DataModelBundle\\ContaoManager\\Plugin",
+    "branch-alias": {
+      "dev-main": "2.0.x-dev"
+    }
   }
 }
