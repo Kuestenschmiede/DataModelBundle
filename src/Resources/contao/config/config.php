@@ -15,6 +15,7 @@ use gutesio\DataModelBundle\Resources\contao\models\GutesioDataChildProductModel
 use gutesio\DataModelBundle\Resources\contao\models\GutesioDataChildEventModel;
 use gutesio\DataModelBundle\Resources\contao\models\GutesioDataChildJobModel;
 use gutesio\DataModelBundle\Resources\contao\models\GutesioDataChildVoucherModel;
+use gutesio\DataModelBundle\Resources\contao\models\GutesioDataChildPersonModel;
 use gutesio\DataModelBundle\Resources\contao\models\GutesioDataChildTypeModel;
 use gutesio\DataModelBundle\Resources\contao\models\GutesioDataChildApiModel;
 
@@ -33,6 +34,7 @@ $GLOBALS['TL_MODELS']['tl_gutesio_data_child_product'] = GutesioDataChildProduct
 $GLOBALS['TL_MODELS']['tl_gutesio_data_child_event'] = GutesioDataChildEventModel::class;
 $GLOBALS['TL_MODELS']['tl_gutesio_data_child_job'] = GutesioDataChildJobModel::class;
 $GLOBALS['TL_MODELS']['tl_gutesio_data_child_voucher'] = GutesioDataChildVoucherModel::class;
+$GLOBALS['TL_MODELS']['tl_gutesio_data_child_person'] = GutesioDataChildPersonModel::class;
 $GLOBALS['TL_MODELS']['tl_gutesio_data_child_type'] = GutesioDataChildTypeModel::class;
 $GLOBALS['TL_MODELS']['tl_gutesio_data_child_api'] = GutesioDataChildApiModel::class;
 
