@@ -99,6 +99,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child'] = [
         ],
         'offerForSale' => [
             'sql' => "char(1) NULL"
+        ],
+        'childIds' => [
+            'sql' => "TEXT NULL"
         ]
     ],
 ];
