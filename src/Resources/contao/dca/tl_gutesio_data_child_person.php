@@ -34,12 +34,6 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_person'] = [
         'childId' => [
             'sql' => 'varchar(50) NOT NULL default \'\''
         ],
-        'firstname' => [
-            'sql' => 'varchar(50) NOT NULL default \'\''
-        ],
-        'name' => [
-            'sql' => 'varchar(50) NOT NULL default \'\''
-        ],
         'dateOfBirth' => [
             'sql' => "int NULL"
         ],
