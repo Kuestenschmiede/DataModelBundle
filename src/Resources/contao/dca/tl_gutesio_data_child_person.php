@@ -35,10 +35,10 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_person'] = [
             'sql' => 'varchar(50) NOT NULL default \'\''
         ],
         'dateOfBirth' => [
-            'sql' => "int NULL"
+            'sql' => "varchar(255) NOT NULL default ''"
         ],
         'dateOfDeath' => [
-            'sql' => "int NULL"
+            'sql' => "varchar(255) NOT NULL default ''"
         ]
     ],
 ];
