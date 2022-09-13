@@ -46,6 +46,15 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_event'] = [
         'endTime' => [
             'sql' => "int NULL"
         ],
+        'expertTimes' => [
+            'sql' => 'char(1) NOT NULL default 0'
+        ],
+        'expertBeginDateTimes' => [
+            'sql' => 'TEXT NULL default ' . serialize([])
+        ],
+        'expertEndDateTimes' => [
+            'sql' => 'TEXT NULL default ' . serialize([])
+        ],
         'useDifferentLocation' => [
             'sql' => "char(1) NULL"
         ],
