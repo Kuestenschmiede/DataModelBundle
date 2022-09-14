@@ -43,6 +43,6 @@ class GutesioDataElementModel extends Model
             'SELECT DISTINCT elementId FROM tl_gutesio_data_child_connection WHERE childId = ? LIMIT 1'
         );
         $result = $statement->execute($uuid)->fetchAssoc();
-        return self::findByUuid($result['elementId']);
+        return $result ? self::findByUuid($result['elementId']) : false;
     }
 }
