@@ -81,6 +81,30 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_product'] = [
         ],
         'basePriceUnitPerPiece' => [
             'sql' => "float NOT NULL default 0"
+        ],
+        'allergenes' => [
+            'sql' => "TEXT NULL"
+        ],
+        'ingredients' => [
+            'sql' => "TEXT NULL"
+        ],
+        'kJ' => [
+            'sql' => "int NULL"
+        ],
+        'fat' => [
+            'sql' => "int NULL"
+        ],
+        'saturatedFattyAcid' => [
+            'sql' => "int NULL"
+        ],
+        'carbonHydrates' => [
+            'sql' => "int NULL"
+        ],
+        'sugar' => [
+            'sql' => "int NULL"
+        ],
+        'salt' => [
+            'sql' => "int NULL"
         ]
     ],
 ];

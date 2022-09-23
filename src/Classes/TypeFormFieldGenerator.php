@@ -10,8 +10,10 @@
 namespace gutesio\DataModelBundle\Classes;
 
 use con4gis\FrameworkBundle\Classes\FormFields\CheckboxFormField;
+use con4gis\FrameworkBundle\Classes\FormFields\NumberFormField;
 use con4gis\FrameworkBundle\Classes\FormFields\PDFUploadFormField;
 use con4gis\FrameworkBundle\Classes\FormFields\SelectFormField;
+use con4gis\FrameworkBundle\Classes\FormFields\TextAreaFormField;
 use con4gis\FrameworkBundle\Classes\FormFields\TextFormField;
 use con4gis\FrameworkBundle\Classes\Utility\RegularExpression;
 use Contao\System;
@@ -32,32 +34,23 @@ class TypeFormFieldGenerator
 
     public static function getFieldsForType(string $technicalKey)
     {
-        switch ($technicalKey) {
-            case 'type_diet_cuisine':
-                return static::getFieldsForDietCuisine();
-            case 'type_event_location':
-                return static::getFieldsForEventLocation();
-            case 'type_extra_zip':
-                return static::getFieldsForExtraZip();
-            case 'type_surr_zip':
-                return static::getFieldsForSurroundingZip();
-            case 'type_menu':
-                return static::getFieldsForMenu();
-            case 'type_brochure_upload':
-                return static::getFieldsForBrochureUpload();
-            case 'type_isbn':
-                return static::getFieldsForIsbn();
-            case 'type_doctor_referral':
-                return static::getFieldsForDoctorReferral();
-            case 'type_self_help_focus':
-                return static::getFieldsForSelfHelpFocus();
-            case 'type_contact_info_advice_focus':
-                return static::getFieldsForContactInfoAdviceFocus();
-            case 'type_administration':
-                return static::getFieldsForAdministration();
-            default:
-                return [];
-        }
+        return match ($technicalKey) {
+            'type_diet_cuisine' => static::getFieldsForDietCuisine(),
+            'type_event_location' => static::getFieldsForEventLocation(),
+            'type_extra_zip' => static::getFieldsForExtraZip(),
+            'type_surr_zip' => static::getFieldsForSurroundingZip(),
+            'type_menu' => static::getFieldsForMenu(),
+            'type_brochure_upload' => static::getFieldsForBrochureUpload(),
+            'type_isbn' => static::getFieldsForIsbn(),
+            'type_doctor_referral' => static::getFieldsForDoctorReferral(),
+            'type_self_help_focus' => static::getFieldsForSelfHelpFocus(),
+            'type_contact_info_advice_focus' => static::getFieldsForContactInfoAdviceFocus(),
+            'type_administration' => static::getFieldsForAdministration(),
+            'type_allergenes' => static::getFieldsForAllergenes(),
+            'type_ingredients' => static::getFieldsForIngredients(),
+            'type_food' => static::getFieldsForFood(),
+            default => [],
+        };
     }
 
     public static function getFieldsForTypes(array $technicalKeys)
@@ -331,5 +324,60 @@ class TypeFormFieldGenerator
         $field->setDescription('Geben Sie den Namen der leitenden Person an.');
 
         return ['administration' => $field];
+    }
+
+    private static function getFieldsForAllergenes()
+    {
+        $field = new TextAreaFormField();
+        $field->setName('allergenes');
+        $field->setLabel('Hinweise zu Allergenen');
+
+        return ['allergenes' => $field];
+    }
+
+    private static function getFieldsForIngredients()
+    {
+        $field = new TextAreaFormField();
+        $field->setName('ingredients');
+        $field->setLabel('Zutaten');
+
+        return ['ingredients' => $field];
+    }
+
+    private static function getFieldsForFood()
+    {
+        $fields = [];
+
+        $field = new NumberFormField();
+        $field->setName('kJ');
+        $field->setLabel('Brennwert (in kJ)');
+        $fields['kJ'] = $field;
+
+        $field = new NumberFormField();
+        $field->setName('fat');
+        $field->setLabel('Fett (in g)');
+        $fields['fat'] = $field;
+
+        $field = new NumberFormField();
+        $field->setName('saturatedFattyAcid');
+        $field->setLabel('Davon gesättigte Fettsäuren (in g)');
+        $fields['saturatedFattyAcid'] = $field;
+
+        $field = new NumberFormField();
+        $field->setName('carbonHydrates');
+        $field->setLabel('Kohlenhydrate (in g)');
+        $fields['carbonHydrates'] = $field;
+
+        $field = new NumberFormField();
+        $field->setName('sugar');
+        $field->setLabel('Davon Zucker (in g)');
+        $fields['sugar'] = $field;
+
+        $field = new NumberFormField();
+        $field->setName('salt');
+        $field->setLabel('Salz (in g)');
+        $fields['salt'] = $field;
+
+        return $fields;
     }
 }
