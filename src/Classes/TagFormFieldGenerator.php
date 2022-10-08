@@ -28,6 +28,8 @@ class TagFormFieldGenerator
                 return static::createFieldForWheelchairTag();
             case 'tag_corona':
                 return static::createFieldForCoronaTag();
+            case 'tag_familyFriendly':
+                return static::createFieldForFamilyFriendlyTag();
             case 'tag_online_reservation':
                 return static::createFieldForOnlineReservationTag();
             case 'tag_onlineshop':
@@ -142,6 +144,20 @@ class TagFormFieldGenerator
         $field->setName('coronaNotes');
         $field->setLabel($GLOBALS['TL_LANG']['form_tag_fields']['coronaNotes'][0]);
         $field->setDescription($GLOBALS['TL_LANG']['form_tag_fields']['coronaNotes'][1]);
+        $field->setParagraphLabel($GLOBALS['TL_LANG']['form_tag_fields']['frontend']['paragraph']);
+        $field->setHeadingLabel($GLOBALS['TL_LANG']['form_tag_fields']['frontend']['heading']);
+        $fields[] = $field;
+
+        return $fields;
+    }
+
+    private static function createFieldForfamilyFriendlyTag()
+    {
+        $fields = [];
+        $field = new CKEditorFormField();
+        $field->setName('familyFriendlyNotes');
+        $field->setLabel($GLOBALS['TL_LANG']['form_tag_fields']['familyFriendlyNotes'][0]);
+        $field->setDescription($GLOBALS['TL_LANG']['form_tag_fields']['familyFriendlyNotes'][1]);
         $field->setParagraphLabel($GLOBALS['TL_LANG']['form_tag_fields']['frontend']['paragraph']);
         $field->setHeadingLabel($GLOBALS['TL_LANG']['form_tag_fields']['frontend']['heading']);
         $fields[] = $field;

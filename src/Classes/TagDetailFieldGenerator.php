@@ -29,6 +29,8 @@ class TagDetailFieldGenerator
                 return static::createFieldForWheelchairTag();
             case 'tag_corona':
                 return static::createFieldForCoronaTag();
+            case 'tag_familyFriendly':
+                return static::createFieldForFamilyFriendlyTag();
             case 'tag_online_reservation':
                 return static::createFieldForOnlineReservationTag();
             case 'tag_onlineshop':
@@ -84,7 +86,19 @@ class TagDetailFieldGenerator
         $fields = [];
 
         $field = new DetailHTMLField();
-        $field->setName('coronaNotes'); // ToDo
+        $field->setName('coronaNotes');
+        $field->setLabel('Hinweise zur Familienfreundlichkeit');
+        $fields[] = $field;
+
+        return $fields;
+    }
+
+    private static function createFieldForfamilyFriendlyTag()
+    {
+        $fields = [];
+
+        $field = new DetailHTMLField();
+        $field->setName('familyFriendlyNotes');
         $field->setLabel('Hinweise zur Corona Situation');
         $fields[] = $field;
 
