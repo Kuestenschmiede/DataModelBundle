@@ -10,6 +10,7 @@
 namespace gutesio\DataModelBundle\Classes;
 
 use con4gis\FrameworkBundle\Classes\FormFields\CheckboxFormField;
+use con4gis\FrameworkBundle\Classes\FormFields\CKEditorFormField;
 use con4gis\FrameworkBundle\Classes\FormFields\NumberFormField;
 use con4gis\FrameworkBundle\Classes\FormFields\PDFUploadFormField;
 use con4gis\FrameworkBundle\Classes\FormFields\SelectFormField;
@@ -37,6 +38,7 @@ class TypeFormFieldGenerator
         return match ($technicalKey) {
             'type_diet_cuisine' => static::getFieldsForDietCuisine(),
             'type_event_location' => static::getFieldsForEventLocation(),
+            'type_admission' => static::getFieldsForAdmission(),
             'type_extra_zip' => static::getFieldsForExtraZip(),
             'type_surr_zip' => static::getFieldsForSurroundingZip(),
             'type_menu' => static::getFieldsForMenu(),
@@ -89,6 +91,7 @@ class TypeFormFieldGenerator
     {
         $dietCuisineFields = static::getFieldsForDietCuisine();
         $eventFields = static::getFieldsForEventLocation();
+        $admissionFields = static::getFieldsForAdmission();
         $extraZipFields = static::getFieldsForExtraZip();
         $surrZipFields = static::getFieldsForSurroundingZip();
         $menuFields = static::getFieldsForMenu();
@@ -98,6 +101,7 @@ class TypeFormFieldGenerator
         return array_merge(
             $dietCuisineFields,
             $eventFields,
+            $admissionFields,
             $menuFields,
             $brochureUploadFields,
             $extraZipFields,
@@ -194,9 +198,11 @@ class TypeFormFieldGenerator
         $field->setLabel($GLOBALS['TL_LANG'][$strName]['maxPersons'] && (count($GLOBALS['TL_LANG'][$strName]['maxPersons']) > 0) ? $GLOBALS['TL_LANG'][$strName]['maxPersons'][0] : '');
         $fields['maxPersons'] = $field;
 
-        $field = new TextFormField();
+        $field = new CKEditorFormField();
         $field->setName('technicalEquipment');
         $field->setLabel($GLOBALS['TL_LANG'][$strName]['technicalEquipment'] && (count($GLOBALS['TL_LANG'][$strName]['technicalEquipment']) > 0) ? $GLOBALS['TL_LANG'][$strName]['technicalEquipment'][0] : '');
+        $field->setParagraphLabel($GLOBALS['TL_LANG']['form_tag_fields']['frontend']['paragraph']);
+        $field->setHeadingLabel($GLOBALS['TL_LANG']['form_tag_fields']['frontend']['heading']);
         $fields['technicalEquipment'] = $field;
 
         $field = new CheckboxFormField();
@@ -205,6 +211,23 @@ class TypeFormFieldGenerator
         $field->setDescription($GLOBALS['TL_LANG'][$strName][self::FIELD_ALLOW_LOCATION_FOR_ALL] && (count($GLOBALS['TL_LANG'][$strName][self::FIELD_ALLOW_LOCATION_FOR_ALL]) > 0) ? $GLOBALS['TL_LANG'][$strName][self::FIELD_ALLOW_LOCATION_FOR_ALL][1] : '');
         $field->setChecked(true);
         $fields[self::FIELD_ALLOW_LOCATION_FOR_ALL] = $field;
+
+        return $fields;
+    }
+
+    private static function getFieldsForAdmission()
+    {
+        System::loadLanguageFile('form_tag_fields');
+        $strName = 'form_tag_fields';
+
+        $fields = [];
+
+        $field = new CKEditorFormField();
+        $field->setName('admissionPrices');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['admissionPrices'] && (count($GLOBALS['TL_LANG'][$strName]['admissionPrices']) > 0) ? $GLOBALS['TL_LANG'][$strName]['admissionPrices'][0] : '');
+        $field->setParagraphLabel($GLOBALS['TL_LANG']['form_tag_fields']['frontend']['paragraph']);
+        $field->setHeadingLabel($GLOBALS['TL_LANG']['form_tag_fields']['frontend']['heading']);
+        $fields['admissionPrices'] = $field;
 
         return $fields;
     }

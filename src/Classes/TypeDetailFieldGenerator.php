@@ -10,8 +10,10 @@
 namespace gutesio\DataModelBundle\Classes;
 
 use con4gis\FrameworkBundle\Classes\DetailFields\DetailLinkField;
+use con4gis\FrameworkBundle\Classes\DetailFields\DetailTextAreaField;
 use con4gis\FrameworkBundle\Classes\DetailFields\DetailTextField;
 use con4gis\FrameworkBundle\Classes\DetailFields\PDFDetailField;
+use con4gis\FrameworkBundle\Classes\FormFields\DetailCKEditorField;
 use con4gis\FrameworkBundle\Classes\Utility\FieldUtil;
 use Contao\System;
 
@@ -29,6 +31,8 @@ class TypeDetailFieldGenerator
                 return static::getFieldsForDietCuisine();
             case 'type_event_location':
                 return static::getFieldsForEventLocation();
+            case 'type_admission':
+                return static::getFieldsForAdmission();
             case 'type_menu':
                 return static::getFieldsForMenu();
             case 'type_brochure_upload':
@@ -83,10 +87,25 @@ class TypeDetailFieldGenerator
         $field->setLabel($GLOBALS['TL_LANG'][$strName]['maxPersons'][0] ? $GLOBALS['TL_LANG'][$strName]['maxPersons'][0] : '');
         $fields[] = $field;
 
-        $field = new DetailTextField();
+        $field = new DetailCKEditorField();
         $field->setName('technicalEquipment');
-        $field->setClass('technicalEquipment');
         $field->setLabel($GLOBALS['TL_LANG'][$strName]['technicalEquipment'][0] ? $GLOBALS['TL_LANG'][$strName]['technicalEquipment'][0] : '');
+        $fields[] = $field;
+
+        return $fields;
+    }
+
+    private static function getFieldsForAdmission()
+    {
+        System::loadLanguageFile('form_tag_fields');
+
+        $strName = 'form_tag_fields';
+
+        $fields = [];
+
+        $field = new DetailCKEditorField();
+        $field->setName('admissionPrices');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['admissionPrices'][0] ? $GLOBALS['TL_LANG'][$strName]['admissionPrices'][0] : '');
         $fields[] = $field;
 
         return $fields;

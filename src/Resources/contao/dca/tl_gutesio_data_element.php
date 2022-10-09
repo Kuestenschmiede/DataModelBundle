@@ -68,7 +68,7 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         'directions' => [
             'sql' => "TEXT NULL"
         ],
-        'surroungdings' => [
+        'surroundings' => [
             'sql' => "TEXT NULL"
         ],
         'importantNotes' => [
