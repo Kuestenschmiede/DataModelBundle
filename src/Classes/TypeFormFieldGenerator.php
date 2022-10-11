@@ -201,8 +201,8 @@ class TypeFormFieldGenerator
         $field = new CKEditorFormField();
         $field->setName('technicalEquipment');
         $field->setLabel($GLOBALS['TL_LANG'][$strName]['technicalEquipment'] && (count($GLOBALS['TL_LANG'][$strName]['technicalEquipment']) > 0) ? $GLOBALS['TL_LANG'][$strName]['technicalEquipment'][0] : '');
-        $field->setParagraphLabel($GLOBALS['TL_LANG']['form_tag_fields']['frontend']['paragraph']);
-        $field->setHeadingLabel($GLOBALS['TL_LANG']['form_tag_fields']['frontend']['heading']);
+        $field->setParagraphLabel($GLOBALS['TL_LANG'][$strName]['frontend']['paragraph'] ?: "Absatz");
+        $field->setHeadingLabel($GLOBALS['TL_LANG'][$strName]['frontend']['heading'] ?: ['Titel', 'Untertitel']);
         $fields['technicalEquipment'] = $field;
 
         $field = new CheckboxFormField();
@@ -225,8 +225,8 @@ class TypeFormFieldGenerator
         $field = new CKEditorFormField();
         $field->setName('admissionPrices');
         $field->setLabel($GLOBALS['TL_LANG'][$strName]['admissionPrices'] && (count($GLOBALS['TL_LANG'][$strName]['admissionPrices']) > 0) ? $GLOBALS['TL_LANG'][$strName]['admissionPrices'][0] : '');
-        $field->setParagraphLabel($GLOBALS['TL_LANG']['form_tag_fields']['frontend']['paragraph']);
-        $field->setHeadingLabel($GLOBALS['TL_LANG']['form_tag_fields']['frontend']['heading']);
+        $field->setParagraphLabel($GLOBALS['TL_LANG'][$strName]['frontend']['paragraph'] ?: "Absatz");
+        $field->setHeadingLabel($GLOBALS['TL_LANG'][$strName]['frontend']['heading'] ?: ['Titel', 'Untertitel']);
         $fields['admissionPrices'] = $field;
 
         return $fields;

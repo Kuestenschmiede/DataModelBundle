@@ -64,6 +64,7 @@ class ShowcaseResultConverter
             $datum['description'] = html_entity_decode(Controller::replaceInsertTags($result['description']));
             $datum['directions'] = html_entity_decode($result['directions']);
             $datum['surroundings'] = html_entity_decode($result['surroundings']);
+            $datum['imageCredits'] = html_entity_decode($result['imageCredits']);
             $datum['importantNotes'] = html_entity_decode($result['importantNotes']);
             $datum['technicalEquipment'] = html_entity_decode($result['technicalEquipment']);
             $datum['admissionPrices'] = html_entity_decode($result['admissionPrices']);

@@ -85,6 +85,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child'] = [
         'imageGallery' => [
             'sql' => "blob NULL"
         ],
+        'imageCredits' => [
+            'sql' => "TEXT NULL"
+        ],
         'importId' => [
             'sql' => "int(10) unsigned NOT NULL default '0'"
         ],

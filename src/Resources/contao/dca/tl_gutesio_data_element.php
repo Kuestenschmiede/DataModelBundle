@@ -200,6 +200,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         'logo' => [
             'sql' => "binary(16) NULL"
         ],
+        'imageCredits' => [
+            'sql' => "TEXT NULL"
+        ],
         'allowLogoDisplay' => [
             'sql' => "int NOT NULL default 0"
         ],
