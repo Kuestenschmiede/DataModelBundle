@@ -78,6 +78,15 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_event'] = [
         ],
         'appointmentUponAgreement' => [
             'sql' => "char(1) NULL"
+        ],
+        'minPersons' => [
+            'sql' => "int NOT NULL default 0"
+        ],
+        'maxPersons' => [
+            'sql' => "int NOT NULL default 0"
+        ],
+        'eventPrice' => [
+            'sql' => "float NULL"
         ]
     ],
 ];
