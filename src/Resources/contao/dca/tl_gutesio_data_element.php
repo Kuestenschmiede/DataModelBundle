@@ -140,6 +140,12 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         'wikipediaLink' => [
             'sql' => "varchar(255) NOT NULL default ''"
         ],
+        'androidAppLink' => [
+            'sql' => "varchar(255) NOT NULL default ''"
+        ],
+        'playstoreLink' => [
+            'sql' => "varchar(255) NOT NULL default ''"
+        ],
         'facebook' => [
             'sql' => "varchar(255) NOT NULL default ''"
         ],
