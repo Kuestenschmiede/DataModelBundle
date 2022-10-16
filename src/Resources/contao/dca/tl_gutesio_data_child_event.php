@@ -40,6 +40,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_event'] = [
         'beginTime' => [
             'sql' => "int NULL"
         ],
+        'entryTime' => [
+            'sql' => "int NULL"
+        ],
         'endDate' => [
             'sql' => "int NULL"
         ],
