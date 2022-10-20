@@ -10,7 +10,10 @@
 namespace gutesio\DataModelBundle\Classes;
 
 use con4gis\FrameworkBundle\Classes\FormFields\CKEditorFormField;
+use con4gis\FrameworkBundle\Classes\FormFields\SelectFormField;
 use con4gis\FrameworkBundle\Classes\FormFields\TextFormField;
+use con4gis\ReservationBundle\Classes\Models\C4gReservationSettingsModel;
+use gutesio\DataModelBundle\Resources\contao\models\GutesioDataTypeModel;
 
 /**
  * Class TagFormFieldGenerator
@@ -19,7 +22,7 @@ use con4gis\FrameworkBundle\Classes\FormFields\TextFormField;
  */
 class TagFormFieldGenerator
 {
-    public static function getFieldsForTag(string $technicalKey)
+    public static function getFieldsForTag(string $technicalKey, array $types)
     {
         switch ($technicalKey) {
             case 'tag_delivery':
@@ -31,7 +34,7 @@ class TagFormFieldGenerator
             case 'tag_familyFriendly':
                 return static::createFieldForFamilyFriendlyTag();
             case 'tag_online_reservation':
-                return static::createFieldForOnlineReservationTag();
+                return static::createFieldForOnlineReservationTag($types);
             case 'tag_onlineshop':
                 return static::createFieldForOnlineshopTag();
             case 'tag_michelin_stars':
@@ -61,20 +64,20 @@ class TagFormFieldGenerator
         }
     }
 
-    public static function getFieldsForTags(array $technicalKeys)
+    public static function getFieldsForTags(array $technicalKeys, array $types = [])
     {
         $fields = [];
         foreach ($technicalKeys as $technicalKey) {
-            $fields = array_merge($fields, static::getFieldsForTag($technicalKey));
+            $fields = array_merge($fields, static::getFieldsForTag($technicalKey, $types));
         }
 
         return $fields;
     }
 
-    public static function getNonMatchingFields(array $technicalKeys)
+    public static function getNonMatchingFields(array $technicalKeys, array $types = [])
     {
-        $allFields = static::getAllFields();
-        $matchingFields = static::getFieldsForTags($technicalKeys);
+        $allFields = static::getAllFields($types);
+        $matchingFields = static::getFieldsForTags($technicalKeys,$types);
         $nonMatchingFields = [];
         foreach ($allFields as $field) {
             $addField = true;
@@ -93,12 +96,12 @@ class TagFormFieldGenerator
         return $nonMatchingFields;
     }
 
-    public static function getAllFields()
+    public static function getAllFields(array $types)
     {
         $deliveryFields = static::createFieldForDeliveryTag();
         $wheelChairFields = static::createFieldForWheelchairTag();
         $coronaFields = static::createFieldForCoronaTag();
-        $reservationFields = static::createFieldForOnlineReservationTag();
+        $reservationFields = static::createFieldForOnlineReservationTag($types);
         $onlineShopFields = static::createFieldForOnlineshopTag();
         $michelinFields = static::createFieldForMichelinStarsTag();
 
@@ -165,14 +168,54 @@ class TagFormFieldGenerator
         return $fields;
     }
 
-    private static function createFieldForOnlineReservationTag()
+    private static function createFieldForOnlineReservationTag(array $types)
     {
         $fields = [];
         $field = new TextFormField();
         $field->setName('onlineReservationLink');
         $field->setLabel($GLOBALS['TL_LANG']['form_tag_fields']['onlineReservationLink'][0]);
-        $field->setDescription($GLOBALS['TL_LANG']['form_tag_fields']['onlineReservationLink'][1]);
+        $field->setDescription($GLOBALS['TL_LANG']['form_tag_fields']['onlineReservationLink'][1]); //ToDo add booking to description
+        $field->setValue("https://gutes.digital/booking?gid=[UUID]");
         $fields[] = $field;
+
+        $reservationOptions = [];
+
+        $settings = [];
+        if ($types) {
+            $typeIds = [];
+            foreach ($types as $type) {
+                if ($type['value'] && $type['label']) {
+                    $typeIds[] = intval($type['value']);
+                }
+            }
+            $objTypes = GutesioDataTypeModel::findMultipleByIds($typeIds);
+            foreach ($objTypes as $objType) {
+                $reservationSettings = unserialize($objType->reservationSettings);
+                foreach ($reservationSettings as $reservationSetting) {
+                    $settingsObj = C4gReservationSettingsModel::findById($reservationSetting);
+                    if ($settingsObj) {
+                        $settings[$reservationSetting] = $settingsObj->caption;
+                    }
+                }
+            }
+        }
+
+        if (count($settings)) {
+            //$reservationOptions[0] = ['value'=>0,'label'=>'Keine Reservierung über gutes.digital (Standard)'];
+            foreach ($settings as $value=>$label) {
+                $reservationOptions[] = [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            }
+
+            $field = new SelectFormField();
+            $field->setName('onlineReservationSettings'); // ToDo
+            $field->setLabel('Vordefinierte Reservierungsformulare'); //ToDo Language
+            $field->setDescription('Ein Standard wurde vordefiniert. Auf Wunsch kann die Auswahl ergänzt und individualisiert werden.'); //ToDo Language
+            $field->setOptions($reservationOptions);
+            $fields[] = $field;
+        }
 
         return $fields;
     }
@@ -189,7 +232,7 @@ class TagFormFieldGenerator
         return $fields;
     }
 
-    private static function createFieldForTableReservationTag()
+    private static function createFieldForTableReservationTag(array $types)
     {
         $fields = [];
         $field = new TextFormField();
@@ -197,6 +240,45 @@ class TagFormFieldGenerator
         $field->setLabel($GLOBALS['TL_LANG']['form_tag_fields']['tableReservationLink'][0]);
         $field->setDescription($GLOBALS['TL_LANG']['form_tag_fields']['tableReservationLink'][1]);
         $fields[] = $field;
+
+        $reservationOptions = [];
+
+        $settings = [];
+        if ($types) {
+            $typeIds = [];
+            foreach ($types as $type) {
+                if ($type['value'] && $type['label']) {
+                    $typeIds[] = intval($type['value']);
+                }
+            }
+            $objTypes = GutesioDataTypeModel::findMultipleByIds($typeIds);
+            foreach ($objTypes as $objType) {
+                $reservationSettings = unserialize($objType->reservationSettings);
+                foreach ($reservationSettings as $reservationSetting) {
+                    $settingsObj = C4gReservationSettingsModel::findById($reservationSetting);
+                    if ($settingsObj) {
+                        $settings[$reservationSetting]  = $settingsObj->caption;
+                    }
+                }
+            }
+        }
+
+        //ToDo load settings by showcase types
+        foreach ($settings as $key=>$value) {
+            $reservationOptions[] = [
+                'value' => $key,
+                'label' => $value,
+            ];
+        }
+
+        if (count($reservationOptions)) {
+            $field = new SelectFormField();
+            $field->setName('onlineReservationSettings'); // ToDo
+            $field->setLabel('Vordefinierte Reservierungsformulare'); //ToDo Language
+            $field->setDescription('Ein Standard wurde vordefiniert. Auf Wunsch kann die Auswahl ergänzt und individualisiert werden.'); //ToDo Language
+            $field->setOptions($reservationOptions);
+            $fields[] = $field;
+        }
 
         return $fields;
     }
