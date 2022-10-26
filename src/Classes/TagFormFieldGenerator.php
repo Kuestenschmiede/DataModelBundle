@@ -200,6 +200,8 @@ class TagFormFieldGenerator
             }
         }
 
+        //ToDo load additional settings by showcase
+
         if (count($settings)) {
             //$reservationOptions[0] = ['value'=>0,'label'=>'Keine Reservierung über gutes.digital (Standard)'];
             foreach ($settings as $value=>$label) {

@@ -9,11 +9,11 @@
  */
 namespace gutesio\DataModelBundle\Classes;
 
+use con4gis\FrameworkBundle\Classes\DetailFields\DetailHTMLField;
 use con4gis\FrameworkBundle\Classes\DetailFields\DetailLinkField;
 use con4gis\FrameworkBundle\Classes\DetailFields\DetailTextAreaField;
 use con4gis\FrameworkBundle\Classes\DetailFields\DetailTextField;
 use con4gis\FrameworkBundle\Classes\DetailFields\PDFDetailField;
-use con4gis\FrameworkBundle\Classes\FormFields\DetailCKEditorField;
 use con4gis\FrameworkBundle\Classes\Utility\FieldUtil;
 use Contao\System;
 
@@ -87,7 +87,7 @@ class TypeDetailFieldGenerator
         $field->setLabel($GLOBALS['TL_LANG'][$strName]['maxPersons'][0] ? $GLOBALS['TL_LANG'][$strName]['maxPersons'][0] : '');
         $fields[] = $field;
 
-        $field = new DetailCKEditorField();
+        $field = new DetailHTMLField();
         $field->setName('technicalEquipment');
         $field->setLabel($GLOBALS['TL_LANG'][$strName]['technicalEquipment'][0] ? $GLOBALS['TL_LANG'][$strName]['technicalEquipment'][0] : '');
         $fields[] = $field;
@@ -103,7 +103,7 @@ class TypeDetailFieldGenerator
 
         $fields = [];
 
-        $field = new DetailCKEditorField();
+        $field = new DetailHTMLField();
         $field->setName('admissionPrices');
         $field->setLabel($GLOBALS['TL_LANG'][$strName]['admissionPrices'][0] ? $GLOBALS['TL_LANG'][$strName]['admissionPrices'][0] : '');
         $fields[] = $field;
