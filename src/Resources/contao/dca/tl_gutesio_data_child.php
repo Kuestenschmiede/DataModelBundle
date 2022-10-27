@@ -88,6 +88,15 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child'] = [
         'imageCredits' => [
             'sql' => "TEXT NULL"
         ],
+        'videoLink' => [
+            'sql' => "varchar(255) NOT NULL default ''"
+        ],
+        'videoType' => [
+            'sql' => "varchar(10) NOT NULL default ''"
+        ],
+        'videoPreviewImage' => [
+            'sql' => "binary(16) NULL"
+        ],
         'importId' => [
             'sql' => "int(10) unsigned NOT NULL default '0'"
         ],
