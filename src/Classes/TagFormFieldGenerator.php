@@ -96,7 +96,7 @@ class TagFormFieldGenerator
         return $nonMatchingFields;
     }
 
-    public static function getAllFields(array $types)
+    public static function getAllFields($types = [])
     {
         $deliveryFields = static::createFieldForDeliveryTag();
         $wheelChairFields = static::createFieldForWheelchairTag();

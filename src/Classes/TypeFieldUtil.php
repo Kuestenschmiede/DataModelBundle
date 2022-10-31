@@ -14,7 +14,7 @@ class TypeFieldUtil
     public static function getTypeFieldnames()
     {
         $fieldNames = [];
-        $fields = TypeFormFieldGenerator::getAllFields();
+        $fields = TypeFormFieldGenerator::getAllFields([]);
         foreach ($fields as $field) {
             $fieldNames[] = $field->getName();
         }
