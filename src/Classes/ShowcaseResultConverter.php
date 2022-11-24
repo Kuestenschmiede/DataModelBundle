@@ -242,7 +242,7 @@ class ShowcaseResultConverter
                         $tag = $tagRow;
                         $validFrom = intval($tag['validFrom']);
                         $validUntil = intval($tag['validUntil']);
-                        if (($validFrom === 0) || ($validFrom >= time()) && (($validUntil === 0) || ($validUntil <= time()))) {
+                        if (($validFrom === 0) || ($validFrom <= time()) && (($validUntil === 0) || ($validUntil >= time()))) {
                             if ($tag['image']) {
                                 $filesModel = FilesModel::findByUuid(StringUtil::binToUuid($tag['image']));
                                 if ($filesModel) {
@@ -453,8 +453,8 @@ class ShowcaseResultConverter
                             ->execute($tagId)->fetchAssoc();
                         $validFrom = intval($tagRow['validFrom']);
                         $validUntil = intval($tagRow['validUntil']);
-                        if (($validFrom === 0) || ($validFrom >= time())
-                            && (($validUntil === 0) || ($validUntil <= time()))
+                        if (($validFrom === 0) || ($validFrom <= time())
+                            && (($validUntil === 0) || ($validUntil >= time()))
                         ) {
                             $tag = [
                                 'value' => $tagId,
