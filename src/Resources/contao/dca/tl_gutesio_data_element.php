@@ -39,7 +39,7 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
             'sql' => "TEXT NULL"
         ],
         'name' => [
-            'sql' => "varchar(64) NOT NULL default ''"
+            'sql' => "varchar(128) NOT NULL default ''"
         ],
         'description' => [
             'sql' => "text NULL"
