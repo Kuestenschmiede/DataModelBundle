@@ -87,6 +87,12 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_event'] = [
         ],
         'eventPrice' => [
             'sql' => "float NULL"
+        ],
+        'reservationContactEMail' => [
+            'sql' => "varchar(255) NOT NULL default ''"
+        ],
+        'reservationContactPhone' => [
+            'sql' => "varchar(50) NOT NULL default ''"
         ]
     ],
 ];
