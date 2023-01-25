@@ -175,7 +175,7 @@ class TagFormFieldGenerator
         $field->setName('onlineReservationLink');
         $field->setLabel($GLOBALS['TL_LANG']['form_tag_fields']['onlineReservationLink'][0]);
         $field->setDescription($GLOBALS['TL_LANG']['form_tag_fields']['onlineReservationLink'][1]); //ToDo add booking to description
-        $field->setValue("https://gutes.digital/booking?gid=[UUID]");
+        $field->setValue("");
         $fields[] = $field;
 
         $reservationOptions = [];
