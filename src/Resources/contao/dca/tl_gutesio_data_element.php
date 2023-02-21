@@ -274,6 +274,12 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         ],
         'importId' => [
             'sql' => "int(20) unsigned NOT NULL default '0'"
+        ],
+        'displayComply' => [
+            'sql' => "tinyint(1) NOT NULL default 0"
+        ],
+        'displaySlogan' => [
+            'sql' => "varchar(512) NOT NULL default ''"
         ]
     ],
 ];
