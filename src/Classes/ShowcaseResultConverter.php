@@ -124,6 +124,8 @@ class ShowcaseResultConverter
             $datum['opening_hours_additional'] = html_entity_decode($result['opening_hours_additional']);
             $datum['legalTextSet'] = $result['legalTextSet'];
             $datum['cashOnlyIfPickup'] = $result['cashOnlyIfPickup'];
+            $datum['displayRequest'] = $result['displayRequest'];
+            $datum['displaySlogan'] = $result['displaySlogan'];
             $datum['operators'] = [];
 
             if (key_exists('operators',$result)) {
