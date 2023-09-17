@@ -144,7 +144,7 @@ class ShowcaseResultConverter
                 ->execute($result['uuid'])->fetchEach('typeId');
             foreach ($arrTypeIds as $typeId) {
                 if (key_exists($typeId,$this->cachedTypes)) {
-                    $datum['types'][] = $this->cachedTypes[$typeId];
+                    $datum['types'][$typeId] = $this->cachedTypes[$typeId];
                 } else {
                     $typeRow = $db
                         ->prepare('SELECT `id`, `name`, `uuid` FROM tl_gutesio_data_type WHERE uuid = ?')
@@ -166,7 +166,7 @@ class ShowcaseResultConverter
                     if ($type) {
                         $this->cachedTypes[$typeId] = $type;
 
-                        $datum['types'][] = $type;
+                        $datum['types'][$typeId] = $type;
                     }
                 }
             }
