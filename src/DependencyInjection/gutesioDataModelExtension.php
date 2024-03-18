@@ -30,11 +30,10 @@ class gutesioDataModelExtension extends Extension
             $container,
             new FileLocator(__DIR__.'/../Resources/config')
         );
-//        $loader->load('services.yml');
     }
-    
-    public function getAlias()
-    {
-        return "gutesio_data_model";
-    }
+//
+//    public function getAlias()
+//    {
+//        return "gutesio_data_model";
+//    }
 }

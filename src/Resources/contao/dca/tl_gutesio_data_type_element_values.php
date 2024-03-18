@@ -47,6 +47,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_type_element_values'] = [
         'typeFieldFile' => [
             'sql' => "binary(16) NULL"
         ],
+        'typeFieldFileCDN' => [
+            'sql' => "varchar(255) NOT NULL default ''"
+        ],
         'importId' => [
             'sql' => "int(20) unsigned NOT NULL default '0'"
         ]

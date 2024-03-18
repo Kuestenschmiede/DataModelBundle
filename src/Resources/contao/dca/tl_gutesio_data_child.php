@@ -79,10 +79,19 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child'] = [
         'image' => [
             'sql' => "binary(16) NULL"
         ],
+        'imageCDN' => [
+           'sql' => "varchar(255) NOT NULL default ''"
+        ],
         'imageOffer' => [
             'sql' => "binary(16) NULL"
         ],
+        'imageOfferCDN' => [
+            'sql' => "varchar(255) NOT NULL default ''"
+        ],
         'imageGallery' => [
+            'sql' => "blob NULL"
+        ],
+        'imageGalleryCDN' => [
             'sql' => "blob NULL"
         ],
         'imageCredits' => [
@@ -97,6 +106,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child'] = [
         'videoPreviewImage' => [
             'sql' => "binary(16) NULL"
         ],
+        'videoPreviewImageCDN' => [
+            'sql' => "varchar(255) NULL"
+        ],
         'importId' => [
             'sql' => "int(10) unsigned NOT NULL default '0'"
         ],
@@ -108,6 +120,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child'] = [
         ],
         'infoFile' => [
             'sql' => "binary(16) NULL"
+        ],
+        'infoFileCDN' => [
+            'sql' => "varchar(10) NOT NULL default ''"
         ],
         'offerForSale' => [
             'sql' => "char(1) NULL"
