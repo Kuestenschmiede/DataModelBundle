@@ -200,24 +200,6 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         'imageCDN' => [
             'sql' => "varchar(255) NOT NULL default ''"
         ],
-        'imagePopup' => [
-            'sql' => "binary(16) NULL"
-        ],
-        'imagePopupCDN' => [
-            'sql' => "varchar(255) NOT NULL default ''"
-        ],
-        'imageShowcase' => [
-            'sql' => "binary(16) NULL"
-        ],
-        'imageShowcaseCDN' => [
-            'sql' => "varchar(255) NOT NULL default ''"
-        ],
-        'imageList' => [
-            'sql' => "binary(16) NULL"
-        ],
-        'imageListCDN' => [
-            'sql' => "binary(16) NULL"
-        ],
         'logo' => [
             'sql' => "binary(16) NULL"
         ],

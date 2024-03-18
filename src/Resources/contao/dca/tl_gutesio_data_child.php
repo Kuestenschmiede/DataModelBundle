@@ -82,12 +82,6 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child'] = [
         'imageCDN' => [
            'sql' => "varchar(255) NOT NULL default ''"
         ],
-        'imageOffer' => [
-            'sql' => "binary(16) NULL"
-        ],
-        'imageOfferCDN' => [
-            'sql' => "varchar(255) NOT NULL default ''"
-        ],
         'imageGallery' => [
             'sql' => "blob NULL"
         ],
