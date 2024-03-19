@@ -76,14 +76,8 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child'] = [
         'avgRating' => [
             'sql' => "float(5,2) NOT NULL default 0"
         ],
-        'image' => [
-            'sql' => "binary(16) NULL"
-        ],
         'imageCDN' => [
            'sql' => "varchar(255) NOT NULL default ''"
-        ],
-        'imageGallery' => [
-            'sql' => "blob NULL"
         ],
         'imageGalleryCDN' => [
             'sql' => "blob NULL"
@@ -97,9 +91,6 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child'] = [
         'videoType' => [
             'sql' => "varchar(10) NOT NULL default ''"
         ],
-        'videoPreviewImage' => [
-            'sql' => "binary(16) NULL"
-        ],
         'videoPreviewImageCDN' => [
             'sql' => "varchar(255) NULL"
         ],
@@ -111,9 +102,6 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child'] = [
         ],
         'memberId' => [
             'sql' => "int(10) unsigned NOT NULL default 0"
-        ],
-        'infoFile' => [
-            'sql' => "binary(16) NULL"
         ],
         'infoFileCDN' => [
             'sql' => "varchar(10) NOT NULL default ''"

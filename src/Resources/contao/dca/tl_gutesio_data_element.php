@@ -176,9 +176,6 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         'videoType' => [
             'sql' => "varchar(10) NOT NULL default ''"
         ],
-        'videoPreviewImage' => [
-            'sql' => "binary(16) NULL"
-        ],
         'videoPreviewImageCDN' => [
             'sql' => "varchar(255) NOT NULL default ''"
         ],
@@ -194,14 +191,8 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         'opening_hours_additional' => [
             'sql' => "TEXT NULL"
         ],
-        'image' => [
-            'sql' => "binary(16) NULL"
-        ],
         'imageCDN' => [
             'sql' => "varchar(255) NOT NULL default ''"
-        ],
-        'logo' => [
-            'sql' => "binary(16) NULL"
         ],
         'logoCDN' => [
             'sql' => "varchar(255) NOT NULL default ''"
@@ -211,9 +202,6 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         ],
         'allowLogoDisplay' => [
             'sql' => "int NOT NULL default 0"
-        ],
-        'imageGallery' => [
-            'sql' => "blob NULL"
         ],
         'imageGalleryCDN' => [
             'sql' => "blob NULL"
