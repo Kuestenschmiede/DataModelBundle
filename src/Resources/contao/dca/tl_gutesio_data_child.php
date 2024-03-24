@@ -104,7 +104,7 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child'] = [
             'sql' => "int(10) unsigned NOT NULL default 0"
         ],
         'infoFileCDN' => [
-            'sql' => "varchar(10) NOT NULL default ''"
+            'sql' => "varchar(255) NOT NULL default ''"
         ],
         'offerForSale' => [
             'sql' => "char(1) NULL"
