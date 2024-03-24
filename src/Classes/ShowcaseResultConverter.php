@@ -15,6 +15,7 @@ use Contao\Database;
 use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\System;
+use gutesio\OperatorBundle\Classes\Models\GutesioOperatorSettingsModel;
 
 /**
  * Class ShowcaseResultConverter
@@ -107,11 +108,11 @@ class ShowcaseResultConverter
                 'video' => html_entity_decode($result['videoLink']),
             ];
             if ($result['videoPreviewImage']) {
-                $model = FilesModel::findByUuid(StringUtil::deserialize($result['videoPreviewImage']));
-                if ($model !== null) {
-                    $datum['videoPreview']['videoPreviewImage'] = $this->createFileDataFromModel($model);
+//                $model = FilesModel::findByUuid(StringUtil::deserialize($result['videoPreviewImage']));
+//                if ($model !== null) {
+                    $datum['videoPreview']['videoPreviewImage'] = $this->createFileDataFromFile($result['videoPreviewImageCDN']);
                     $datum['videoPreviewImage'] = $datum['videoPreview']['videoPreviewImage'];
-                }
+                //}
             }
             $datum['youtubeChannelLink'] = C4GUtils::addProtocolToLink($result['youtubeChannelLink']);
             $datum['vimeoChannelLink'] = C4GUtils::addProtocolToLink($result['vimeoChannelLink']);
@@ -245,13 +246,13 @@ class ShowcaseResultConverter
                         $validFrom = intval($tag['validFrom']);
                         $validUntil = intval($tag['validUntil']);
                         if (($validFrom === 0) || ($validFrom <= time()) && (($validUntil === 0) || ($validUntil >= time()))) {
-                            if ($tag['image']) {
-                                $filesModel = FilesModel::findByUuid(StringUtil::binToUuid($tag['image']));
-                                if ($filesModel) {
-                                    $tag['image'] = $this->createFileDataFromModel($filesModel, true);
-                                } else {
-                                    $tag['image'] = [];
-                                }
+                            if ($tag['imageCDN']) {
+//                                $filesModel = FilesModel::findByUuid(StringUtil::binToUuid($tag['image']));
+//                                if ($filesModel) {
+                                    $tag['image'] = $this->createFileDataFromFile($tag['imageCDN'], true);
+//                                } else {
+//                                    $tag['image'] = [];
+//                                }
                                 switch ($tag['technicalKey']) {
                                     case 'tag_delivery':
                                         $stmt = $db->prepare(
@@ -526,8 +527,8 @@ class ShowcaseResultConverter
                             foreach ($relatedIds as $relatedId) {
                                 if ($relatedId === $datum['uuid']) {
                                     if ($showcase['allowLogoDisplay'] && $showcase['logo'] && !in_array($showcase['uuid'], $processedIds)) {
-                                        $logoModel = FilesModel::findByUuid(StringUtil::binToUuid($showcase['logo']));
-                                        if ($logoModel) {
+                                        //$logoModel = FilesModel::findByUuid(StringUtil::binToUuid($showcase['logo']));
+                                        if ($showcase['logoCDN']) {
                                             if (!$datum['relatedShowcaseLogos']) {
                                                 $datum['relatedShowcaseLogos'] = [];
                                             }
@@ -535,7 +536,8 @@ class ShowcaseResultConverter
                                             if (!$datum['relatedShowcases']) {
                                                 $datum['relatedShowcases'] = [];
                                             }
-                                            $logoData = $this->createFileDataFromModel($logoModel);
+                                            //$logoData = $this->createFileDataFromModel($logoModel);
+                                            $logoData = $this->createFileDataFromFile($showcase['logoCDN']);
                                             $logoData['href'] = $showcase['alias'];
                                             $datum['relatedShowcaseLogos'][] = $logoData;
                                             $datum['relatedShowcases'][] = [
@@ -581,11 +583,11 @@ class ShowcaseResultConverter
                 $datum['directory'] = $result['directory'];
             }
 
-            if ($result['image']) {
-                $model = FilesModel::findByUuid(StringUtil::deserialize($result['image']));
-                if ($model !== null) {
-                    $datum['image'] = $this->createFileDataFromModel($model);
-                }
+            if ($result['imageCDN']) {
+                //$model = FilesModel::findByUuid(StringUtil::deserialize($result['image']));
+                //if ($model !== null) {
+                    $datum['image'] = $this->createFileDataFromFile($result['imageCDN']);
+                //}
             }
 //            if ($result['imageList']) {
 //                $model = FilesModel::findByUuid(StringUtil::deserialize($result['imageList']));
@@ -605,21 +607,21 @@ class ShowcaseResultConverter
 //                    $datum['imagePopup'] = $this->createFileDataFromModel($model);
 //                }
 //            }
-            if ($result['logo']) {
-                $model = FilesModel::findByUuid(StringUtil::deserialize($result['logo']));
-                if ($model !== null) {
-                    $datum['logo'] = $this->createFileDataFromModel($model);
-                }
+            if ($result['logoCDN']) {
+//                $model = FilesModel::findByUuid(StringUtil::deserialize($result['logo']));
+//                if ($model !== null) {
+                    $datum['logo'] = $this->createFileDataFromFile($result['logoCDN']);
+//                }
             }
-            if ($result['imageGallery']) {
-                $images = StringUtil::deserialize($result['imageGallery']);
+            if ($result['imageGalleryCDN']) {
+                $images = StringUtil::deserialize($result['imageGalleryCDN']);
                 $idx = 0;
                 foreach ($images as $image) {
-                    $model = FilesModel::findByUuid(StringUtil::deserialize($image));
-                    if ($model !== null) {
-                        $datum['imageGallery_' . $idx] = $this->createFileDataFromModel($model);
+//                    $model = FilesModel::findByUuid(StringUtil::deserialize($image));
+//                    if ($model !== null) {
+                        $datum['imageGallery_' . $idx] = $this->createFileDataFromFile($image);
                         $idx++;
-                    }
+//                    }
                 }
             }
             // load imprint data
@@ -691,6 +693,36 @@ class ShowcaseResultConverter
                 'width' => $model->importantPartWidth,
                 'height' => $model->importantPartHeight,
             ],
+        ];
+    }
+
+    //ToDO
+    public function createFileDataFromFile($file, $svg = false) : array
+    {
+        $objSettings = GutesioOperatorSettingsModel::findSettings();
+        $cdnUrl = $objSettings->cdnUrl;
+
+        //if ($svg) {
+            $width = 100;
+            $height = 100;
+//        } else {
+//            list($width, $height) = getimagesize($model->path);
+//        }
+
+        return [
+            'src' => $cdnUrl.$file,
+            'path' => $cdnUrl.$file,
+            'uuid' => '',
+            'alt' => '',
+            'name' => '',
+            'height' => $height,
+            'width' => $width/*,
+            'importantPart' => [
+                'x' => $model->importantPartX,
+                'y' => $model->importantPartY,
+                'width' => $model->importantPartWidth,
+                'height' => $model->importantPartHeight,
+            ],*/
         ];
     }
 
