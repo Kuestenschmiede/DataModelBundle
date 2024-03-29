@@ -584,44 +584,18 @@ class ShowcaseResultConverter
             }
 
             if ($result['imageCDN']) {
-                //$model = FilesModel::findByUuid(StringUtil::deserialize($result['image']));
-                //if ($model !== null) {
-                    $datum['image'] = $this->createFileDataFromFile($result['imageCDN']);
-                //}
+               $datum['image'] = $this->createFileDataFromFile($result['imageCDN']);
             }
-//            if ($result['imageList']) {
-//                $model = FilesModel::findByUuid(StringUtil::deserialize($result['imageList']));
-//                if ($model !== null) {
-//                    $datum['imageList'] = $this->createFileDataFromModel($model);
-//                }
-//            }
-//            if ($result['imageShowcase']) {
-//                $model = FilesModel::findByUuid(StringUtil::deserialize($result['imageShowcase']));
-//                if ($model !== null) {
-//                    $datum['imageShowcase'] = $this->createFileDataFromModel($model);
-//                }
-//            }
-//            if ($result['imagePopup']) {
-//                $model = FilesModel::findByUuid(StringUtil::deserialize($result['imagePopup']));
-//                if ($model !== null) {
-//                    $datum['imagePopup'] = $this->createFileDataFromModel($model);
-//                }
-//            }
+
             if ($result['logoCDN']) {
-//                $model = FilesModel::findByUuid(StringUtil::deserialize($result['logo']));
-//                if ($model !== null) {
-                    $datum['logo'] = $this->createFileDataFromFile($result['logoCDN']);
-//                }
+                $datum['logo'] = $this->createFileDataFromFile($result['logoCDN']);
             }
             if ($result['imageGalleryCDN']) {
                 $images = StringUtil::deserialize($result['imageGalleryCDN']);
                 $idx = 0;
                 foreach ($images as $image) {
-//                    $model = FilesModel::findByUuid(StringUtil::deserialize($image));
-//                    if ($model !== null) {
-                        $datum['imageGallery_' . $idx] = $this->createFileDataFromFile($image);
-                        $idx++;
-//                    }
+                    $datum['imageGallery_' . $idx] = $this->createFileDataFromFile($image);
+                    $idx++;
                 }
             }
             // load imprint data
