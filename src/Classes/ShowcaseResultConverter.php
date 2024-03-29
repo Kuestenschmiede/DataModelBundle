@@ -579,7 +579,7 @@ class ShowcaseResultConverter
             $datum['contactCity'] = $result['contactCity'];
             $datum['contactStreet'] = $result['contactStreet'];
             $datum['contactStreetNumber'] = $result['contactStreetNumber'];
-            if ($result['directory']) {
+            if (key_exists('directory', $result) && $result['directory']) {
                 $datum['directory'] = $result['directory'];
             }
 
@@ -676,12 +676,15 @@ class ShowcaseResultConverter
         $objSettings = GutesioOperatorSettingsModel::findSettings();
         $cdnUrl = $objSettings->cdnUrl;
 
-        //if ($svg) {
+        if ($svg) {
             $width = 100;
             $height = 100;
-//        } else {
-//            list($width, $height) = getimagesize($model->path);
-//        }
+        } else {
+            //ToDo extreme slow
+            //list($width, $height) = getimagesize($cdnUrl.$file);
+            $width = 600;
+            $height = 450;
+        }
 
         return [
             'src' => $cdnUrl.$file,
