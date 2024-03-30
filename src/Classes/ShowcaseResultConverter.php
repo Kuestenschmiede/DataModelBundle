@@ -67,8 +67,8 @@ class ShowcaseResultConverter
             $datum['surroundings'] = html_entity_decode($result['surroundings']);
             $datum['imageCredits'] = html_entity_decode($result['imageCredits']);
             $datum['importantNotes'] = html_entity_decode($result['importantNotes']);
-            $datum['technicalEquipment'] = html_entity_decode($result['technicalEquipment']);
-            $datum['admissionPrices'] = html_entity_decode($result['admissionPrices']);
+            $datum['technicalEquipment'] = key_exists('technicalEquipment', $result) ? html_entity_decode($result['technicalEquipment']) : '';
+            $datum['admissionPrices'] = key_exists('admissionPrices', $result) ? html_entity_decode($result['admissionPrices']) : '';
             $datum['alias'] = $result['alias'];
             $datum['geox'] = $result['geox'];
             $datum['geoy'] = $result['geoy'];
@@ -107,7 +107,7 @@ class ShowcaseResultConverter
                 'videoType' => $result['videoType'],
                 'video' => html_entity_decode($result['videoLink']),
             ];
-            if ($result['videoPreviewImage']) {
+            if (key_exists('videoPreviewImageCDN', $result) && $result['videoPreviewImageCDN']) {
 //                $model = FilesModel::findByUuid(StringUtil::deserialize($result['videoPreviewImage']));
 //                if ($model !== null) {
                     $datum['videoPreview']['videoPreviewImage'] = $this->createFileDataFromFile($result['videoPreviewImageCDN']);
@@ -125,7 +125,7 @@ class ShowcaseResultConverter
             $datum['opening_hours_additional'] = html_entity_decode($result['opening_hours_additional']);
             $datum['legalTextSet'] = $result['legalTextSet'];
             $datum['cashOnlyIfPickup'] = $result['cashOnlyIfPickup'];
-            $datum['displayRequest'] = $result['displayRequest'];
+            $datum['displayRequest'] = key_exists('displayRequest', $result) ? $result['displayRequest'] : '';
             $datum['displaySlogan'] = $result['displaySlogan'];
             $datum['operators'] = [];
 
@@ -186,7 +186,7 @@ class ShowcaseResultConverter
                 // check if the value is serialized
                 $fieldKey = $typeElementValue['typeFieldKey'];
                 $fieldValue = StringUtil::deserialize($typeElementValue['typeFieldValue']);
-                if (is_array($fieldValue) && $arrOptions['details']) {
+                if (is_array($fieldValue) && key_exists('details', $arrOptions) && $arrOptions['details']) {
                     $resultValue = '';
                     foreach ($fieldValue as $key => $value) {
                         if (is_array($value)) {
@@ -235,7 +235,7 @@ class ShowcaseResultConverter
                 ->prepare('SELECT tagId FROM tl_gutesio_data_tag_element WHERE elementId = ?')
                 ->execute($result['uuid'])->fetchEach('tagId');
             foreach ($arrTagIds as $tagId) {
-                if ($this->processedTags[$tagId] && !$arrOptions['loadTagsComplete']) {
+                if (key_exists($tagId, $this->processedTags) && $this->processedTags[$tagId] && !$arrOptions['loadTagsComplete']) {
                     $datum['tags'][] = $this->processedTags[$tagId];
                 } else {
                     if ($arrOptions['loadTagsComplete']) {
@@ -243,10 +243,10 @@ class ShowcaseResultConverter
                             ->prepare('SELECT * FROM tl_gutesio_data_tag WHERE published = 1 AND uuid = ?')
                             ->execute($tagId)->fetchAssoc();
                         $tag = $tagRow;
-                        $validFrom = intval($tag['validFrom']);
-                        $validUntil = intval($tag['validUntil']);
+                        $validFrom = $tag ? intval($tag['validFrom']) : 0;
+                        $validUntil = $tag ? intval($tag['validUntil']) : 0;
                         if (($validFrom === 0) || ($validFrom <= time()) && (($validUntil === 0) || ($validUntil >= time()))) {
-                            if ($tag['imageCDN']) {
+                            if ($tag && $tag['imageCDN']) {
 //                                $filesModel = FilesModel::findByUuid(StringUtil::binToUuid($tag['image']));
 //                                if ($filesModel) {
                                     $tag['image'] = $this->createFileDataFromFile($tag['imageCDN'], true);
@@ -491,7 +491,7 @@ class ShowcaseResultConverter
             $tagElementValues = $db->prepare($sql)->execute($datum['uuid'])->fetchAllAssoc();
             foreach ($tagElementValues as $tagElementValue) {
                 // avoid overriding type values with same key
-                if (!$datum[$tagElementValue['tagFieldKey']]) {
+                if (!key_exists($tagElementValue['tagFieldKey'], $datum) || !$datum[$tagElementValue['tagFieldKey']]) {
                     if ($tagElementValue['tagFieldKey'] === 'onlineReservationLink') {
                         if (strpos($tagElementValue['tagFieldValue'], '@') !== false) {
                             if (strpos($tagElementValue['tagFieldValue'], 'mailto:') !== 0) {
@@ -526,14 +526,14 @@ class ShowcaseResultConverter
                         if ($relatedIds) {
                             foreach ($relatedIds as $relatedId) {
                                 if ($relatedId === $datum['uuid']) {
-                                    if ($showcase['allowLogoDisplay'] && $showcase['logo'] && !in_array($showcase['uuid'], $processedIds)) {
+                                    if ($showcase['allowLogoDisplay'] && $showcase['logoCDN'] && !in_array($showcase['uuid'], $processedIds)) {
                                         //$logoModel = FilesModel::findByUuid(StringUtil::binToUuid($showcase['logo']));
                                         if ($showcase['logoCDN']) {
-                                            if (!$datum['relatedShowcaseLogos']) {
+                                            if (!key_exists('relatedShowcaseLogos', $datum) || !$datum['relatedShowcaseLogos']) {
                                                 $datum['relatedShowcaseLogos'] = [];
                                             }
                                             // this array is needed to restrict the options for the type filter correctly
-                                            if (!$datum['relatedShowcases']) {
+                                            if (!key_exists('relatedShowcases', $datum) || !$datum['relatedShowcases']) {
                                                 $datum['relatedShowcases'] = [];
                                             }
                                             //$logoData = $this->createFileDataFromModel($logoModel);
@@ -620,7 +620,7 @@ class ShowcaseResultConverter
                     $filledImprintData['addressCityAll'] = $filledImprintData['addressZipcode'] . ' ' . $arrImprintData['addressCity'];
                     $filledImprintData['responsibleStreetAll'] = $filledImprintData['responsibleStreet'] . ' ' . $arrImprintData['responsibleStreetNumber'];
                     $filledImprintData['responsibleCityAll'] = $filledImprintData['responsibleZipcode'] . ' ' . $arrImprintData['responsibleCity'];
-                    if ($filledImprintData['companyForm'] !== 'noImprintRequired') {
+                    if (key_exists('companyForm', $filledImprintData) && $filledImprintData['companyForm'] !== 'noImprintRequired') {
                         $datum['imprintData'] = $filledImprintData;
                     }
                     $datum = array_merge($datum, $filledImprintData);
