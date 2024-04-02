@@ -1,9 +1,9 @@
 {
   "name": "gutesio/data-model",
   "type": "contao-bundle",
-  "description": "The shared data-model bundle for gutes.digital.",
-  "keywords": ["gutes.digital"],
-  "homepage": "https://gutes.digital",
+  "description": "The shared data-model bundle for gutes.io.",
+  "keywords": ["gutes.io","gutes.digital","nordsee.digital"],
+  "homepage": "https://gutes.io",
   "license": "LGPL-3.0-or-later",
   "authors": [
     {

@@ -681,14 +681,16 @@ class ShowcaseResultConverter
             $height = 100;
         } else {
             //ToDo extreme slow
-            //list($width, $height) = getimagesize($cdnUrl.$file);
+            //list($width, $height) = getimagesize(StringUtils::addUrlToPath($cdnUrl,$file));
             $width = 600;
             $height = 450;
         }
 
+        $url = StringUtils::addUrlToPath($cdnUrl, $file);
+
         return [
-            'src' => $cdnUrl.$file,
-            'path' => $cdnUrl.$file,
+            'src' => $url,
+            'path' => $url,
             'uuid' => '',
             'alt' => '',
             'name' => '',
