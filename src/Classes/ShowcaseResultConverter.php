@@ -155,7 +155,7 @@ class ShowcaseResultConverter
                     if ($typeRow) {
                         $value = key_exists('id', $typeRow) ? $typeRow['id'] : '';
                         $label = key_exists('name',$typeRow) ? html_entity_decode($typeRow['name']) : '';
-                        $uuid = key_exists('id',$typeRow) ? $typeRow['uuid'] : '';
+                        $uuid = key_exists('uuid',$typeRow) ? $typeRow['uuid'] : '';
 
                         $type = [
                             'value' => $value,
@@ -166,7 +166,6 @@ class ShowcaseResultConverter
 
                     if ($type) {
                         $this->cachedTypes[$typeId] = $type;
-
                         $datum['types'][$typeId] = $type;
                     }
                 }
