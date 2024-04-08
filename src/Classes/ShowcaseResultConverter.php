@@ -583,21 +583,50 @@ class ShowcaseResultConverter
                 $datum['directory'] = $result['directory'];
             }
 
-            if ($result['imageCDN']) {
-               $datum['image'] = $this->createFileDataFromFile($result['imageCDN']);
-            }
+            if ($arrOptions && $arrOptions['withoutKeyCDN']) {
+                if ($result['image']) {
+                    $model = FilesModel::findByUuid(StringUtil::deserialize($result['image']));
+                    if ($model !== null) {
+                        $datum['image'] = $this->createFileDataFromModel($model);
+                    }
+                }
 
-            if ($result['logoCDN']) {
-                $datum['logo'] = $this->createFileDataFromFile($result['logoCDN']);
-            }
-            if ($result['imageGalleryCDN']) {
-                $images = StringUtil::deserialize($result['imageGalleryCDN']);
-                $idx = 0;
-                foreach ($images as $image) {
-                    $datum['imageGallery_' . $idx] = $this->createFileDataFromFile($image);
-                    $idx++;
+                if ($result['logo']) {
+                    $model = FilesModel::findByUuid(StringUtil::deserialize($result['logo']));
+                    if ($model !== null) {
+                        $datum['logo'] = $this->createFileDataFromModel($model);
+                    }
+                }
+
+                if ($result['imageGallery']) {
+                    $images = StringUtil::deserialize($result['imageGallery']);
+                    $idx = 0;
+                    foreach ($images as $image) {
+                        $model = FilesModel::findByUuid(StringUtil::deserialize($image));
+                        if ($model !== null) {
+                            $datum['imageGallery_' . $idx] = $this->createFileDataFromModel($model);
+                            $idx++;
+                        }
+                    }
+                }
+            } else {
+                if ($result['imageCDN']) {
+                    $datum['image'] = $this->createFileDataFromFile($result['imageCDN']);
+                }
+
+                if ($result['logoCDN']) {
+                    $datum['logo'] = $this->createFileDataFromFile($result['logoCDN']);
+                }
+                if ($result['imageGalleryCDN']) {
+                    $images = StringUtil::deserialize($result['imageGalleryCDN']);
+                    $idx = 0;
+                    foreach ($images as $image) {
+                        $datum['imageGallery_' . $idx] = $this->createFileDataFromFile($image);
+                        $idx++;
+                    }
                 }
             }
+
             // load imprint data
             $selectImprintSql = 'SELECT * FROM tl_gutesio_data_element_imprint WHERE `showcaseId` = ?';
             $arrImprintData = $db->prepare($selectImprintSql)->execute($datum['uuid'])->fetchAssoc();
