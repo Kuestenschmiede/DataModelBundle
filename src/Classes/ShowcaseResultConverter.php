@@ -171,6 +171,13 @@ class ShowcaseResultConverter
                 }
             }
 
+            //fix wrong json encoding as object
+            $types = $datum['types'];
+            $datum['types'] = [];
+            foreach  ($types as $key=>$value) {
+                $datum['types'][] = $value;
+            }
+
             $dietLabels = $GLOBALS['TL_LANG']['gutesio']['diet_options'];
             $cuisineLabels = $GLOBALS['TL_LANG']['gutesio']['cuisine_options'];
             $otherLabels = $GLOBALS['TL_LANG']['gutesio'];
