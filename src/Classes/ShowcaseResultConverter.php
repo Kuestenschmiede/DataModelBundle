@@ -43,6 +43,8 @@ class ShowcaseResultConverter
         $db = Database::getInstance();
         $checker = new ImprintConstraintChecker();
         System::loadLanguageFile('field_translations');
+        $objSettings = GutesioOperatorSettingsModel::findSettings();
+        $cdnUrl = $objSettings->cdnUrl;
         $data = [];
         if (count($arrResult) === 0) {
             // no data
@@ -186,7 +188,7 @@ class ShowcaseResultConverter
                 'contactInfoAdviceFocus',
             ];
             // load type values
-            $sql = 'SELECT `typeFieldKey`, `typeFieldValue`, `typeFieldFile` FROM tl_gutesio_data_type_element_values WHERE elementId = ?';
+            $sql = 'SELECT `typeFieldKey`, `typeFieldValue`, `typeFieldFile`, `typeFieldFileCDN` FROM tl_gutesio_data_type_element_values WHERE elementId = ?';
             $typeElementValues = $db->prepare($sql)->execute($datum['uuid'])->fetchAllAssoc();
             foreach ($typeElementValues as $typeElementValue) {
                 // check if the value is serialized
@@ -214,7 +216,7 @@ class ShowcaseResultConverter
                     }
                     $datum[$fieldKey] = $resultValue;
                 } elseif (in_array($fieldKey, $this->fileUploadFields)) {
-                    if ($typeElementValue['typeFieldFile']) {
+                    if ($arrOptions && $arrOptions['withoutKeyCDN'] && $typeElementValue['typeFieldFile']) {
                         if (C4GUtils::isBinary($typeElementValue['typeFieldFile'])) {
                             $uuid = StringUtil::binToUuid($typeElementValue['typeFieldFile']);
                         } else {
@@ -229,6 +231,13 @@ class ShowcaseResultConverter
                                 'path' => $fileModel->path,
                             ];
                         }
+                    } else if ($typeElementValue['typeFieldFileCDN']) {
+                        $datum[$fieldKey] = [
+                            'data' => [],
+                            'name' => $fieldKey,
+                            'changed' => false,
+                            'path' => StringUtils::addUrlToPath($cdnUrl, $typeElementValue['typeFieldFileCDN'])
+                        ];
                     }
                 } else {
                     $datum[$fieldKey] = $fieldValue;
