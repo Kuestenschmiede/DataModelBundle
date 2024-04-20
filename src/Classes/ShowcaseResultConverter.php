@@ -216,7 +216,7 @@ class ShowcaseResultConverter
                     }
                     $datum[$fieldKey] = $resultValue;
                 } elseif (in_array($fieldKey, $this->fileUploadFields)) {
-                    if ($arrOptions && $arrOptions['withoutKeyCDN'] && $typeElementValue['typeFieldFile']) {
+                    if ($arrOptions && $arrOptions['withoutCDN'] && $typeElementValue['typeFieldFile']) {
                         if (C4GUtils::isBinary($typeElementValue['typeFieldFile'])) {
                             $uuid = StringUtil::binToUuid($typeElementValue['typeFieldFile']);
                         } else {
@@ -598,7 +598,7 @@ class ShowcaseResultConverter
                 $datum['directory'] = $result['directory'];
             }
 
-            if ($arrOptions && $arrOptions['withoutKeyCDN']) {
+            if ($arrOptions && $arrOptions['withoutCDN']) {
                 if ($result['image']) {
                     $model = FilesModel::findByUuid(StringUtil::deserialize($result['image']));
                     if ($model !== null) {
