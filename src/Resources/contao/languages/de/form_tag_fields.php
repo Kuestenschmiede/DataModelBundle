@@ -8,7 +8,7 @@ $GLOBALS['TL_LANG'][$strName]['onlineReservationLink'] = ['Link zur Onlinereserv
 $GLOBALS['TL_LANG'][$strName]['clicknmeetLink'] = ['Link zur Terminreservierung', 'Die URL zur Click & Meet Terminreservierung.'];
 $GLOBALS['TL_LANG'][$strName]['tableReservationLink'] = ['Link zur Tischreservierung', 'Die URL zur Tischreservierung.'];
 $GLOBALS['TL_LANG'][$strName]['onlineShopLink'] = ['Link zum Onlineshop', 'Die URL zum Onlineshop.'];
-$GLOBALS['TL_LANG'][$strName]['wheelchairNotes'] = ['Hinweise zur Barrierefreiheit', 'Hinweise zur Barrierefreiheit'];
+$GLOBALS['TL_LANG'][$strName]['wheelchairNotes'] = ['Hinweise zur Barrierearmut', 'Hinweise zur Barrierearmut'];
 $GLOBALS['TL_LANG'][$strName]['coronaNotes'] = ['Hinweise zur Corona Situation', 'Hier können Sie individuelle Maßnahmen erfassen, die Sie um Einhalten der Hygienevorgaben für Ihre Institution, Ihr Geschäft umsetzen. Beispiele: "Tragen eines Mundschutzes erforderlich", "Besuch nur nach Terminvereinbarung", "Max. 3 Kunden zeitgleich", ...'];
 $GLOBALS['TL_LANG'][$strName]['familyFriendlyNotes'] = ['Hinweise zur Familienfreundlichkeit', 'Explizite Angaben zur Familienfreundlichkeit sind möglich.'];
 
