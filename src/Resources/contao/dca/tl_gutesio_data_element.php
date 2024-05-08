@@ -271,6 +271,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         ],
         'displaySlogan' => [
             'sql' => "varchar(512) NOT NULL default ''"
+        ],
+        'source' => [
+            'sql' => "TEXT NULL"
         ]
     ],
 ];

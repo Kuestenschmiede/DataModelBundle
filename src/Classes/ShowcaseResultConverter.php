@@ -130,6 +130,7 @@ class ShowcaseResultConverter
             $datum['displayRequest'] = key_exists('displayRequest', $result) ? $result['displayRequest'] : '';
             $datum['displaySlogan'] = $result['displaySlogan'];
             $datum['operators'] = [];
+            $datum['source'] = $result['source'];
 
             if (key_exists('operators',$result)) {
                 foreach ($result['operators'] as $operator) {

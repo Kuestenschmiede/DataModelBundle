@@ -111,7 +111,10 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child'] = [
         ],
         'childIds' => [
             'sql' => "TEXT NULL"
+        ],
+        'source' => [
+            'sql' => "TEXT NULL"
         ]
-    ],
+    ]
 ];
 
