@@ -46,7 +46,8 @@ $GLOBALS['gutesio']['diet_options'] = [
     'kosher',
     'lactose_free',
     'vegan',
-    'vegetarian'
+    'vegetarian',
+    'bio'
 ];
 
 $GLOBALS['gutesio']['cuisine_options'] = [
@@ -70,6 +71,16 @@ $GLOBALS['gutesio']['cuisine_options'] = [
     'soup', //Suppen
     'steak', //Steak
     'sushi', //Sushi
-    'tapas' //Tapas
+    'tapas', //Tapas
+    'plain', //gutbürgerlich
+    'seasonal',
+    'other',
+    'german',
+    'fast_food',
+    'international',
+    'mediterranian',
+    'italian',
+    'greek',
+    'japanese'
 ];
 
