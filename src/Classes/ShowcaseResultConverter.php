@@ -52,6 +52,10 @@ class ShowcaseResultConverter
         }
         foreach ($arrResult as $result) {
             $datum = [];
+
+            if (!is_array($result)) {
+                continue;
+            }
             // for wishlist
             if (key_exists('internal_type',$result)) {
                 $datum['internal_type'] = $result['internal_type'];
