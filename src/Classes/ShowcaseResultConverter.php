@@ -135,6 +135,7 @@ class ShowcaseResultConverter
             $datum['displaySlogan'] = $result['displaySlogan'];
             $datum['operators'] = [];
             $datum['source'] = $result['source'];
+            $datum['foreignKey'] = strlen($result['foreignKey']) > 2 ? '1' : '';
 
             if (key_exists('operators',$result)) {
                 foreach ($result['operators'] as $operator) {
