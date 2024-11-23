@@ -736,7 +736,7 @@ class ShowcaseResultConverter
             $height = 450;
         }
 
-        $url = StringUtils::addUrlToPath($cdnUrl, $file);
+        $url = StringUtils::addUrlToPath($cdnUrl, $file, $width, $height);
 
         return [
             'src' => $url,
