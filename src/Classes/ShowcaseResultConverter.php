@@ -242,7 +242,7 @@ class ShowcaseResultConverter
                             'data' => [],
                             'name' => $fieldKey,
                             'changed' => false,
-                            'path' => StringUtils::addUrlToPath($cdnUrl, $typeElementValue['typeFieldFileCDN'])
+                            'path' => FileUtils::addUrlToPath($cdnUrl, $typeElementValue['typeFieldFileCDN'])
                         ];
                     }
                 } else {
@@ -700,7 +700,7 @@ class ShowcaseResultConverter
             $width = 100;
             $height = 100;
         } else {
-            list($width, $height) = getimagesize($model->path);
+            list($width, $height) = FileUtils::getImageSize($model->path);
         }
 
         return [
@@ -730,13 +730,13 @@ class ShowcaseResultConverter
             $width = 100;
             $height = 100;
         } else {
-            //ToDo extreme slow
-            //list($width, $height) = getimagesize(StringUtils::addUrlToPath($cdnUrl,$file));
+            //ToDo extreme slow with default php function
+            //list($width, $height) = FileUtils::getImageSize(FileUtils::addUrlToPath($cdnUrl,$file));
             $width = 600;
             $height = 450;
         }
 
-        $url = StringUtils::addUrlToPath($cdnUrl, $file, $width, $height);
+        $url = FileUtils::addUrlToPath($cdnUrl, $file, $width, $height);
 
         return [
             'src' => $url,
