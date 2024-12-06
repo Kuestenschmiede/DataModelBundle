@@ -604,7 +604,7 @@ class ShowcaseResultConverter
                 $datum['directory'] = $result['directory'];
             }
 
-            if ($arrOptions && $arrOptions['withoutCDN']) {
+            if ($arrOptions && key_exists('withoutCDN', $arrOptions) && $arrOptions['withoutCDN']) {
                 if ($result['image']) {
                     $model = FilesModel::findByUuid(StringUtil::deserialize($result['image']));
                     if ($model !== null) {
