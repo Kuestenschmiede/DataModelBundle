@@ -15,6 +15,10 @@ class FileUtils
 
         if ($cropWidth && $cropHeight) {
             $result .= "?crop=smart&width=".$cropWidth."&height=".$cropHeight;
+        } else if ($cropWidth) {
+            $result .= "?crop=smart&width=".$cropWidth;
+        } else if ($cropHeight) {
+            $result .= "?crop=smart&height=".$cropHeight;
         }
 
         return $result;
