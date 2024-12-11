@@ -33,7 +33,7 @@ class ImageCache
             if (is_file($itemPath)) {
                 $fileModifiedTime = filemtime($itemPath);
                 $now = time();
-                if (($now - $fileModifiedTime) > (2 * 86400)) {
+                if (($now - $fileModifiedTime) > 3600) {
                     if (!unlink($itemPath)) {
                         return false;
                     }
