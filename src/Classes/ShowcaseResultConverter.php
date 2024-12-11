@@ -38,13 +38,14 @@ class ShowcaseResultConverter
      * @param array $arrOptions
      * @return array
      */
-    public function convertDbResult($arrResult, $arrOptions = []) : array
+    public function convertDbResult($arrResult, $arrOptions = [], $fileUtils = new FileUtils()) : array
     {
         $db = Database::getInstance();
         $checker = new ImprintConstraintChecker();
         System::loadLanguageFile('field_translations');
         $objSettings = GutesioOperatorSettingsModel::findSettings();
         $cdnUrl = $objSettings->cdnUrl;
+
         $data = [];
         if (count($arrResult) === 0) {
             // no data
@@ -116,7 +117,7 @@ class ShowcaseResultConverter
             if (key_exists('videoPreviewImageCDN', $result) && $result['videoPreviewImageCDN']) {
 //                $model = FilesModel::findByUuid(StringUtil::deserialize($result['videoPreviewImage']));
 //                if ($model !== null) {
-                    $datum['videoPreview']['videoPreviewImage'] = $this->createFileDataFromFile($result['videoPreviewImageCDN']);
+                    $datum['videoPreview']['videoPreviewImage'] = $this->createFileDataFromFile($result['videoPreviewImageCDN'], false, $fileUtils);
                     $datum['videoPreviewImage'] = $datum['videoPreview']['videoPreviewImage'];
                 //}
             }
@@ -242,7 +243,7 @@ class ShowcaseResultConverter
                             'data' => [],
                             'name' => $fieldKey,
                             'changed' => false,
-                            'path' => FileUtils::addUrlToPath($cdnUrl, $typeElementValue['typeFieldFileCDN'])
+                            'path' => $fileUtils->addUrlToPathAndGetImage($cdnUrl, $typeElementValue['typeFieldFileCDN'])
                         ];
                     }
                 } else {
@@ -270,7 +271,7 @@ class ShowcaseResultConverter
                             if ($tag && $tag['imageCDN']) {
 //                                $filesModel = FilesModel::findByUuid(StringUtil::binToUuid($tag['image']));
 //                                if ($filesModel) {
-                                    $tag['image'] = $this->createFileDataFromFile($tag['imageCDN'], true);
+                                    $tag['image'] = $this->createFileDataFromFile($tag['imageCDN'], true, $fileUtils);
 //                                } else {
 //                                    $tag['image'] = [];
 //                                }
@@ -558,7 +559,7 @@ class ShowcaseResultConverter
                                                 $datum['relatedShowcases'] = [];
                                             }
                                             //$logoData = $this->createFileDataFromModel($logoModel);
-                                            $logoData = $this->createFileDataFromFile($showcase['logoCDN']);
+                                            $logoData = $this->createFileDataFromFile($showcase['logoCDN'], false, $fileUtils);
                                             $logoData['href'] = $showcase['alias'];
                                             $datum['relatedShowcaseLogos'][] = $logoData;
                                             $datum['relatedShowcases'][] = [
@@ -608,14 +609,14 @@ class ShowcaseResultConverter
                 if ($result['image']) {
                     $model = FilesModel::findByUuid(StringUtil::deserialize($result['image']));
                     if ($model !== null) {
-                        $datum['image'] = $this->createFileDataFromModel($model);
+                        $datum['image'] = $this->createFileDataFromModel($model, false, $fileUtils);
                     }
                 }
 
                 if ($result['logo']) {
                     $model = FilesModel::findByUuid(StringUtil::deserialize($result['logo']));
                     if ($model !== null) {
-                        $datum['logo'] = $this->createFileDataFromModel($model);
+                        $datum['logo'] = $this->createFileDataFromModel($model, false, $fileUtils);
                     }
                 }
 
@@ -625,24 +626,24 @@ class ShowcaseResultConverter
                     foreach ($images as $image) {
                         $model = FilesModel::findByUuid(StringUtil::deserialize($image));
                         if ($model !== null) {
-                            $datum['imageGallery_' . $idx] = $this->createFileDataFromModel($model);
+                            $datum['imageGallery_' . $idx] = $this->createFileDataFromModel($model, false, $fileUtils);
                             $idx++;
                         }
                     }
                 }
             } else {
                 if ($result['imageCDN']) {
-                    $datum['image'] = $this->createFileDataFromFile($result['imageCDN']);
+                    $datum['image'] = $this->createFileDataFromFile($result['imageCDN'], false, $fileUtils);
                 }
 
                 if ($result['logoCDN']) {
-                    $datum['logo'] = $this->createFileDataFromFile($result['logoCDN']);
+                    $datum['logo'] = $this->createFileDataFromFile($result['logoCDN'], false, $fileUtils);
                 }
                 if ($result['imageGalleryCDN']) {
                     $images = StringUtil::deserialize($result['imageGalleryCDN']);
                     $idx = 0;
                     foreach ($images as $image) {
-                        $datum['imageGallery_' . $idx] = $this->createFileDataFromFile($image);
+                        $datum['imageGallery_' . $idx] = $this->createFileDataFromFile($image, false, $fileUtils);
                         $idx++;
                     }
                 }
@@ -694,13 +695,13 @@ class ShowcaseResultConverter
      * @param FilesModel $model
      * @return array
      */
-    public function createFileDataFromModel(FilesModel $model, $svg = false) : array
+    public function createFileDataFromModel(FilesModel $model, $svg = false, $fileUtils = new FileUtils()) : array
     {
         if ($svg) {
             $width = 100;
             $height = 100;
         } else {
-            list($width, $height) = FileUtils::getImageSize($model->path);
+            list($width, $height) = $fileUtils->getImageSize($model->path);
         }
 
         return [
@@ -721,7 +722,7 @@ class ShowcaseResultConverter
     }
 
     //ToDO
-    public function createFileDataFromFile($file, $svg = false) : array
+    public function createFileDataFromFile($file, $svg = false, $fileUtils = new FileUtils()) : array
     {
         $objSettings = GutesioOperatorSettingsModel::findSettings();
         $cdnUrl = $objSettings->cdnUrl;
@@ -731,12 +732,12 @@ class ShowcaseResultConverter
             $height = 100;
         } else {
             //ToDo extreme slow with default php function
-            //list($width, $height) = FileUtils::getImageSize(FileUtils::addUrlToPath($cdnUrl,$file));
+            //list($width, $height) = $fileUtils->getImageSize(FileUtils::addUrlToPath($cdnUrl,$file));
             $width = 600;
             $height = 450;
         }
 
-        $url = FileUtils::addUrlToPath($cdnUrl, $file, $width, $height);
+        $url = $fileUtils->addUrlToPathAndGetImage($cdnUrl, $file, $width, $height);
 
         return [
             'src' => $url,
