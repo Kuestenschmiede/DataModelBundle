@@ -33,7 +33,7 @@ class ImageCache
             if (is_file($itemPath)) {
                 $fileModifiedTime = filemtime($itemPath);
                 $now = time();
-                if (($now - $fileModifiedTime) > 3600) {
+                if (($now - $fileModifiedTime) > 86400) {
                     if (!unlink($itemPath)) {
                         return false;
                     }
@@ -86,7 +86,7 @@ class ImageCache
         }
 
         $fileTimestamp = filemtime($filePath);
-        return (time() - $fileTimestamp) > 86400;
+        return (time() - $fileTimestamp) > 3600;
     }
 
     private function downloadImage(string $url, string $localFilePath): void
