@@ -41,9 +41,9 @@ class FileUtils
         return $result;
     }
 
-    public function addUrlToPathAndGetImage($url, $path, $cropWidth = 0, $cropHeight = 0) {
+    public function addUrlToPathAndGetImage($url, $path, $cropWidth = 0, $cropHeight = 0, $time=3600) {
         $result = $this->addUrlToPath($url, $path, $cropWidth, $cropHeight);
-        return $this->getImage($result);
+        return $this->getImage($result, $time);
     }
 
     public function getImageSize($uri)
@@ -75,9 +75,9 @@ class FileUtils
         return [$size, $orientation];
     }
 
-    public function getImage($imagePath) {
+    public function getImage($imagePath, $time=3600) {
         try {
-            $localImage = $this->imageCache->getImage($imagePath);
+            $localImage = $this->imageCache->getImage($imagePath, $time);
             return $localImage;
         } catch (\Exception $e) {
             C4gLogModel::addLogEntry("operator", "Fehler beim Abrufen des Bildes: " . $e->getMessage());

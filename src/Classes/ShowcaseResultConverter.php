@@ -559,7 +559,7 @@ class ShowcaseResultConverter
                                                 $datum['relatedShowcases'] = [];
                                             }
                                             //$logoData = $this->createFileDataFromModel($logoModel);
-                                            $logoData = $this->createFileDataFromFile($showcase['logoCDN'], false, $fileUtils);
+                                            $logoData = $this->createFileDataFromFile($showcase['logoCDN'], false, $fileUtils, 0, 150);
                                             $logoData['href'] = $showcase['alias'];
                                             $datum['relatedShowcaseLogos'][] = $logoData;
                                             $datum['relatedShowcases'][] = [
@@ -637,7 +637,7 @@ class ShowcaseResultConverter
                 }
 
                 if ($result['logoCDN']) {
-                    $datum['logo'] = $this->createFileDataFromFile($result['logoCDN'], false, $fileUtils);
+                    $datum['logo'] = $this->createFileDataFromFile($result['logoCDN'], false, $fileUtils, 0, 150);
                 }
                 if ($result['imageGalleryCDN']) {
                     $images = StringUtil::deserialize($result['imageGalleryCDN']);
@@ -722,7 +722,7 @@ class ShowcaseResultConverter
     }
 
     //ToDO
-    public function createFileDataFromFile($file, $svg = false, $fileUtils = new FileUtils()) : array
+    public function createFileDataFromFile($file, $svg = false, $fileUtils = new FileUtils(), $width = 600, $height = 450) : array
     {
         $objSettings = GutesioOperatorSettingsModel::findSettings();
         $cdnUrl = $objSettings->cdnUrl;
@@ -730,11 +730,6 @@ class ShowcaseResultConverter
         if ($svg) {
             $width = 100;
             $height = 100;
-        } else {
-            //ToDo extreme slow with default php function
-            //list($width, $height) = $fileUtils->getImageSize(FileUtils::addUrlToPath($cdnUrl,$file));
-            $width = 600;
-            $height = 450;
         }
 
         $url = $fileUtils->addUrlToPathAndGetImage($cdnUrl, $file, $width, $height);

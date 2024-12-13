@@ -54,7 +54,7 @@ class ImageCache
         return $urlParts['path'];
     }
 
-    public function getImage(string $imagePath): string
+    public function getImage(string $imagePath, int $time=3600): string
     {
         $localPath = $this->removeGetParams($imagePath);
         $cdnUrl = $imagePath;
@@ -67,7 +67,7 @@ class ImageCache
         $sourcePath = ltrim($parsedUrl['path'], '/');
         $destinationPath = rtrim($this->localCachePath, '/') . '/' . $sourcePath;
 
-        if ($this->isCacheExpired($destinationPath)) {
+        if ($this->isCacheExpired($destinationPath, $time)) {
             if ($this->cacheCount < 10) {
                 $this->downloadImage($cdnUrl, $destinationPath);
                 $this->cacheCount++;
@@ -79,14 +79,14 @@ class ImageCache
         return $this->localPublicPath . $localPath;
     }
 
-    private function isCacheExpired(string $filePath): bool
+    private function isCacheExpired(string $filePath, int $time=3600): bool
     {
         if (!file_exists($filePath)) {
             return true;
         }
 
         $fileTimestamp = filemtime($filePath);
-        return (time() - $fileTimestamp) > 3600;
+        return (time() - $fileTimestamp) > $time;
     }
 
     private function downloadImage(string $url, string $localFilePath): void
