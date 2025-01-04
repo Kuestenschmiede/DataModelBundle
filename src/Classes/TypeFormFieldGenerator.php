@@ -232,33 +232,45 @@ class TypeFormFieldGenerator
         return $fields;
     }
 
+    //ToDo auslagern
     private static function getFieldsForExtraZip()
     {
-        $field = new TextFormField();
-        $field->setName('extraZip');
-        $field->setLabel($GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip']     && (count($GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip']) > 0) ? $GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip'][0] : '');
-        $field->setDescription($GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip'] && (count($GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip']) > 0) ? $GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip'][1] : '');
-        $field->setPattern('^[0-9]{5}(,[0-9]{5})*$');
-        $field->setDynamicFieldlist(true);
-        $field->setDynamicFieldlistUrl('/gutesio/maininstance/showcase/getTypeFields');
-        $field->setDynamicFieldlistAdditionalFields([
-            'types',
-            'locationZip',
-        ]);
+        System::loadLanguageFile('tl_gutesio_data_element');
+        if (key_exists('tl_gutesio_data_element', $GLOBALS)) {
+            $field = new TextFormField();
+            $field->setName('extraZip');
+            $field->setLabel($GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip'] && (count($GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip']) > 0) ? $GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip'][0] : '');
+            $field->setDescription($GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip'] && (count($GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip']) > 0) ? $GLOBALS['TL_LANG']['tl_gutesio_data_element']['extraZip'][1] : '');
+            $field->setPattern('^[0-9]{5}(,[0-9]{5})*$');
+            $field->setDynamicFieldlist(true);
+            $field->setDynamicFieldlistUrl('/gutesio/maininstance/showcase/getTypeFields');
+            $field->setDynamicFieldlistAdditionalFields([
+                'types',
+                'locationZip',
+            ]);
 
-        return ['extraZip' => $field];
+            return ['extraZip' => $field];
+        } else {
+            return [];
+        }
     }
     private static function getFieldsForSurroundingZip()
     {
-        $field = new TextFormField();
-        $field->setName('surrZip');
-        $field->setLabel($GLOBALS['TL_LANG']['tl_gutesio_data_element']['surrZip']     && (count($GLOBALS['TL_LANG']['tl_gutesio_data_element']['surrZip']) > 0) ? $GLOBALS['TL_LANG']['tl_gutesio_data_element']['surrZip'][0] : '');
-        $field->setDescription($GLOBALS['TL_LANG']['tl_gutesio_data_element']['surrZip'] && (count($GLOBALS['TL_LANG']['tl_gutesio_data_element']['surrZip']) > 0) ? $GLOBALS['TL_LANG']['tl_gutesio_data_element']['surrZip'][1] : '');
-        $field->setPattern('^[0-9]{5}(,[0-9]{5})*$');
+        System::loadLanguageFile('tl_gutesio_data_element');
+        if (key_exists('tl_gutesio_data_element', $GLOBALS)) {
+            $field = new TextFormField();
+            $field->setName('surrZip');
+            $field->setLabel($GLOBALS['TL_LANG']['tl_gutesio_data_element']['surrZip'] && (count($GLOBALS['TL_LANG']['tl_gutesio_data_element']['surrZip']) > 0) ? $GLOBALS['TL_LANG']['tl_gutesio_data_element']['surrZip'][0] : '');
+            $field->setDescription($GLOBALS['TL_LANG']['tl_gutesio_data_element']['surrZip'] && (count($GLOBALS['TL_LANG']['tl_gutesio_data_element']['surrZip']) > 0) ? $GLOBALS['TL_LANG']['tl_gutesio_data_element']['surrZip'][1] : '');
+            $field->setPattern('^[0-9]{5}(,[0-9]{5})*$');
 
-        return ['surrZip' => $field];
+            return ['surrZip' => $field];
+        } else {
+            return [];
+        }
     }
 
+    //ToDo auslagern
     private static function getFieldsForIsbn()
     {
         $strName = 'main_instance_offer_form';
@@ -270,8 +282,10 @@ class TypeFormFieldGenerator
         return ['isbn' => $field];
     }
 
+    //ToDo auslagern
     private static function getFieldsForDoctorReferral()
     {
+        System::loadLanguageFile('main_instance_offer_form');
         $strName = 'main_instance_offer_form';
         $fields = [];
 

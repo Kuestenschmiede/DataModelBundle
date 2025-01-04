@@ -31,9 +31,5 @@ class gutesioDataModelExtension extends Extension
             new FileLocator(__DIR__.'/../Resources/config')
         );
     }
-//
-//    public function getAlias()
-//    {
-//        return "gutesio_data_model";
-//    }
+
 }
