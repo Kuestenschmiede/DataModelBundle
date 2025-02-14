@@ -82,6 +82,8 @@ $GLOBALS['gutesio']['cuisine_options'] = [
     'italian',
     'greek',
     'japanese',
-    'bohemian'
+    'bohemian',
+    'asian',
+    'indian'
 ];
 
