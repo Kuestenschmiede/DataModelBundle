@@ -9,7 +9,6 @@
  */
 namespace gutesio\DataModelBundle\Classes;
 
-use con4gis\CoreBundle\Classes\Helper\ArrayHelper;
 use con4gis\FrameworkBundle\Classes\FormFields\CheckboxFormField;
 use con4gis\FrameworkBundle\Classes\FormFields\CKEditorFormField;
 use con4gis\FrameworkBundle\Classes\FormFields\NumberFormField;
@@ -315,8 +314,6 @@ class TypeFormFieldGenerator
                 'label' => $entry,
             ];
         }
-
-        //$options = ArrayHelper::array_sort($options, 'label', SORT_ASC, false);
 
         $field = new SelectFormField();
         $field->setMultiple(true);
