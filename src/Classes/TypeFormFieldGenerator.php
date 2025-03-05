@@ -9,6 +9,7 @@
  */
 namespace gutesio\DataModelBundle\Classes;
 
+use con4gis\CoreBundle\Classes\Helper\ArrayHelper;
 use con4gis\FrameworkBundle\Classes\FormFields\CheckboxFormField;
 use con4gis\FrameworkBundle\Classes\FormFields\CKEditorFormField;
 use con4gis\FrameworkBundle\Classes\FormFields\NumberFormField;
@@ -307,6 +308,7 @@ class TypeFormFieldGenerator
         System::loadLanguageFile('field_translations', 'de');
         $language = $GLOBALS['TL_LANG']['gutesio'];
 
+        asort($language['selfHelpFocusOptions'], SORT_STRING | SORT_FLAG_CASE );
         foreach ($language['selfHelpFocusOptions'] as $key => $entry) {
             $options[] = [
                 'value' => $key,
@@ -314,14 +316,22 @@ class TypeFormFieldGenerator
             ];
         }
 
+        //$options = ArrayHelper::array_sort($options, 'label', SORT_ASC, false);
+
         $field = new SelectFormField();
         $field->setMultiple(true);
         $field->setName('selfHelpFocus');
         $field->setOptions($options);
-        $field->setLabel('Schwerpunkte');
+        $field->setLabel('Selbsthilfethemen');
         $field->setDescription('Wählen Sie die passenden Einträge für Informationen zu Ihren Schwerpunkten aus.');
         $field->setEmptyOptionLabel('');
         $fields['selfHelpFocus'] = $field;
+
+        $field = new TextFormField();
+        $field->setName('turnDescription');
+        $field->setLabel('Wann finden die Treffen statt?');
+        $field->setDescription('Beschreiben Sie den Turnus der Treffen (z.B. jeden ersten Dienstag um 19 Uhr)');
+        $fields['turnDescription'] = $field;
 
         return $fields;
     }
