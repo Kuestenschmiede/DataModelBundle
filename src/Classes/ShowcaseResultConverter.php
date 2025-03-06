@@ -203,7 +203,7 @@ class ShowcaseResultConverter
                 // check if the value is serialized
                 $fieldKey = $typeElementValue['typeFieldKey'];
                 $fieldValue = StringUtil::deserialize($typeElementValue['typeFieldValue']);
-                if (is_array($fieldValue) && key_exists('details', $arrOptions) && $arrOptions['details']) {
+                if (is_array($fieldValue)) {//} && key_exists('details', $arrOptions) && $arrOptions['details']) {
                     $resultValue = '';
                     foreach ($fieldValue as $key => $value) {
                         if (is_array($value)) {
