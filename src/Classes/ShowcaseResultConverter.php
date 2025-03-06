@@ -72,6 +72,7 @@ class ShowcaseResultConverter
             $datum['description'] = html_entity_decode(C4GUtils::replaceInsertTags($result['description']));
             $datum['directions'] = html_entity_decode($result['directions']);
             $datum['surroundings'] = html_entity_decode($result['surroundings']);
+            $datum['internalDescription'] = html_entity_decode($result['internalDescription']);
             $datum['imageCredits'] = html_entity_decode($result['imageCredits']);
             $datum['importantNotes'] = html_entity_decode($result['importantNotes']);
             $datum['technicalEquipment'] = key_exists('technicalEquipment', $result) ? html_entity_decode($result['technicalEquipment']) : '';
@@ -137,6 +138,7 @@ class ShowcaseResultConverter
             $datum['operators'] = [];
             $datum['source'] = $result['source'];
             $datum['foreignKey'] = isset($result['foreignKey']) && strlen($result['foreignKey']) > 2 ? '1' : '';
+            
 
             if (key_exists('operators',$result)) {
                 foreach ($result['operators'] as $operator) {
