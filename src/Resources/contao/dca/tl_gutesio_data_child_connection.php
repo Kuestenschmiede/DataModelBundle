@@ -17,7 +17,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_connection'] = [
         'sql' => [
             'keys' => [
                 'id' => 'primary',
-                'uuid' => 'index'
+                'uuid' => 'index',
+                'childId' => 'index',
+                'elementId' => 'index'
             ],
         ],
     ],
