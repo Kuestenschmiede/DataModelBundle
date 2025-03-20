@@ -54,7 +54,8 @@ class ImageCache
         return $urlParts['path'];
     }
 
-    public function getImage(string $imagePath, int $time=3600): string
+    //default 4h
+    public function getImage(string $imagePath, int $time=14400, int $cacheCount=100): string
     {
         $localPath = $this->removeGetParams($imagePath);
         $cdnUrl = $imagePath;
@@ -68,7 +69,7 @@ class ImageCache
         $destinationPath = rtrim($this->localCachePath, '/') . '/' . $sourcePath;
 
         if ($this->isCacheExpired($destinationPath, $time)) {
-            if ($this->cacheCount < 10) {
+            if ($this->cacheCount < $cacheCount) {
                 $this->downloadImage($cdnUrl, $destinationPath);
                 $this->cacheCount++;
             } else {
@@ -79,7 +80,8 @@ class ImageCache
         return $this->localPublicPath . $localPath;
     }
 
-    private function isCacheExpired(string $filePath, int $time=3600): bool
+    //default 4h
+    private function isCacheExpired(string $filePath, int $time=14400): bool
     {
         if (!file_exists($filePath)) {
             return true;
@@ -89,16 +91,40 @@ class ImageCache
         return (time() - $fileTimestamp) > $time;
     }
 
+    private function downloadImages(array $urls, array $localFilePaths): void
+    {
+        $client = new Client();
+        $promises = [];
+
+        foreach ($urls as $index => $url) {
+            $destinationDir = dirname($localFilePaths[$index]);
+
+            if (!is_dir($destinationDir)) {
+                mkdir($destinationDir, 0777, true);
+            }
+
+            $promises[] = $client->getAsync($url, ['sink' => $localFilePaths[$index]]);
+        }
+
+        Promise\settle($promises)->wait();
+    }
+    
     private function downloadImage(string $url, string $localFilePath): void
     {
         $client = new Client();
-
         $destinationDir = dirname($localFilePath);
         if (!is_dir($destinationDir)) {
             mkdir($destinationDir, 0777, true);
         }
 
         try {
+            $response = $client->head($url);
+            $lastModified = $response->getHeaderLine('Last-Modified');
+
+            if (file_exists($localFilePath) && $lastModified && filemtime($localFilePath) >= strtotime($lastModified)) {
+                return;
+            }
+
             $response = $client->get($url, ['sink' => $localFilePath]);
 
             if ($response->getStatusCode() !== 200) {
@@ -112,4 +138,5 @@ class ImageCache
             throw $e;
         }
     }
+
 }
