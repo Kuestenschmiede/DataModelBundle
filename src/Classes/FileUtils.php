@@ -41,7 +41,8 @@ class FileUtils
         return $result;
     }
 
-    public function addUrlToPathAndGetImage($url, $path, $cropWidth = 0, $cropHeight = 0, $time=3600) {
+    //caching 4h
+    public function addUrlToPathAndGetImage($url, $path, $cropWidth = 0, $cropHeight = 0, $time=14400) {
         $result = $this->addUrlToPath($url, $path, $cropWidth, $cropHeight);
         return $this->getImage($result, $time);
     }
@@ -75,7 +76,8 @@ class FileUtils
         return [$size, $orientation];
     }
 
-    public function getImage($imagePath, $time=3600) {
+    //caching 4h
+    public function getImage($imagePath, $time=14400) {
         try {
             $localImage = $this->imageCache->getImage($imagePath, $time);
             return $localImage;
