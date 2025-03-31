@@ -28,15 +28,13 @@ class FileUtils
             $result = $url.$path;
         }
 
-        //if (strpos($url, 'con4gis') !== false) {
-            if ($cropWidth && $cropHeight) {
-                $result .= "?crop=smart&width=".$cropWidth."&height=".$cropHeight;
-            } else if ($cropWidth) {
-                $result .= "?crop=smart&width=".$cropWidth;
-            } else if ($cropHeight) {
-                $result .= "?crop=smart&height=".$cropHeight;
-            }
-        //}
+        if ($cropWidth && $cropHeight) {
+            $result .= "?crop=smart&width=".$cropWidth."&height=".$cropHeight;
+        } else if ($cropWidth) {
+            $result .= "?crop=smart&width=".$cropWidth;
+        } else if ($cropHeight) {
+            $result .= "?crop=smart&height=".$cropHeight;
+        }
 
         return $result;
     }
@@ -86,5 +84,9 @@ class FileUtils
         }
 
         return $imagePath;
+    }
+
+    public function getImages(Array $files, $time=14400) {
+        $this->imageCache->getImages($imagePath, $time);
     }
 }

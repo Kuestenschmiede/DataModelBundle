@@ -54,8 +54,8 @@ class ImageCache
         return $urlParts['path'];
     }
 
-    //default 4h
-    public function getImage(string $imagePath, int $time=14400, int $cacheCount=100): string
+    //default 4hm nax. 10 new images
+    public function getImage(string $imagePath, int $time=14400, int $cacheCount=10): string
     {
         $localPath = $this->removeGetParams($imagePath);
         $cdnUrl = $imagePath;
@@ -78,6 +78,37 @@ class ImageCache
         }
 
         return $this->localPublicPath . $localPath;
+    }
+
+    //default 4h, max. 5000 images
+    public function getImages(array $imagePaths, int $time=14400, int $cacheCount=5000): string
+    {
+        $sourcePaths = [];
+        $destinationPaths = [];
+        foreach ($imagePaths as $imagePath) {
+            $localPath = $this->removeGetParams($imagePath);
+            $cdnUrl = $imagePath;
+
+            $parsedUrl = parse_url($localPath);
+            if (!isset($parsedUrl['path'])) {
+                return false;
+            }
+
+            $sourcePath = ltrim($parsedUrl['path'], '/');
+            $destinationPath = rtrim($this->localCachePath, '/') . '/' . $sourcePath;
+
+            if ($this->isCacheExpired($destinationPath, $time)) {
+                if ($this->cacheCount < $cacheCount) {
+                    $sourcePaths[] = $cdnUrl;
+                    $destinationPaths[] = $destinationPath;
+                    $this->cacheCount++;
+                }
+            }
+        }
+
+        if (count($sourcePaths) > 0 && count($destinationPaths) > 0) {
+            $this->downloadImages($sourcePaths, $destinationPath);
+        }
     }
 
     //default 4h
