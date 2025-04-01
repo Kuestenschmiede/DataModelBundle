@@ -87,6 +87,6 @@ class FileUtils
     }
 
     public function getImages(Array $files, $time=14400) {
-        $this->imageCache->getImages($imagePath, $time);
+        $this->imageCache->getImages($files, $time);
     }
 }
