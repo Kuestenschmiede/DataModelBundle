@@ -3,6 +3,7 @@
 namespace gutesio\DataModelBundle\Classes\Cache;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Promise;
 
 class ImageCache
 {
