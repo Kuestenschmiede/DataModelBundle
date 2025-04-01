@@ -107,7 +107,7 @@ class ImageCache
         }
 
         if (count($sourcePaths) > 0 && count($destinationPaths) > 0) {
-            $this->downloadImages($sourcePaths, $destinationPath);
+            $this->downloadImages($sourcePaths, $destinationPaths);
         }
     }
 
