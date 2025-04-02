@@ -82,7 +82,7 @@ class ImageCache
     }
 
     //default 4h, max. 5000 images
-    public function getImages(array $imagePaths, int $time=14400, int $cacheCount=5000): string
+    public function getImages(array $imagePaths, int $time=14400, int $cacheCount=5000): bool
     {
         $sourcePaths = [];
         $destinationPaths = [];
@@ -110,6 +110,8 @@ class ImageCache
         if (count($sourcePaths) > 0 && count($destinationPaths) > 0) {
             $this->downloadImages($sourcePaths, $destinationPaths);
         }
+
+        return true;
     }
 
     //default 4h

@@ -28,7 +28,7 @@
     "con4gis/framework": "^2.0",
     "marc1706/fast-image-size": "1.*",
     "guzzlehttp/guzzle": "^7",
-    "guzzlehttp/promises": "^2"
+    "guzzlehttp/promises": "^1.5"
   },
   "conflict": {
     "contao/core": "*",
