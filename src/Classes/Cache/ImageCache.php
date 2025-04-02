@@ -3,7 +3,7 @@
 namespace gutesio\DataModelBundle\Classes\Cache;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Promise;
+use GuzzleHttp\Promise\Utils;
 
 class ImageCache
 {
@@ -138,7 +138,7 @@ class ImageCache
             $promises[] = $client->getAsync($url, ['sink' => $localFilePaths[$index]]);
         }
 
-        Promise\settle($promises)->wait();
+        \GuzzleHttp\Promise\Utils::settle($promises)->wait();
     }
     
     private function downloadImage(string $url, string $localFilePath): void
