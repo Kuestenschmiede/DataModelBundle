@@ -133,14 +133,26 @@ class ImageCache
         foreach ($urls as $index => $url) {
             $destinationDir = dirname($localFilePaths[$index]);
 
-            if (!is_dir($destinationDir)) {
-                mkdir($destinationDir, 0777, true);
+            // Sicherstellen, dass das Zielverzeichnis existiert
+            if (!is_dir($destinationDir) && !mkdir($destinationDir, 0777, true) && !is_dir($destinationDir)) {
+                throw new \RuntimeException(sprintf('Verzeichnis "%s" konnte nicht erstellt werden.', $destinationDir));
             }
 
+            // Asynchrone GET-Anfrage hinzufügen
             $promises[] = $client->getAsync($url, ['sink' => $localFilePaths[$index]]);
         }
 
-        \GuzzleHttp\Promise\Utils::settle($promises)->wait();
+        // Promises ausführen und Fehler behandeln
+        $results = \GuzzleHttp\Promise\Utils::settle($promises)->wait();
+
+        // Ergebnisse durchlaufen und Fehler protokollieren
+        foreach ($results as $index => $result) {
+            if ($result['state'] === 'rejected') {
+                // Fehlerprotokollierung (oder andere Verarbeitung)
+                $reason = $result['reason'];
+                error_log("Download fehlgeschlagen für URL {$urls[$index]}: {$reason->getMessage()}");
+            }
+        }
     }
     
     private function downloadImage(string $url, string $localFilePath): void
