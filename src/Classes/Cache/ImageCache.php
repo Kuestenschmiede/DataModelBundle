@@ -52,6 +52,11 @@ class ImageCache
 
     private function removeGetParams($url) {
         $urlParts = parse_url($url);
+
+        if ($urlParts === false || !isset($urlParts['path'])) {
+            return false;
+        }
+
         return $urlParts['path'];
     }
 
@@ -59,14 +64,12 @@ class ImageCache
     public function getImage(string $imagePath, int $time=14400, int $cacheCount=10): string
     {
         $localPath = $this->removeGetParams($imagePath);
-        $cdnUrl = $imagePath;
-
-        $parsedUrl = parse_url($localPath);
-        if (!isset($parsedUrl['path'])) {
+        if (!$localPath) {
             return false;
         }
 
-        $sourcePath = ltrim($parsedUrl['path'], '/');
+        $cdnUrl = $imagePath;
+        $sourcePath = ltrim($localPath, '/');
         $destinationPath = rtrim($this->localCachePath, '/') . '/' . $sourcePath;
 
         if ($this->isCacheExpired($destinationPath, $time)) {
@@ -88,28 +91,27 @@ class ImageCache
         $destinationPaths = [];
         foreach ($imagePaths as $imagePath) {
             $localPath = $this->removeGetParams($imagePath);
+            if (!$localPath) {
+                continue;
+            }
             $cdnUrl = $imagePath;
 
-            $parsedUrl = parse_url($localPath);
-            if (!isset($parsedUrl['path'])) {
-                return false;
-            }
-
-            $sourcePath = ltrim($parsedUrl['path'], '/');
+            $sourcePath = ltrim($localPath, '/');
             $destinationPath = rtrim($this->localCachePath, '/') . '/' . $sourcePath;
 
             if ($this->isCacheExpired($destinationPath, $time)) {
                 if ($this->cacheCount < $cacheCount) {
-                    $sourcePaths[] = $cdnUrl;
-                    $destinationPaths[] = $destinationPath;
+                    //$sourcePaths[] = $cdnUrl;
+                    //$destinationPaths[] = $destinationPath;
+                    $this->downloadImage($cdnUrl, $destinationPath);
                     $this->cacheCount++;
                 }
             }
         }
 
-        if (count($sourcePaths) > 0 && count($destinationPaths) > 0) {
-            $this->downloadImages($sourcePaths, $destinationPaths);
-        }
+//        if (count($sourcePaths) > 0 && count($destinationPaths) > 0) {
+//            $this->downloadImages($sourcePaths, $destinationPaths);
+//        }
 
         return true;
     }
@@ -125,35 +127,34 @@ class ImageCache
         return (time() - $fileTimestamp) > $time;
     }
 
-    private function downloadImages(array $urls, array $localFilePaths): void
-    {
-        $client = new Client();
-        $promises = [];
-
-        foreach ($urls as $index => $url) {
-            $destinationDir = dirname($localFilePaths[$index]);
-
-            // Sicherstellen, dass das Zielverzeichnis existiert
-            if (!is_dir($destinationDir) && !mkdir($destinationDir, 0777, true) && !is_dir($destinationDir)) {
-                throw new \RuntimeException(sprintf('Verzeichnis "%s" konnte nicht erstellt werden.', $destinationDir));
-            }
-
-            // Asynchrone GET-Anfrage hinzufügen
-            $promises[] = $client->getAsync($url, ['sink' => $localFilePaths[$index]]);
-        }
-
-        // Promises ausführen und Fehler behandeln
-        $results = \GuzzleHttp\Promise\Utils::settle($promises)->wait();
-
-        // Ergebnisse durchlaufen und Fehler protokollieren
-        foreach ($results as $index => $result) {
-            if ($result['state'] === 'rejected') {
-                // Fehlerprotokollierung (oder andere Verarbeitung)
-                $reason = $result['reason'];
-                error_log("Download fehlgeschlagen für URL {$urls[$index]}: {$reason->getMessage()}");
-            }
-        }
-    }
+//    private function downloadImages(array $urls, array $localFilePaths): void
+//    {
+//        $client = new Client();
+//        $promises = [];
+//
+//        foreach ($urls as $index => $url) {
+//            if (!isset($promises[$url])) {
+//                $destinationDir = dirname($localFilePaths[$index]);
+//
+//                if (!is_dir($destinationDir) && !mkdir($destinationDir, 0777, true) && !is_dir($destinationDir)) {
+//                    throw new \RuntimeException(sprintf('Verzeichnis "%s" konnte nicht erstellt werden.', $destinationDir));
+//                }
+//
+//                // Asynchrone GET-Anfrage hinzufügen (einmalig pro URL)
+//                $promises[$url] = $client->getAsync($url, ['sink' => $localFilePaths[$index]]);
+//            }
+//        }
+//
+//        // Sicherstellen, dass keine Promise doppelt verarbeitet wird
+//        $results = \GuzzleHttp\Promise\Utils::settle($promises)->wait();
+//
+////        foreach ($results as $index => $result) {
+////            if ($result['state'] === 'rejected') {
+////                $reason = $result['reason'];
+////                error_log("Download fehlgeschlagen für URL {$urls[$index]}: {$reason->getMessage()}");
+////            }
+////        }
+//    }
     
     private function downloadImage(string $url, string $localFilePath): void
     {
