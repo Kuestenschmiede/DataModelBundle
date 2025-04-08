@@ -129,7 +129,11 @@ class ShowcaseResultConverter
             $datum['iosAppLink'] = C4GUtils::addProtocolToLink($result['iosAppLink']);
             $datum['deviatingPhoneHours'] = $result['deviatingPhoneHours'];
             $datum['phoneHours'] = html_entity_decode($result['phoneHours']);
-            $datum['opening_hours'] = html_entity_decode($result['opening_hours']);
+            if ($result['opening_hours'] && strpos($result['opening_hours'], '"') === 0) {
+                $datum['opening_hours'] = html_entity_decode(str_replace(array("\r\n", "\r", "\n"), '', $result['opening_hours']));
+            } else {
+                $datum['opening_hours'] = html_entity_decode($result['opening_hours']);
+            }
             $datum['opening_hours_additional'] = html_entity_decode($result['opening_hours_additional']);
             $datum['legalTextSet'] = $result['legalTextSet'];
             $datum['cashOnlyIfPickup'] = $result['cashOnlyIfPickup'];
@@ -642,6 +646,7 @@ class ShowcaseResultConverter
                 $datum['showcaseIds'] = [];
             }
 
+            $datum['locationName'] = $result['name'];
             $datum['locationCity'] = $result['locationCity'];
             $datum['locationZip'] = $result['locationZip'];
             $datum['locationStreet'] = $result['locationStreet'];
