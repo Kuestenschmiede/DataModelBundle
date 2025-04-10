@@ -151,6 +151,8 @@ $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['bullying'] = "Mobbing";
 $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['burnout'] = "Burnout";
 $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['heart'] = "Herz";
 $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['breastCancer'] = "Brustkrebs";
+$GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['colorectalCancer'] = "Darmkrebs";
+$GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['huntington'] = "Huntington";
 
 $GLOBALS['TL_LANG']['gutesio']['contactInfoAdviceFocusOptions']['mentalIssues'] = "psychische Beeinträchtigung";
 $GLOBALS['TL_LANG']['gutesio']['contactInfoAdviceFocusOptions']['psychologicalAdvice'] = "Psychologische Beratung";
