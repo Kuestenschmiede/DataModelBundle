@@ -274,6 +274,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         ],
         'source' => [
             'sql' => "TEXT NULL"
+        ],
+        'extendedSearchTerms' => [
+            'sql' => "TEXT NULL"
         ]
     ],
 ];
