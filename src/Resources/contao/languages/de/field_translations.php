@@ -7,8 +7,8 @@ $GLOBALS['TL_LANG']['gutesio']['diet_options']['halal'] = "halal";
 $GLOBALS['TL_LANG']['gutesio']['diet_options']['lactose_free'] = "laktosefrei";
 $GLOBALS['TL_LANG']['gutesio']['diet_options']['kosher'] = "koscher";
 $GLOBALS['TL_LANG']['gutesio']['diet_options']['meat'] = "Fleischgerichte";
-
 $GLOBALS['TL_LANG']['gutesio']['diet_options']['bio'] = "bio";
+
 $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['plain'] = "gutbürgerlich";
 $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['seasonal'] = "saisonal";
 $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['other'] = "sonstiges";
@@ -22,6 +22,12 @@ $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['japanese'] = "japanisch";
 $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['bohemian'] = "böhmisch";
 $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['asian'] = "asiatisch";
 $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['indian'] = "indisch";
+$GLOBALS['TL_LANG']['gutesio']['cuisine_options']['turkish'] = "türkisch";
+$GLOBALS['TL_LANG']['gutesio']['cuisine_options']['chinese'] = "chinesisch";
+$GLOBALS['TL_LANG']['gutesio']['cuisine_options']['thai'] = "thailändisch";
+$GLOBALS['TL_LANG']['gutesio']['cuisine_options']['vietnamese'] = "vietnamesisch";
+$GLOBALS['TL_LANG']['gutesio']['cuisine_options']['oriental'] = "orientalisch";
+$GLOBALS['TL_LANG']['gutesio']['cuisine_options']['american'] = "amerikanisch";
 
 $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['kebab'] = "Döner Kebab";
 $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['pizza'] = "Pizza";
