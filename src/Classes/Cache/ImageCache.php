@@ -155,33 +155,35 @@ class ImageCache
 ////            }
 ////        }
 //    }
-    
+
     private function downloadImage(string $url, string $localFilePath): void
     {
-        $client = new Client();
+        $client = new Client([
+            'timeout' => 10,           // Kurzer Timeout
+            'connect_timeout' => 5,    // Schnelles Verbindungs-Timeout
+            'http_errors' => true,     // Direkte Fehlerbehandlung
+            'verify' => false          // SSL-Verifizierung deaktiviert für schnellere Downloads
+        ]);
+
         $destinationDir = dirname($localFilePath);
         if (!is_dir($destinationDir)) {
             mkdir($destinationDir, 0777, true);
         }
 
         try {
-            $response = $client->head($url);
-            $lastModified = $response->getHeaderLine('Last-Modified');
-
-            if (file_exists($localFilePath) && $lastModified && filemtime($localFilePath) >= strtotime($lastModified)) {
-                return;
-            }
-
-            $response = $client->get($url, ['sink' => $localFilePath]);
+            // HEAD-Request weglassen für bessere Performance
+            $response = $client->get($url, [
+                'sink' => $localFilePath,
+                'stream' => true,      // Stream-Modus für große Dateien
+            ]);
 
             if ($response->getStatusCode() !== 200) {
-                throw new \Exception("Failed to download image: " . $url);
+                throw new \Exception("Download fehlgeschlagen: " . $url);
             }
         } catch (\Exception $e) {
             if (file_exists($localFilePath)) {
                 unlink($localFilePath);
             }
-
             throw $e;
         }
     }
