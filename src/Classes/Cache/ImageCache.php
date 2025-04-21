@@ -74,7 +74,9 @@ class ImageCache
 
         if ($this->isCacheExpired($destinationPath, $time)) {
             if ($this->cacheCount < $cacheCount) {
-                $this->downloadImage($cdnUrl, $destinationPath);
+                if (!$this->downloadImage($cdnUrl, $destinationPath)) {
+                    return $imagePath;
+                };
                 $this->cacheCount++;
             } else {
                 return $imagePath;
@@ -101,17 +103,11 @@ class ImageCache
 
             if ($this->isCacheExpired($destinationPath, $time)) {
                 if ($this->cacheCount < $cacheCount) {
-                    //$sourcePaths[] = $cdnUrl;
-                    //$destinationPaths[] = $destinationPath;
                     $this->downloadImage($cdnUrl, $destinationPath);
                     $this->cacheCount++;
                 }
             }
         }
-
-//        if (count($sourcePaths) > 0 && count($destinationPaths) > 0) {
-//            $this->downloadImages($sourcePaths, $destinationPaths);
-//        }
 
         return true;
     }
@@ -127,42 +123,13 @@ class ImageCache
         return (time() - $fileTimestamp) > $time;
     }
 
-//    private function downloadImages(array $urls, array $localFilePaths): void
-//    {
-//        $client = new Client();
-//        $promises = [];
-//
-//        foreach ($urls as $index => $url) {
-//            if (!isset($promises[$url])) {
-//                $destinationDir = dirname($localFilePaths[$index]);
-//
-//                if (!is_dir($destinationDir) && !mkdir($destinationDir, 0777, true) && !is_dir($destinationDir)) {
-//                    throw new \RuntimeException(sprintf('Verzeichnis "%s" konnte nicht erstellt werden.', $destinationDir));
-//                }
-//
-//                // Asynchrone GET-Anfrage hinzufügen (einmalig pro URL)
-//                $promises[$url] = $client->getAsync($url, ['sink' => $localFilePaths[$index]]);
-//            }
-//        }
-//
-//        // Sicherstellen, dass keine Promise doppelt verarbeitet wird
-//        $results = \GuzzleHttp\Promise\Utils::settle($promises)->wait();
-//
-////        foreach ($results as $index => $result) {
-////            if ($result['state'] === 'rejected') {
-////                $reason = $result['reason'];
-////                error_log("Download fehlgeschlagen für URL {$urls[$index]}: {$reason->getMessage()}");
-////            }
-////        }
-//    }
-
-    private function downloadImage(string $url, string $localFilePath): void
+    private function downloadImage(string $url, string $localFilePath): bool
     {
         $client = new Client([
-            'timeout' => 10,           // Kurzer Timeout
-            'connect_timeout' => 5,    // Schnelles Verbindungs-Timeout
-            'http_errors' => true,     // Direkte Fehlerbehandlung
-            'verify' => false          // SSL-Verifizierung deaktiviert für schnellere Downloads
+            'timeout' => 10,
+            'connect_timeout' => 5,
+            'http_errors' => false,
+            'verify' => false
         ]);
 
         $destinationDir = dirname($localFilePath);
@@ -171,21 +138,30 @@ class ImageCache
         }
 
         try {
-            // HEAD-Request weglassen für bessere Performance
-            $response = $client->get($url, [
-                'sink' => $localFilePath,
-                'stream' => true,      // Stream-Modus für große Dateien
-            ]);
+            $fileHandle = fopen($localFilePath, 'w');
+            $response = $client->get($url, ['sink' => $fileHandle]);
 
             if ($response->getStatusCode() !== 200) {
-                throw new \Exception("Download fehlgeschlagen: " . $url);
+                fclose($fileHandle);
+                if (file_exists($localFilePath)) {
+                    unlink($localFilePath);
+                }
+                return false;
             }
+
+            fclose($fileHandle);
+            return true;
+
         } catch (\Exception $e) {
+            if (isset($fileHandle) && is_resource($fileHandle)) {
+                fclose($fileHandle);
+            }
             if (file_exists($localFilePath)) {
                 unlink($localFilePath);
             }
-            throw $e;
+            return false;
         }
     }
+
 
 }
