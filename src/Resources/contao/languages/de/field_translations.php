@@ -160,7 +160,7 @@ $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['breastCancer'] = "Brustk
 $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['colorectalCancer'] = "Darmkrebs";
 $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['huntington'] = "Huntington";
 $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['mental_disability'] = "geistige Behinderung";
-$GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['hearing_aids'] = "Hörgeräte";
+$GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['hearing_aids'] = "Hörgerät";
 
 $GLOBALS['TL_LANG']['gutesio']['contactInfoAdviceFocusOptions']['mentalIssues'] = "psychische Beeinträchtigung";
 $GLOBALS['TL_LANG']['gutesio']['contactInfoAdviceFocusOptions']['psychologicalAdvice'] = "Psychologische Beratung";
