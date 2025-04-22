@@ -161,6 +161,13 @@ $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['colorectalCancer'] = "Da
 $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['huntington'] = "Huntington";
 $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['mental_disability'] = "geistige Behinderung";
 $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['hearing_aids'] = "Hörgerät";
+$GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['men'] = "Männer";
+$GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['women'] = "Frauen";
+$GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['laryngeal_cancer'] = "Kehlkopfkrebs";
+$GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['testicular_cancer'] = "Hodenkrebs";
+$GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['pulmonary_emphysema'] = "Lungenemphysem";
+$GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['pulmonary_dysfunction'] = "Lungenfunktionsstörungen";
+$GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['lung_cancer'] = "Lungenkrebs";
 
 $GLOBALS['TL_LANG']['gutesio']['contactInfoAdviceFocusOptions']['mentalIssues'] = "psychische Beeinträchtigung";
 $GLOBALS['TL_LANG']['gutesio']['contactInfoAdviceFocusOptions']['psychologicalAdvice'] = "Psychologische Beratung";
