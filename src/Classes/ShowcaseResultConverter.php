@@ -155,12 +155,12 @@ class ShowcaseResultConverter
 
             // load types
             $datum['types'] = [];
-            $result = $db
+            $resultTypeIds = $db
                 ->prepare('SELECT typeId FROM tl_gutesio_data_element_type WHERE elementId = ? ORDER BY `rank` ASC')
                 ->execute($result['uuid'])
                 ->fetchAllAssoc();
 
-            $arrTypeIds = array_column($result, 'typeId');
+            $arrTypeIds = array_column($resultTypeIds, 'typeId');
 
             foreach ($arrTypeIds as $typeId) {
                 if (key_exists($typeId,$this->cachedTypes)) {
