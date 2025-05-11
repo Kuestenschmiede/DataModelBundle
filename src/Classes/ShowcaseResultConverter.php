@@ -1,3 +1,4 @@
+```php
 <?php
 /**
  * This file belongs to gutes.digital and is published exclusively for use
@@ -72,7 +73,7 @@ class ShowcaseResultConverter
             $datum['description'] = html_entity_decode(C4GUtils::replaceInsertTags($result['description']));
             $datum['directions'] = html_entity_decode($result['directions']);
             $datum['surroundings'] = html_entity_decode($result['surroundings']);
-            $datum['internalDescription'] = html_entity_decode($result['internalDescription']);
+            $datum['internalDescription'] = key_exists('internalDescription', $result) ? html_entity_decode($result['internalDescription']) : '';
             $datum['imageCredits'] = html_entity_decode($result['imageCredits']);
             $datum['importantNotes'] = html_entity_decode($result['importantNotes']);
             $datum['technicalEquipment'] = key_exists('technicalEquipment', $result) ? html_entity_decode($result['technicalEquipment']) : '';
@@ -155,9 +156,13 @@ class ShowcaseResultConverter
 
             // load types
             $datum['types'] = [];
-            $arrTypeIds = $db
-                ->prepare('SELECT typeId FROM tl_gutesio_data_element_type WHERE elementId = ?')
-                ->execute($result['uuid'])->fetchEach('typeId');
+            $result = $db
+                ->prepare('SELECT typeId FROM tl_gutesio_data_element_type WHERE elementId = ? ORDER BY `rank` ASC')
+                ->execute($result['uuid'])
+                ->fetchAllAssoc();
+
+            $arrTypeIds = array_column($result, 'typeId');
+
             foreach ($arrTypeIds as $typeId) {
                 if (key_exists($typeId,$this->cachedTypes)) {
                     $datum['types'][$typeId] = $this->cachedTypes[$typeId];
