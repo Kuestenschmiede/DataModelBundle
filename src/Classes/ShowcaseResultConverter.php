@@ -1,4 +1,3 @@
-```php
 <?php
 /**
  * This file belongs to gutes.digital and is published exclusively for use
