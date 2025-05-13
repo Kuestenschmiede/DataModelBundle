@@ -741,6 +741,9 @@ class ShowcaseResultConverter
                         $datum['imprintData'] = $filledImprintData;
                     }
                     $datum = array_merge($datum, $filledImprintData);
+                } else {
+                    // still load data from imprint, even if incomplete
+                    $datum = array_merge($datum, $filledImprintData);
                 }
             }
 
