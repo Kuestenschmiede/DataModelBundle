@@ -60,8 +60,8 @@ class ImageCache
         return $urlParts['path'];
     }
 
-    //default 4hm nax. 10 new images
-    public function getImage(string $imagePath, int $time=14400, int $cacheCount=10): string
+    //default 48h nax. 4 new images
+    public function getImage(string $imagePath, int $time=172800, int $cacheCount=4): string
     {
         $localPath = $this->removeGetParams($imagePath);
         if (!$localPath) {
@@ -86,8 +86,8 @@ class ImageCache
         return $this->localPublicPath . $localPath;
     }
 
-    //default 4h, max. 5000 images
-    public function getImages(array $imagePaths, int $time=14400, int $cacheCount=5000): bool
+    //default 48h, max. 5000 images
+    public function getImages(array $imagePaths, int $time=172800, int $cacheCount=5000): bool
     {
         $sourcePaths = [];
         $destinationPaths = [];
@@ -112,8 +112,8 @@ class ImageCache
         return true;
     }
 
-    //default 4h
-    private function isCacheExpired(string $filePath, int $time=14400): bool
+    //default 48h
+    private function isCacheExpired(string $filePath, int $time=172800): bool
     {
         if (!file_exists($filePath)) {
             return true;
