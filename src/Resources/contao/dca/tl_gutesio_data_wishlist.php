@@ -4,7 +4,8 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_wishlist'] = [
         'sql' => [
             'keys' => [
                 'id' => 'primary',
-                'uuid' => 'index'
+                'uuid' => 'index',
+                'clientUuid' => 'index'
             ],
         ],
     ],
