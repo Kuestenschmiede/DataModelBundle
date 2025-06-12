@@ -118,7 +118,7 @@ class ShowcaseResultConverter
             if (key_exists('videoPreviewImageCDN', $result) && $result['videoPreviewImageCDN']) {
 //                $model = FilesModel::findByUuid(StringUtil::deserialize($result['videoPreviewImage']));
 //                if ($model !== null) {
-                    $datum['videoPreview']['videoPreviewImage'] = $this->createFileDataFromFile($result['videoPreviewImageCDN'], false, $fileUtils);
+                    $datum['videoPreview']['videoPreviewImage'] = $this->createFileDataFromFile($result['videoPreviewImageCDN'], false, $fileUtils, 600, 450, $datum['name'], $datum['name']);
                     $datum['videoPreviewImage'] = $datum['videoPreview']['videoPreviewImage'];
                 //}
             }
@@ -279,7 +279,7 @@ class ShowcaseResultConverter
                         $validUntil = $tag ? intval($tag['validUntil']) : 0;
                         if ((!$validFrom || ($validFrom <= time())) && (!$validUntil || ($validUntil >= time()))) {
                             if ($tag && $tag['imageCDN']) {
-                                $tag['image'] = $this->createFileDataFromFile($tag['imageCDN'], true, $fileUtils);
+                                $tag['image'] = $this->createFileDataFromFile($tag['imageCDN'], true, $fileUtils, 600, 450, $tag['name'], $tag['name']);
 
                                 switch ($tag['technicalKey']) {
                                     case 'tag_delivery':
@@ -624,7 +624,7 @@ class ShowcaseResultConverter
                                                 $datum['relatedShowcases'] = [];
                                             }
                                             //$logoData = $this->createFileDataFromModel($logoModel);
-                                            $logoData = $this->createFileDataFromFile($showcase['logoCDN'], false, $fileUtils, 0, 150);
+                                            $logoData = $this->createFileDataFromFile($showcase['logoCDN'], false, $fileUtils, 0, 150, $showcase['name'], $showcase['name']);;
                                             $logoData['href'] = $showcase['alias'];
                                             $datum['relatedShowcaseLogos'][] = $logoData;
                                             $datum['relatedShowcases'][] = [
@@ -699,17 +699,17 @@ class ShowcaseResultConverter
                 }
             } else {
                 if ($result['imageCDN']) {
-                    $datum['image'] = $this->createFileDataFromFile($result['imageCDN'], false, $fileUtils);
+                    $datum['image'] = $this->createFileDataFromFile($result['imageCDN'], false, $fileUtils, 600, 450, $result['name'], $result['name']);;
                 }
 
                 if ($result['logoCDN']) {
-                    $datum['logo'] = $this->createFileDataFromFile($result['logoCDN'], false, $fileUtils, 0, 150);
+                    $datum['logo'] = $this->createFileDataFromFile($result['logoCDN'], false, $fileUtils, 0, 150, $result['name'], $result['name']);;
                 }
                 if ($result['imageGalleryCDN']) {
                     $images = StringUtil::deserialize($result['imageGalleryCDN']);
                     $idx = 0;
                     foreach ($images as $image) {
-                        $datum['imageGallery_' . $idx] = $this->createFileDataFromFile($image, false, $fileUtils);
+                        $datum['imageGallery_' . $idx] = $this->createFileDataFromFile($image, false, $fileUtils, 600, 450, $result['name'].$idx, 'Bild '.$idx.': '.$result['name']);;
                         $idx++;
                     }
                 }
@@ -791,7 +791,7 @@ class ShowcaseResultConverter
     }
 
     //ToDO
-    public function createFileDataFromFile($file, $svg = false, $fileUtils = new FileUtils(), $width = 600, $height = 450) : array
+    public function createFileDataFromFile($file, $svg = false, $fileUtils = new FileUtils(), $width = 600, $height = 450, $title = '', $alt = '') : array
     {
         $objSettings = GutesioOperatorSettingsModel::findSettings();
         $cdnUrl = $objSettings->cdnUrl;
@@ -807,8 +807,8 @@ class ShowcaseResultConverter
             'src' => $url,
             'path' => $url,
             'uuid' => '',
-            'alt' => '',
-            'name' => '',
+            'alt' => $alt,
+            'name' => $title,
             'height' => $height,
             'width' => $width/*,
             'importantPart' => [
