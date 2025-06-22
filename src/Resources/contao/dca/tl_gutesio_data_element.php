@@ -149,9 +149,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         'facebook' => [
             'sql' => "varchar(255) NOT NULL default ''"
         ],
-        'twitter' => [
+        /*'twitter' => [
             'sql' => "varchar(255) NOT NULL default ''"
-        ],
+        ],*/
         'instagram' => [
             'sql' => "varchar(255) NOT NULL default ''"
         ],

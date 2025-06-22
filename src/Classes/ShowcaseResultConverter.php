@@ -91,7 +91,7 @@ class ShowcaseResultConverter
             $datum['contactFax'] = html_entity_decode($result['contactFax']);
             $datum['website'] = C4GUtils::addProtocolToLink($result['website']);
             $datum['facebook'] = C4GUtils::addProtocolToLink($result['facebook']);
-            $datum['twitter'] = C4GUtils::addProtocolToLink($result['twitter']);
+            //$datum['twitter'] = C4GUtils::addProtocolToLink($result['twitter']);
             $datum['instagram'] = C4GUtils::addProtocolToLink($result['instagram']);
             $datum['xing'] = C4GUtils::addProtocolToLink($result['xing']);
             $datum['linkedin'] = C4GUtils::addProtocolToLink($result['linkedin']);
