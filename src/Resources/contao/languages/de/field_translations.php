@@ -108,6 +108,7 @@ $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['lupusErythematosus'] = "
 $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['migration'] = "Migration";
 $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['multipleSclerosis'] = "Multiple Sklerose";
 $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['muscleDisease'] = "Muskelerkrankung";
+$GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['narcissism'] = "Narzissmus";
 $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['naroticsAnonymous'] = "Narotics-anonymouss";
 $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['neurofibromatosis'] = "Neurofibromatose";
 $GLOBALS['TL_LANG']['gutesio']['selfHelpFocusOptions']['kidneyDisease'] = "Nierenkrank";
