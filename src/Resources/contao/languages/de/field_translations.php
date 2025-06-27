@@ -28,6 +28,8 @@ $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['thai'] = "thailändisch";
 $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['vietnamese'] = "vietnamesisch";
 $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['oriental'] = "orientalisch";
 $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['american'] = "amerikanisch";
+$GLOBALS['TL_LANG']['gutesio']['cuisine_options']['spain'] = "spanisch";
+$GLOBALS['TL_LANG']['gutesio']['cuisine_options']['french'] = "französisch";
 
 $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['kebab'] = "Döner Kebab";
 $GLOBALS['TL_LANG']['gutesio']['cuisine_options']['pizza'] = "Pizza";
