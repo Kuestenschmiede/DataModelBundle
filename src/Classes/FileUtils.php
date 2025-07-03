@@ -29,11 +29,11 @@ class FileUtils
         }
 
         if ($cropWidth && $cropHeight) {
-            $result .= "?crop=smart&width=".$cropWidth."&height=".$cropHeight;
+            $result .= "?crop=smart&width=".$cropWidth."&height=".$cropHeight."&quality=85&format=webp&fit=scale-down";
         } else if ($cropWidth) {
-            $result .= "?crop=smart&width=".$cropWidth;
+            $result .= "?crop=smart&width=".$cropWidth."&quality=85&format=webp&fit=scale-down";
         } else if ($cropHeight) {
-            $result .= "?crop=smart&height=".$cropHeight;
+            $result .= "?crop=smart&height=".$cropHeight."&quality=85&format=webp&fit=scale-down";
         }
 
         return $result;
