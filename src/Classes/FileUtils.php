@@ -40,7 +40,7 @@ class FileUtils
     }
 
     //caching 4h
-    public function addUrlToPathAndGetImage($url, $path, $cropWidth = 0, $cropHeight = 0, $time=14400) {
+    public function addUrlToPathAndGetImage($url, $path, $cropWidth = 0, $cropHeight = 0, $time=172800) {
         $result = $this->addUrlToPath($url, $path, $cropWidth, $cropHeight);
         return $this->getImage($result, $time);
     }
@@ -75,7 +75,7 @@ class FileUtils
     }
 
     //caching 4h
-    public function getImage($imagePath, $time=14400) {
+    public function getImage($imagePath, $time=172800) {
         try {
             $localImage = $this->imageCache->getImage($imagePath, $time);
             return $localImage;
@@ -86,7 +86,7 @@ class FileUtils
         return $imagePath;
     }
 
-    public function getImages(Array $files, $time=14400) {
+    public function getImages(Array $files, $time=172800) {
         $this->imageCache->getImages($files, $time);
     }
 }
