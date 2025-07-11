@@ -60,8 +60,16 @@ class ImageCache
         return $urlParts['path'];
     }
 
+
+    private function appendToImageName($url, $extendedParam) {
+        $info = pathinfo($url);
+        $newName = $info['filename'] . $extendedParam . "." . $info['extension'];
+        $newPathName = $info['dirname'] . '/' . $newName;
+        return $newPathName;
+    }
+
     //default 48h nax. 4 new images
-    public function getImage(string $imagePath, int $time=172800, int $cacheCount=4): string
+    public function getImage(string $imagePath, string $extendedParam = '', int $time=172800, int $cacheCount=4): string
     {
         $localPath = $this->removeGetParams($imagePath);
         if (!$localPath) {
@@ -70,16 +78,24 @@ class ImageCache
 
         $cdnUrl = $imagePath;
         $sourcePath = ltrim($localPath, '/');
-        $destinationPath = rtrim($this->localCachePath, '/') . '/' . $sourcePath;
+        $downloadPath = rtrim($this->localCachePath, '/') . '/' . $sourcePath;
+
+        if ($extendedParam) {
+            $localPath = $this->appendToImageName($localPath, $extendedParam);
+            $sourcePath = ltrim($localPath, '/');
+            $destinationPath = rtrim($this->localCachePath, '/') . '/' . $sourcePath;
+        } else {
+            $destinationPath = $downloadPath;
+        }
 
         if ($this->isCacheExpired($destinationPath, $time)) {
             if ($this->cacheCount < $cacheCount) {
                 if (!$this->downloadImage($cdnUrl, $destinationPath)) {
-                    return $imagePath;
+                    return $cdnUrl;
                 };
                 $this->cacheCount++;
             } else {
-                return $imagePath;
+                return $cdnUrl;
             }
         }
 
@@ -92,14 +108,23 @@ class ImageCache
         $sourcePaths = [];
         $destinationPaths = [];
         foreach ($imagePaths as $imagePath) {
-            $localPath = $this->removeGetParams($imagePath);
+            $localPath = $this->removeGetParams($imagePath['image']);
             if (!$localPath) {
                 continue;
             }
-            $cdnUrl = $imagePath;
+            $cdnUrl = $imagePath['image'];
+            $extendedParam = $imagePath['extendedParam'];
 
             $sourcePath = ltrim($localPath, '/');
-            $destinationPath = rtrim($this->localCachePath, '/') . '/' . $sourcePath;
+            $downloadPath = rtrim($this->localCachePath, '/') . '/' . $sourcePath;
+
+            if ($extendedParam) {
+                $localPath = $this->appendToImageName($localPath, $extendedParam);
+                $sourcePath = ltrim($localPath, '/');
+                $destinationPath = rtrim($this->localCachePath, '/') . '/' . $sourcePath;
+            } else {
+                $destinationPath = $downloadPath;
+            }
 
             if ($this->isCacheExpired($destinationPath, $time)) {
                 if ($this->cacheCount < $cacheCount) {

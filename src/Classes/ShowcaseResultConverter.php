@@ -801,7 +801,12 @@ class ShowcaseResultConverter
             $height = 100;
         }
 
-        $url = $fileUtils->addUrlToPathAndGetImage($cdnUrl, $file, $width, $height);
+        $extendedParam = '';
+        if ($width == 600) {
+            $extendedParam = '-list';
+        }
+
+        $url = $fileUtils->addUrlToPathAndGetImage($cdnUrl, $file, $extendedParam, $width, $height);
 
         return [
             'src' => $url,
