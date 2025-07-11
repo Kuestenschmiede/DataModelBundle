@@ -803,7 +803,7 @@ class ShowcaseResultConverter
 
         $extendedParam = '';
         if ($width == 600) {
-            $extendedParam = '-list';
+            $extendedParam = '-small';
         }
 
         $url = $fileUtils->addUrlToPathAndGetImage($cdnUrl, $file, $extendedParam, $width, $height);
@@ -815,13 +815,7 @@ class ShowcaseResultConverter
             'alt' => $alt,
             'name' => $title,
             'height' => $height,
-            'width' => $width/*,
-            'importantPart' => [
-                'x' => $model->importantPartX,
-                'y' => $model->importantPartY,
-                'width' => $model->importantPartWidth,
-                'height' => $model->importantPartHeight,
-            ],*/
+            'width' => $width
         ];
     }
 
