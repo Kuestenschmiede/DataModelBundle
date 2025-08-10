@@ -39,6 +39,15 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_job'] = [
         ],
         'importId' => [
             'sql' => "int(20) unsigned NOT NULL default '0'"
+        ],
+        'applicationContactUrl' => [
+            'sql' => "varchar(100) NOT NULL default ''"
+        ],
+        'applicationContactEMail' => [
+            'sql' => "varchar(255) NOT NULL default ''"
+        ],
+        'applicationContactPhone' => [
+            'sql' => "varchar(50) NOT NULL default ''"
         ]
     ],
 ];
