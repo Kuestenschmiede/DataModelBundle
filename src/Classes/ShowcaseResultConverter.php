@@ -281,6 +281,10 @@ class ShowcaseResultConverter
                             if ($tag && $tag['imageCDN']) {
                                 $tag['image'] = $this->createFileDataFromFile($tag['imageCDN'], true, $fileUtils, 600, 450, $tag['name'], $tag['name']);
 
+                                if (key_exists('fixedIconUrl', $tag) && $tag['fixedIconUrl']) {
+                                    $tag['linkHref'] = C4GUtils::addProtocolToLink($tag['fixedIconUrl']);
+                                }
+
                                 switch ($tag['technicalKey']) {
                                     case 'tag_delivery':
                                         $stmt = $db->prepare(

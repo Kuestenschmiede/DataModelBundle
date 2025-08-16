@@ -53,6 +53,12 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_tag'] = [
         'postals' => [
             'sql' => "TEXT NULL"
         ],
+        'fixedIconUrl' => [
+            'sql' => "varchar(255) NOT NULL default ''"
+        ],
+        'setsTileClass' => [
+            'sql' => "int unsigned NOT NULL default 0"
+        ],
         'validFrom' => [
             'sql' => "int NULL"
         ],
