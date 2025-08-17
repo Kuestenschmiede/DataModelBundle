@@ -108,7 +108,7 @@ class ImageCache
         $sourcePaths = [];
         $destinationPaths = [];
         foreach ($imagePaths as $imagePath) {
-            $localPath = $this->removeGetParams($imagePath['image']);
+            $localPath = is_array($imagePath['image']) ? $this->removeGetParams($imagePath['image']) : false;
             if (!$localPath) {
                 continue;
             }
