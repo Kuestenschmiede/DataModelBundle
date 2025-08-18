@@ -48,7 +48,28 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_job'] = [
         ],
         'applicationContactPhone' => [
             'sql' => "varchar(50) NOT NULL default ''"
-        ]
+        ],
+//        'baseSalary' => [
+//            'sql' => "varchar(255) NOT NULL default ''"
+//        ],
+//        'estimatedSalary' => [
+//            'sql' => "varchar(255) NOT NULL default ''"
+//        ],
+        'workHours' => [
+            'sql' => "varchar(255) NOT NULL default ''"
+        ],
+        'remoteType'  => [
+            'sql' => "int(2) unsigned NOT NULL default '0'"
+        ],
+//        'employmentUnit' => [
+//            'sql' => "varchar(255) NOT NULL default ''"
+//        ],
+        'jobBenefits' => [
+            'sql' => "TEXT NULL'"
+        ],
+        'totalJobOpenings'  => [
+            'sql' => "int(5) unsigned NOT NULL default '1'"
+        ],
     ],
 ];
 
