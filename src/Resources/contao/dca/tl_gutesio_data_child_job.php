@@ -41,7 +41,7 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_job'] = [
             'sql' => "int(20) unsigned NOT NULL default '0'"
         ],
         'applicationContactUrl' => [
-            'sql' => "varchar(100) NOT NULL default ''"
+            'sql' => "varchar(255) NOT NULL default ''"
         ],
         'applicationContactEMail' => [
             'sql' => "varchar(255) NOT NULL default ''"
