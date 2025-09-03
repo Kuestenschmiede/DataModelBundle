@@ -112,20 +112,23 @@ class TypeFormFieldGenerator
 
     private static function getFieldsForDietCuisine()
     {
-        System::loadLanguageFile('field_translations');
+        System::loadLanguageFile('field_translations', 'de');
         $language = $GLOBALS['TL_LANG']['gutesio'];
         $dietOptions = [];
         $cuisineOptions = [];
-        foreach ($GLOBALS['gutesio']['diet_options'] as $entry) {
+
+        asort($language['diet_options'], SORT_STRING | SORT_FLAG_CASE );
+        foreach ($language['diet_options'] as $key => $value) {
             $dietOptions[] = [
-                'value' => $entry,
-                'label' => $language['diet_options'][$entry],
+                'value' => $key,
+                'label' => $value,
             ];
         }
-        foreach ($GLOBALS['gutesio']['cuisine_options'] as $entry) {
+        asort($language['cuisine_options'], SORT_STRING | SORT_FLAG_CASE );
+        foreach ($language['cuisine_options'] as $key => $value) {
             $cuisineOptions[] = [
-                'value' => $entry,
-                'label' => $language['cuisine_options'][$entry],
+                'value' => $key,
+                'label' => $value,
             ];
         }
 
