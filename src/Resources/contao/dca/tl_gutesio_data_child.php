@@ -53,6 +53,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child'] = [
         'metaDescription' => [
             'sql' => "text NULL"
         ],
+        'alias' => [
+            'sql' => "varchar(255) NOT NULL default ''"
+        ],
         'foreignKey' => [
             'sql' => "varchar(255) NOT NULL default ''"
         ],
