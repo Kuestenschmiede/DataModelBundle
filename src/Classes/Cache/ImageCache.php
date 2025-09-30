@@ -69,7 +69,7 @@ class ImageCache
     }
 
     //default 48h nax. 4 new images
-    public function getImage(string $imagePath, string $extendedParam = '', int $time=172800, int $cacheCount=4): string
+    public function getImage(string $imagePath, string $extendedParam = '', int $time=172800, int $cacheCount=4, $ignoreExpiry = false): string
     {
         $localPath = $this->removeGetParams($imagePath);
         if (!$localPath) {
@@ -88,7 +88,7 @@ class ImageCache
             $destinationPath = $downloadPath;
         }
 
-        if ($this->isCacheExpired($destinationPath, $time)) {
+        if ($this->isCacheExpired($destinationPath, $time, $ignoreExpiry)) {
             if ($this->cacheCount < $cacheCount) {
                 if (!$this->downloadImage($cdnUrl, $destinationPath)) {
                     return $cdnUrl;
@@ -138,13 +138,18 @@ class ImageCache
     }
 
     //default 48h
-    private function isCacheExpired(string $filePath, int $time=172800): bool
+    private function isCacheExpired(string $filePath, int $time=172800, bool $ignoreExpiry = false): bool
     {
         if (!file_exists($filePath)) {
             return true;
         }
 
+        if ($ignoreExpiry === true) {
+            return false;
+        }
+
         $fileTimestamp = filemtime($filePath);
+
         return (time() - $fileTimestamp) > $time;
     }
 
