@@ -38,6 +38,7 @@ class TypeFormFieldGenerator
         return match ($technicalKey) {
             'type_diet_cuisine' => static::getFieldsForDietCuisine(),
             'type_event_location' => static::getFieldsForEventLocation(),
+            'type_lodging' => static::getFieldsForLodging(),
             'type_admission' => static::getFieldsForAdmission(),
             'type_extra_zip' => static::getFieldsForExtraZip(),
             'type_surr_zip' => static::getFieldsForSurroundingZip(),
@@ -214,6 +215,33 @@ class TypeFormFieldGenerator
         $field->setDescription($GLOBALS['TL_LANG'][$strName][self::FIELD_ALLOW_LOCATION_FOR_ALL] && (count($GLOBALS['TL_LANG'][$strName][self::FIELD_ALLOW_LOCATION_FOR_ALL]) > 0) ? $GLOBALS['TL_LANG'][$strName][self::FIELD_ALLOW_LOCATION_FOR_ALL][1] : '');
         $field->setChecked(true);
         $fields[self::FIELD_ALLOW_LOCATION_FOR_ALL] = $field;
+
+        return $fields;
+    }
+
+    private static function getFieldsForLodging()
+    {
+        System::loadLanguageFile('form_tag_fields');
+        $strName = 'form_tag_fields';
+
+        $fields = [];
+
+        $field = new TextFormField();
+        $field->setName('numberOfRooms');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['numberOfRooms'] && (count($GLOBALS['TL_LANG'][$strName]['numberOfRooms']) > 0) ? $GLOBALS['TL_LANG'][$strName]['numberOfRooms'][0] : '');
+        $fields['numberOfRooms'] = $field;
+
+        $field = new TextFormField();
+        $field->setName('numberOfBeds');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['numberOfBeds'] && (count($GLOBALS['TL_LANG'][$strName]['numberOfBeds']) > 0) ? $GLOBALS['TL_LANG'][$strName]['numberOfBeds'][0] : '');
+        $fields['numberOfBeds'] = $field;
+
+        $field = new CKEditorFormField();
+        $field->setName('equipment');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['equipment'] && (count($GLOBALS['TL_LANG'][$strName]['equipment']) > 0) ? $GLOBALS['TL_LANG'][$strName]['equipment'][0] : '');
+        $field->setParagraphLabel($GLOBALS['TL_LANG'][$strName]['frontend']['paragraph'] ?: "Absatz");
+        $field->setHeadingLabel($GLOBALS['TL_LANG'][$strName]['frontend']['heading'] ?: ['Titel', 'Untertitel']);
+        $fields['equipment'] = $field;
 
         return $fields;
     }

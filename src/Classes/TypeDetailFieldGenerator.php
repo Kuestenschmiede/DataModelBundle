@@ -31,6 +31,8 @@ class TypeDetailFieldGenerator
                 return static::getFieldsForDietCuisine();
             case 'type_event_location':
                 return static::getFieldsForEventLocation();
+            case 'type_lodging':
+                return static::getFieldsForLodging();
             case 'type_admission':
                 return static::getFieldsForAdmission();
             case 'type_menu':
@@ -90,6 +92,34 @@ class TypeDetailFieldGenerator
         $field = new DetailHTMLField();
         $field->setName('technicalEquipment');
         $field->setLabel($GLOBALS['TL_LANG'][$strName]['technicalEquipment'][0] ? $GLOBALS['TL_LANG'][$strName]['technicalEquipment'][0] : '');
+        $fields[] = $field;
+
+        return $fields;
+    }
+
+    private static function getFieldsForLodging()
+    {
+        System::loadLanguageFile('form_tag_fields');
+
+        $strName = 'form_tag_fields';
+
+        $fields = [];
+
+        $field = new DetailTextField();
+        $field->setName('numberOfRooms');
+        $field->setClass('numberOfRooms');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['numberOfRooms'][0] ? $GLOBALS['TL_LANG'][$strName]['numberOfRooms'][0] : '');
+        $fields[] = $field;
+
+        $field = new DetailTextField();
+        $field->setName('numberOfBeds');
+        $field->setClass('numberOfBeds');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['numberOfBeds'][0] ? $GLOBALS['TL_LANG'][$strName]['numberOfBeds'][0] : '');
+        $fields[] = $field;
+
+        $field = new DetailHTMLField();
+        $field->setName('equipment');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['equipment'][0] ? $GLOBALS['TL_LANG'][$strName]['equipment'][0] : '');
         $fields[] = $field;
 
         return $fields;

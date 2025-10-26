@@ -31,3 +31,6 @@ $GLOBALS['TL_LANG'][$strName]['onlineVideoForum'] = ['Link zum Online-Video-Foru
 $GLOBALS['TL_LANG'][$strName]['onlineTherapyProgram'] = ['Link zur Online-Therapie', ''];
 $GLOBALS['TL_LANG'][$strName]['tariffCalculator'] = ['Link zum Tarifrechner', ''];
 $GLOBALS['TL_LANG'][$strName]['donationLink'] = ['Spendenlink', 'Die URL zur Spendenmöglichkeit.'];
+$GLOBALS['TL_LANG'][$strName]['numberOfRooms'] = ['Anzahl Räume', ''];
+$GLOBALS['TL_LANG'][$strName]['numberOfBeds'] = ['Anzahl Betten', ''];
+$GLOBALS['TL_LANG'][$strName]['equipment'] = ['Ausstattung', ''];
