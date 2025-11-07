@@ -140,7 +140,7 @@ class ImageCache
     //default 48h
     private function isCacheExpired(string $filePath, int $time=172800, bool $ignoreExpiry = false): bool
     {
-        if (!file_exists($filePath)) {
+        if (!file_exists($filePath) || filesize($filePath) <= 0) {
             return true;
         }
 
