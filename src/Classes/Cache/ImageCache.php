@@ -156,7 +156,7 @@ class ImageCache
     private function downloadImage(string $url, string $localFilePath): bool
     {
         $client = new Client([
-            'timeout' => 10,
+            'timeout' => 20,
             'connect_timeout' => 5,
             'http_errors' => false,
             'verify' => true,
