@@ -159,7 +159,19 @@ class ImageCache
             'timeout' => 10,
             'connect_timeout' => 5,
             'http_errors' => false,
-            'verify' => false
+            'verify' => true,
+            'allow_redirects' => [
+                'max'             => 5,
+                'strict'          => false,
+                'referer'         => true,
+                'protocols'       => ['http', 'https'],
+                'track_redirects' => true
+            ],
+            'headers' => [
+                // Viele CDNs blockieren Requests ohne User-Agent oder senden leere Antworten
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept' => 'image/avif,image/webp,image/apng,image/svg+xml,image/*,application/pdf,*/*;q=0.8',
+            ]
         ]);
 
         $destinationDir = dirname($localFilePath);
@@ -180,6 +192,15 @@ class ImageCache
             }
 
             fclose($fileHandle);
+
+            clearstatcache(true, $localFilePath);
+            if (filesize($localFilePath) === 0) {
+                if (file_exists($localFilePath)) {
+                    unlink($localFilePath);
+                }
+                return false;
+            }
+
             return true;
 
         } catch (\Exception $e) {
