@@ -155,6 +155,15 @@ class ImageCache
 
     private function downloadImage(string $url, string $localFilePath): bool
     {
+        $headers = [
+            'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept' => 'image/avif,image/webp,image/apng,image/svg+xml,image/*,application/pdf,*/*;q=0.8',
+        ];
+
+        if (file_exists($localFilePath) && filesize($localFilePath) > 0) {
+            $headers['If-Modified-Since'] = gmdate('D, d M Y H:i:s T', filemtime($localFilePath));
+        }
+
         $client = new Client([
             'timeout' => 20,
             'connect_timeout' => 5,
@@ -167,11 +176,7 @@ class ImageCache
                 'protocols'       => ['http', 'https'],
                 'track_redirects' => true
             ],
-            'headers' => [
-                // Viele CDNs blockieren Requests ohne User-Agent oder senden leere Antworten
-                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                'Accept' => 'image/avif,image/webp,image/apng,image/svg+xml,image/*,application/pdf,*/*;q=0.8',
-            ]
+            'headers' => $headers
         ]);
 
         $destinationDir = dirname($localFilePath);
@@ -179,40 +184,59 @@ class ImageCache
             mkdir($destinationDir, 0777, true);
         }
 
+        $tempFilePath = $localFilePath . '.tmp';
+
         try {
-            $fileHandle = fopen($localFilePath, 'w');
+            $fileHandle = fopen($tempFilePath, 'w');
             $response = $client->get($url, ['sink' => $fileHandle]);
 
-            if ($response->getStatusCode() !== 200) {
+            if (is_resource($fileHandle)) {
                 fclose($fileHandle);
-                if (file_exists($localFilePath)) {
-                    unlink($localFilePath);
+            }
+
+            if ($response->getStatusCode() === 304) {
+                if (file_exists($tempFilePath)) {
+                    unlink($tempFilePath);
                 }
+
+                if (file_exists($localFilePath)) {
+                    touch($localFilePath);
+                    return true;
+                }
+
                 return false;
             }
 
-            fclose($fileHandle);
+            if ($response->getStatusCode() === 200) {
+                clearstatcache(true, $tempFilePath);
+                if (filesize($tempFilePath) === 0) {
+                    if (file_exists($tempFilePath)) {
+                        unlink($tempFilePath);
+                    }
+                    return false;
+                }
 
-            clearstatcache(true, $localFilePath);
-            if (filesize($localFilePath) === 0) {
                 if (file_exists($localFilePath)) {
                     unlink($localFilePath);
                 }
-                return false;
+
+                rename($tempFilePath, $localFilePath);
+                return true;
             }
 
-            return true;
+            if (file_exists($tempFilePath)) {
+                unlink($tempFilePath);
+            }
+            return false;
 
         } catch (\Exception $e) {
             if (isset($fileHandle) && is_resource($fileHandle)) {
                 fclose($fileHandle);
             }
-            if (file_exists($localFilePath)) {
-                unlink($localFilePath);
+            if (file_exists($tempFilePath)) {
+                unlink($tempFilePath);
             }
             return false;
         }
     }
-
-
 }
