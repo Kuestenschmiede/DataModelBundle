@@ -41,6 +41,9 @@ class FileUtils
 
     //caching 4h
     public function addUrlToPathAndGetImage($url, $path, $extendedParam = '', $cropWidth = 0, $cropHeight = 0, $time=172800, $ignoreExpiry = false) {
+        if (strpos($path, 'http') !== false) {
+            return $path;
+        }
         $result = $this->addUrlToPath($url, $path, $cropWidth, $cropHeight);
         return $this->getImage($result, $extendedParam, $time, $ignoreExpiry);
     }
