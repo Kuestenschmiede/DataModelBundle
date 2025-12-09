@@ -25,7 +25,17 @@ class FileUtils
     {
         $result = $path;
         if ($url && $path && strpos(strtolower($path), 'http') === false) {
-            $result = $url.$path;
+            // Host-specific mapping: some proxies (e.g., proxy.nordsee.digital) do not expose
+            // the Contao files prefix. Example mapping:
+            //   Local: /files/con4gis_import_data/images/showcases/{uuid}/file.png
+            //   Proxy: /showcases/{uuid}/file.png
+            $host = parse_url($url, PHP_URL_HOST) ?: '';
+            if (in_array($host, ['proxy.nordsee.digital'], true)) {
+                $path = preg_replace('#^/files/con4gis_import_data/images/#', '/', $path);
+            }
+
+            // Ensure exactly one slash between base URL and path
+            $result = rtrim($url, '/') . '/' . ltrim($path, '/');
         }
 
         if ($cropWidth && $cropHeight) {
@@ -45,6 +55,24 @@ class FileUtils
             return $path;
         }
         $result = $this->addUrlToPath($url, $path, $cropWidth, $cropHeight);
+
+        // Diagnostics logging disabled by default. Enable only if explicitly requested via ENV.
+        // Set IMAGECACHE_LOG=1 to turn on temporary diagnostics in non-production environments.
+        if ((string) getenv('IMAGECACHE_LOG') === '1') {
+            try {
+                C4gLogModel::addLogEntry(
+                    'operator',
+                    'ImagePath: cdnUrl=' . (string)$url
+                    . ' | origPath=' . (string)$path
+                    . ' | finalUrl=' . (string)$result
+                    . ' | extParam=' . (string)$extendedParam
+                    . ' | crop=' . (string)$cropWidth . 'x' . (string)$cropHeight
+                );
+            } catch (\Throwable $t) {
+                // ignore logging errors
+            }
+        }
+
         return $this->getImage($result, $extendedParam, $time, $ignoreExpiry);
     }
 
