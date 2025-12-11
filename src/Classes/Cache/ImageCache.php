@@ -13,6 +13,10 @@ class ImageCache
     private $maxDownloadsPerMinute;
     private $negativeCacheTtl;
     private $enableStaleWhileRevalidate;
+    // Strict probing defaults
+    private int $strictConnectTimeoutMs = 300; // 0.3s
+    private int $strictReadTimeoutMs = 800;    // 0.8s
+    private int $strictNegativeTtl = 120;      // seconds
 
     public function __construct(string $localCachePath, string $localPublicPath)
     {
@@ -21,6 +25,11 @@ class ImageCache
         $this->maxDownloadsPerMinute = (int) (getenv('IMAGECACHE_MAX_DOWNLOADS_PER_MINUTE') ?: 60);
         $this->negativeCacheTtl = (int) (getenv('IMAGECACHE_NEGATIVE_CACHE_TTL') ?: 600); // 10 minutes
         $this->enableStaleWhileRevalidate = (bool) (getenv('IMAGECACHE_ENABLE_SWR') !== '0');
+
+        // Allow tuning strict mode via env
+        $this->strictConnectTimeoutMs = (int) (getenv('IMAGECACHE_STRICT_CONNECT_MS') ?: $this->strictConnectTimeoutMs);
+        $this->strictReadTimeoutMs = (int) (getenv('IMAGECACHE_STRICT_READ_MS') ?: $this->strictReadTimeoutMs);
+        $this->strictNegativeTtl = (int) (getenv('IMAGECACHE_STRICT_NEG_TTL') ?: $this->strictNegativeTtl);
 
         if (!is_dir($this->localCachePath)) {
             mkdir($this->localCachePath, 0777, true);
@@ -72,6 +81,39 @@ class ImageCache
         $newName = $info['filename'] . $extendedParam . "." . $info['extension'];
         $newPathName = $info['dirname'] . '/' . $newName;
         return $newPathName;
+    }
+
+    /**
+     * Strict resolver: returns only URLs that are locally present or verifiably available on the CDN.
+     * Never triggers a download. Returns an array with keys: status (local|remote|missing) and url.
+     */
+    public function resolveImageStrict(string $imagePath, string $extendedParam = ''): array
+    {
+        $paths = $this->computePaths($imagePath, $extendedParam);
+        if ($paths === null) {
+            return ['status' => 'missing', 'url' => ''];
+        }
+
+        [$cdnUrl, $localPath, $destinationPath] = $paths;
+
+        // Serve local if present
+        if (file_exists($destinationPath) && filesize($destinationPath) > 0) {
+            return ['status' => 'local', 'url' => $this->localPublicPath . $localPath];
+        }
+
+        // Respect negative cache with a shorter TTL in strict mode
+        if ($this->isNegativelyCachedStrict($destinationPath)) {
+            return ['status' => 'missing', 'url' => ''];
+        }
+
+        // Probe CDN quickly
+        $available = $this->probeRemoteAvailable($cdnUrl);
+        if ($available) {
+            return ['status' => 'remote', 'url' => $cdnUrl];
+        }
+
+        $this->writeNegativeCache($destinationPath);
+        return ['status' => 'missing', 'url' => ''];
     }
 
     public function getImage(string $imagePath, string $extendedParam = '', int $time=172800, int $cacheCount=4, $ignoreExpiry = false): string
@@ -299,6 +341,72 @@ class ImageCache
         }
     }
 
+    /**
+     * Compute CDN URL, localPath (public), destinationPath (filesystem) for an imagePath + optional extendedParam.
+     */
+    private function computePaths(string $imagePath, string $extendedParam = ''): ?array
+    {
+        $localPath = $this->removeGetParams($imagePath);
+        if (!$localPath) {
+            return null;
+        }
+        $cdnUrl = $imagePath;
+        $sourcePath = ltrim($localPath, '/');
+        $downloadPath = rtrim($this->localCachePath, '/') . '/' . $sourcePath;
+
+        if ($extendedParam) {
+            $localPath = $this->appendToImageName($localPath, $extendedParam);
+            $sourcePath = ltrim($localPath, '/');
+            $destinationPath = rtrim($this->localCachePath, '/') . '/' . $sourcePath;
+        } else {
+            $destinationPath = $downloadPath;
+        }
+
+        return [$cdnUrl, $localPath, $destinationPath];
+    }
+
+    /**
+     * Quick availability probe for a remote URL. Tries HEAD first, then falls back to Range GET.
+     */
+    private function probeRemoteAvailable(string $url): bool
+    {
+        try {
+            $client = new Client([
+                'timeout' => max(0.001, ($this->strictConnectTimeoutMs + $this->strictReadTimeoutMs) / 1000.0),
+                'connect_timeout' => max(0.001, $this->strictConnectTimeoutMs / 1000.0),
+                'http_errors' => false,
+                'verify' => true,
+                'allow_redirects' => [
+                    'max' => 3,
+                    'track_redirects' => true,
+                ],
+                'headers' => [
+                    'User-Agent' => 'gutes.digital ImageCache/strict',
+                    'Accept' => 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8',
+                ],
+            ]);
+
+            $resp = $client->request('HEAD', $url);
+            $code = $resp->getStatusCode();
+            if ($code >= 200 && $code < 300) {
+                return true;
+            }
+            // Some CDNs block HEAD; try a tiny ranged GET
+            if ($code === 400 || $code === 403 || $code === 405 || $code === 501) {
+                $resp2 = $client->request('GET', $url, [
+                    'headers' => ['Range' => 'bytes=0-0'],
+                ]);
+                $c2 = $resp2->getStatusCode();
+                if ($c2 === 206 || ($c2 >= 200 && $c2 < 300)) {
+                    return true;
+                }
+            }
+            return false;
+        } catch (\Throwable $t) {
+            return false;
+        }
+    }
+
     private function getLockPath(string $destinationPath): string
     {
         return rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'imgcache_' . sha1($destinationPath) . '.lock';
@@ -393,6 +501,25 @@ class ImageCache
             return false;
         }
         if ((time() - $ts) <= $this->negativeCacheTtl) {
+            return true;
+        }
+        @unlink($errPath);
+        return false;
+    }
+
+    // Strict variant: respects a shorter TTL to allow quicker recovery when images become available later
+    private function isNegativelyCachedStrict(string $localFilePath): bool
+    {
+        $errPath = $this->getNegativeCachePath($localFilePath);
+        if (!file_exists($errPath)) {
+            return false;
+        }
+        $ts = (int) @file_get_contents($errPath);
+        if ($ts <= 0) {
+            return false;
+        }
+        $ttl = max(15, min($this->negativeCacheTtl, $this->strictNegativeTtl));
+        if ((time() - $ts) <= $ttl) {
             return true;
         }
         @unlink($errPath);

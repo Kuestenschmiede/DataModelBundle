@@ -76,6 +76,25 @@ class FileUtils
         return $this->getImage($result, $extendedParam, $time, $ignoreExpiry);
     }
 
+    /**
+     * Strict variant: only returns a URL if the image is available (local cache exists or CDN confirms availability).
+     * Otherwise returns an empty string to allow callers to skip rendering the image/slide.
+     */
+    public function addUrlToPathAndGetImageStrict($url, $path, $extendedParam = '', $cropWidth = 0, $cropHeight = 0)
+    {
+        // If already an absolute URL, use as-is for strict probing
+        $full = (strpos($path, 'http') !== false) ? $path : $this->addUrlToPath($url, (string)$path, $cropWidth, $cropHeight);
+        try {
+            $res = $this->imageCache->resolveImageStrict($full, (string)$extendedParam);
+            if (!empty($res['url']) && ($res['status'] === 'local' || $res['status'] === 'remote')) {
+                return (string) $res['url'];
+            }
+        } catch (\Throwable $t) {
+            // fall through
+        }
+        return '';
+    }
+
     public function getImageSize($uri)
     {
         $size = [0, 0];
