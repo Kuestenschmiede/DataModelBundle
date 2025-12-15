@@ -140,7 +140,7 @@ class ShowcaseResultConverter
                 $datum['opening_hours'] = html_entity_decode($result['opening_hours']);
             }
             $datum['opening_hours_additional'] = html_entity_decode($result['opening_hours_additional']);
-            $datum['legalTextSet'] = $result['legalTextSet'];
+            $datum['legalTextSet'] = intval($result['legalTextSet']);
             $datum['allowedPaymentMethods'] = StringUtil::deserialize($result['allowedPaymentMethods'], true);
             $datum['cashOnlyIfPickup'] = $result['cashOnlyIfPickup'];
             $datum['displayRequest'] = key_exists('displayRequest', $result) ? $result['displayRequest'] : '';
