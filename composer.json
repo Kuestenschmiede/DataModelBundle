@@ -25,7 +25,7 @@
   "require": {
     "php": ">=8.1",
     "contao/core-bundle": "^4.13 || ^5.3",
-    "con4gis/framework": "^2.0",
+    "con4gis/framework": "^2",
     "marc1706/fast-image-size": "1.*",
     "guzzlehttp/guzzle": "^7",
     "guzzlehttp/promises": "^1.5"

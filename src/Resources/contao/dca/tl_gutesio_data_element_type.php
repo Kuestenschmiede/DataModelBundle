@@ -17,7 +17,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element_type'] = [
         'sql' => [
             'keys' => [
                 'id' => 'primary',
-                'uuid' => 'index'
+                'uuid' => 'index',
+                'elementId' => 'index',
+                'typeId' => 'index'
             ],
         ],
     ],
