@@ -286,6 +286,12 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         'aiOptimized' => [
             'sql' => "char(1) NOT NULL default ''"
         ],
+        'rating' => [
+            'sql' => "int NOT NULL default 0"
+        ],
+        'countRating' => [
+            'sql' => "int NOT NULL default 0"
+        ],
         'extendedSearchTerms' => [
             'sql' => "TEXT NULL"
         ]
