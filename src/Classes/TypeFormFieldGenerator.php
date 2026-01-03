@@ -52,6 +52,7 @@ class TypeFormFieldGenerator
             'type_allergenes' => static::getFieldsForAllergenes(),
             'type_ingredients' => static::getFieldsForIngredients(),
             'type_food' => static::getFieldsForFood(),
+            'type_tour' => static::getFieldsForTour(),
             default => [],
         };
     }
@@ -93,6 +94,8 @@ class TypeFormFieldGenerator
         $dietCuisineFields = static::getFieldsForDietCuisine();
         $eventFields = static::getFieldsForEventLocation();
         $admissionFields = static::getFieldsForAdmission();
+        $lodgingFields = static::getFieldsForLodging();
+        $tourFields = static::getFieldsForTour();
         $extraZipFields = static::getFieldsForExtraZip();
         $surrZipFields = static::getFieldsForSurroundingZip();
         $menuFields = static::getFieldsForMenu();
@@ -103,6 +106,8 @@ class TypeFormFieldGenerator
             $dietCuisineFields,
             $eventFields,
             $admissionFields,
+            $lodgingFields,
+            $tourFields,
             $menuFields,
             $brochureUploadFields,
             $extraZipFields,
@@ -242,6 +247,58 @@ class TypeFormFieldGenerator
         $field->setParagraphLabel($GLOBALS['TL_LANG'][$strName]['frontend']['paragraph'] ?: "Absatz");
         $field->setHeadingLabel($GLOBALS['TL_LANG'][$strName]['frontend']['heading'] ?: ['Titel', 'Untertitel']);
         $fields['equipment'] = $field;
+
+        return $fields;
+    }
+
+    private static function getFieldsForTour()
+    {
+        System::loadLanguageFile('form_tag_fields');
+        $strName = 'form_tag_fields';
+
+        $fields = [];
+
+        $field = new NumberFormField();
+        $field->setName('duration');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['duration'] && (count($GLOBALS['TL_LANG'][$strName]['duration']) > 0) ? $GLOBALS['TL_LANG'][$strName]['duration'][0] : '');
+        $field->setDescription($GLOBALS['TL_LANG'][$strName]['duration'] && (count($GLOBALS['TL_LANG'][$strName]['duration']) > 0) ? $GLOBALS['TL_LANG'][$strName]['duration'][1] : '');
+        $fields['duration'] = $field;
+
+        $field = new NumberFormField();
+        $field->setName('length');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['length'] && (count($GLOBALS['TL_LANG'][$strName]['length']) > 0) ? $GLOBALS['TL_LANG'][$strName]['length'][0] : '');
+        $field->setDescription($GLOBALS['TL_LANG'][$strName]['length'] && (count($GLOBALS['TL_LANG'][$strName]['length']) > 0) ? $GLOBALS['TL_LANG'][$strName]['length'][1] : '');
+        $fields['length'] = $field;
+
+        $field = new NumberFormField();
+        $field->setName('elevationMin');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['elevationMin'] && (count($GLOBALS['TL_LANG'][$strName]['elevationMin']) > 0) ? $GLOBALS['TL_LANG'][$strName]['elevationMin'][0] : '');
+        $field->setDescription($GLOBALS['TL_LANG'][$strName]['elevationMin'] && (count($GLOBALS['TL_LANG'][$strName]['elevationMin']) > 0) ? $GLOBALS['TL_LANG'][$strName]['elevationMin'][1] : '');
+        $fields['elevationMin'] = $field;
+
+        $field = new NumberFormField();
+        $field->setName('elevationMax');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['elevationMax'] && (count($GLOBALS['TL_LANG'][$strName]['elevationMax']) > 0) ? $GLOBALS['TL_LANG'][$strName]['elevationMax'][0] : '');
+        $field->setDescription($GLOBALS['TL_LANG'][$strName]['elevationMax'] && (count($GLOBALS['TL_LANG'][$strName]['elevationMax']) > 0) ? $GLOBALS['TL_LANG'][$strName]['elevationMax'][1] : '');
+        $fields['elevationMax'] = $field;
+
+        $field = new NumberFormField();
+        $field->setName('totalAscent');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['totalAscent'] && (count($GLOBALS['TL_LANG'][$strName]['totalAscent']) > 0) ? $GLOBALS['TL_LANG'][$strName]['totalAscent'][0] : '');
+        $field->setDescription($GLOBALS['TL_LANG'][$strName]['totalAscent'] && (count($GLOBALS['TL_LANG'][$strName]['totalAscent']) > 0) ? $GLOBALS['TL_LANG'][$strName]['totalAscent'][1] : '');
+        $fields['totalAscent'] = $field;
+
+        $field = new NumberFormField();
+        $field->setName('totalDescent');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['totalDescent'] && (count($GLOBALS['TL_LANG'][$strName]['totalDescent']) > 0) ? $GLOBALS['TL_LANG'][$strName]['totalDescent'][0] : '');
+        $field->setDescription($GLOBALS['TL_LANG'][$strName]['totalDescent'] && (count($GLOBALS['TL_LANG'][$strName]['totalDescent']) > 0) ? $GLOBALS['TL_LANG'][$strName]['totalDescent'][1] : '');
+        $fields['totalDescent'] = $field;
+
+        $field = new CheckboxFormField();
+        $field->setName('roundTrip');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['roundTrip'] && (count($GLOBALS['TL_LANG'][$strName]['roundTrip']) > 0) ? $GLOBALS['TL_LANG'][$strName]['roundTrip'][0] : '');
+        $field->setDescription($GLOBALS['TL_LANG'][$strName]['roundTrip'] && (count($GLOBALS['TL_LANG'][$strName]['roundTrip']) > 0) ? $GLOBALS['TL_LANG'][$strName]['roundTrip'][1] : '');
+        $fields['roundTrip'] = $field;
 
         return $fields;
     }

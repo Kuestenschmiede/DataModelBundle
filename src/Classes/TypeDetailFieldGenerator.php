@@ -41,6 +41,8 @@ class TypeDetailFieldGenerator
                 return static::getFieldsForBrochureUpload();
             case 'type_isbn':
                 return static::getFieldsForIsbn();
+            case 'type_tour':
+                return static::getFieldsForTour();
             default:
                 return [];
         }
@@ -185,5 +187,58 @@ class TypeDetailFieldGenerator
         $field->setClass(TypeFormFieldGenerator::FIELD_ISBN);
 
         return [$field];
+    }
+
+    private static function getFieldsForTour()
+    {
+        System::loadLanguageFile('form_tag_fields');
+
+        $strName = 'form_tag_fields';
+
+        $fields = [];
+
+        $field = new DetailTextField();
+        $field->setName('duration');
+        $field->setClass('duration');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['duration'][0] ? $GLOBALS['TL_LANG'][$strName]['duration'][0] : '');
+        $fields[] = $field;
+
+        $field = new DetailTextField();
+        $field->setName('length');
+        $field->setClass('length');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['length'][0] ? $GLOBALS['TL_LANG'][$strName]['length'][0] : '');
+        $fields[] = $field;
+
+        $field = new DetailTextField();
+        $field->setName('elevationMin');
+        $field->setClass('elevationMin');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['elevationMin'][0] ? $GLOBALS['TL_LANG'][$strName]['elevationMin'][0] : '');
+        $fields[] = $field;
+
+        $field = new DetailTextField();
+        $field->setName('elevationMax');
+        $field->setClass('elevationMax');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['elevationMax'][0] ? $GLOBALS['TL_LANG'][$strName]['elevationMax'][0] : '');
+        $fields[] = $field;
+
+        $field = new DetailTextField();
+        $field->setName('totalAscent');
+        $field->setClass('totalAscent');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['totalAscent'][0] ? $GLOBALS['TL_LANG'][$strName]['totalAscent'][0] : '');
+        $fields[] = $field;
+
+        $field = new DetailTextField();
+        $field->setName('totalDescent');
+        $field->setClass('totalDescent');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['totalDescent'][0] ? $GLOBALS['TL_LANG'][$strName]['totalDescent'][0] : '');
+        $fields[] = $field;
+
+        $field = new DetailTextField();
+        $field->setName('roundTrip');
+        $field->setClass('roundTrip');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['roundTrip'][0] ? $GLOBALS['TL_LANG'][$strName]['roundTrip'][0] : '');
+        $fields[] = $field;
+
+        return $fields;
     }
 }
