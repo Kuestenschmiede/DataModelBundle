@@ -300,6 +300,24 @@ class TypeFormFieldGenerator
         $field->setDescription($GLOBALS['TL_LANG'][$strName]['roundTrip'] && (count($GLOBALS['TL_LANG'][$strName]['roundTrip']) > 0) ? $GLOBALS['TL_LANG'][$strName]['roundTrip'][1] : '');
         $fields['roundTrip'] = $field;
 
+        $field = new NumberFormField();
+        $field->setName('panoramaValue');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['panoramaValue'] && (count($GLOBALS['TL_LANG'][$strName]['panoramaValue']) > 0) ? $GLOBALS['TL_LANG'][$strName]['panoramaValue'][0] : '');
+        $field->setDescription($GLOBALS['TL_LANG'][$strName]['panoramaValue'] && (count($GLOBALS['TL_LANG'][$strName]['panoramaValue']) > 0) ? $GLOBALS['TL_LANG'][$strName]['panoramaValue'][1] : '');
+        $fields['panoramaValue'] = $field;
+
+        $field = new NumberFormField();
+        $field->setName('fitnessValue');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['fitnessValue'] && (count($GLOBALS['TL_LANG'][$strName]['fitnessValue']) > 0) ? $GLOBALS['TL_LANG'][$strName]['fitnessValue'][0] : '');
+        $field->setDescription($GLOBALS['TL_LANG'][$strName]['fitnessValue'] && (count($GLOBALS['TL_LANG'][$strName]['fitnessValue']) > 0) ? $GLOBALS['TL_LANG'][$strName]['fitnessValue'][1] : '');
+        $fields['fitnessValue'] = $field;
+
+        $field = new NumberFormField();
+        $field->setName('difficultyValue');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['difficultyValue'] && (count($GLOBALS['TL_LANG'][$strName]['difficultyValue']) > 0) ? $GLOBALS['TL_LANG'][$strName]['difficultyValue'][0] : '');
+        $field->setDescription($GLOBALS['TL_LANG'][$strName]['difficultyValue'] && (count($GLOBALS['TL_LANG'][$strName]['difficultyValue']) > 0) ? $GLOBALS['TL_LANG'][$strName]['difficultyValue'][1] : '');
+        $fields['difficultyValue'] = $field;
+
         return $fields;
     }
 

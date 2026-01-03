@@ -706,6 +706,15 @@ class ShowcaseResultConverter
             $datum['foreignLink'] = $result['foreignLink'];
             $datum['directLink'] = $result['foreignLink'] ? '1' : '0';
             $datum['aiOptimized'] = $result['aiOptimized'];
+
+            // rating
+            $ratingStmt = $db->prepare("SELECT AVG(ratingValue) as avgRating, COUNT(id) as countRating FROM tl_gutesio_data_rating WHERE elementId = ?");
+            $ratingRes = $ratingStmt->execute($datum['uuid'])->fetchAssoc();
+            if ($ratingRes && $ratingRes['countRating'] > 0) {
+                $datum['avgRating'] = (float) $ratingRes['avgRating'];
+                $datum['countRating'] = (int) $ratingRes['countRating'];
+            }
+
             $datum['extraZip'] = key_exists('extraZip', $result) ? $result['extraZip'] : '';
             $datum['published_title'] = $result['published'] ? 'Ja' : 'Nein'; //ToDo
 

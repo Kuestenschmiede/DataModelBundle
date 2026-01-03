@@ -17,7 +17,10 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_rating'] = [
         'sql' => [
             'keys' => [
                 'id' => 'primary',
-                'uuid' => 'index'
+                'uuid' => 'index',
+                'elementId' => 'index',
+                'childId' => 'index',
+                'memberId' => 'index'
             ],
         ],
     ],
@@ -31,8 +34,14 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_rating'] = [
         'tstamp' => [
             'sql' => "int NOT NULL default 0"
         ],
+        'elementId' => [
+            'sql' => "varchar(50) NOT NULL default ''"
+        ],
         'childId' => [
-            'sql' => "int NOT NULL default 0"
+            'sql' => "varchar(50) NOT NULL default ''"
+        ],
+        'memberId' => [
+            'sql' => "int(10) unsigned NOT NULL default 0"
         ],
         'ratingValue' => [
             'sql'=> "int NOT NULL default 0"

@@ -239,6 +239,24 @@ class TypeDetailFieldGenerator
         $field->setLabel($GLOBALS['TL_LANG'][$strName]['roundTrip'][0] ? $GLOBALS['TL_LANG'][$strName]['roundTrip'][0] : '');
         $fields[] = $field;
 
+        $field = new DetailTextField();
+        $field->setName('panoramaValue');
+        $field->setClass('panoramaValue');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['panoramaValue'][0] ? $GLOBALS['TL_LANG'][$strName]['panoramaValue'][0] : '');
+        $fields[] = $field;
+
+        $field = new DetailTextField();
+        $field->setName('fitnessValue');
+        $field->setClass('fitnessValue');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['fitnessValue'][0] ? $GLOBALS['TL_LANG'][$strName]['fitnessValue'][0] : '');
+        $fields[] = $field;
+
+        $field = new DetailTextField();
+        $field->setName('difficultyValue');
+        $field->setClass('difficultyValue');
+        $field->setLabel($GLOBALS['TL_LANG'][$strName]['difficultyValue'][0] ? $GLOBALS['TL_LANG'][$strName]['difficultyValue'][0] : '');
+        $fields[] = $field;
+
         return $fields;
     }
 }
