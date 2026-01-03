@@ -73,6 +73,15 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_element'] = [
         'importantNotes' => [
             'sql' => "TEXT NULL"
         ],
+        'safetyInstructions' => [
+            'sql' => "TEXT NULL"
+        ],
+        'tips' => [
+            'sql' => "TEXT NULL"
+        ],
+        'additionalInformation' => [
+            'sql' => "TEXT NULL"
+        ],
         'contactable' => [
             'sql' => "tinyint(1) NOT NULL default 0"
         ],

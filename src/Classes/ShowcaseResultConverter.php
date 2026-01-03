@@ -79,6 +79,9 @@ class ShowcaseResultConverter
             $datum['internalDescription'] = key_exists('internalDescription', $result) ? html_entity_decode($result['internalDescription']) : '';
             $datum['imageCredits'] = html_entity_decode($result['imageCredits']);
             $datum['importantNotes'] = html_entity_decode($result['importantNotes']);
+            $datum['safetyInstructions'] = key_exists('safetyInstructions', $result) ? html_entity_decode($result['safetyInstructions']) : '';
+            $datum['tips'] = key_exists('tips', $result) ? html_entity_decode($result['tips']) : '';
+            $datum['additionalInformation'] = key_exists('additionalInformation', $result) ? html_entity_decode($result['additionalInformation']) : '';
             $datum['technicalEquipment'] = key_exists('technicalEquipment', $result) ? html_entity_decode($result['technicalEquipment']) : '';
             $datum['equipment'] = key_exists('equipment', $result) ? html_entity_decode($result['equipment']) : '';
             $datum['admissionPrices'] = key_exists('admissionPrices', $result) ? html_entity_decode($result['admissionPrices']) : '';
