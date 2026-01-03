@@ -705,6 +705,7 @@ class ShowcaseResultConverter
             $datum['releaseType'] = $result['releaseType'];
             $datum['foreignLink'] = $result['foreignLink'];
             $datum['directLink'] = $result['foreignLink'] ? '1' : '0';
+            $datum['aiOptimized'] = $result['aiOptimized'];
             $datum['extraZip'] = key_exists('extraZip', $result) ? $result['extraZip'] : '';
             $datum['published_title'] = $result['published'] ? 'Ja' : 'Nein'; //ToDo
 

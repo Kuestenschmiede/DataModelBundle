@@ -118,6 +118,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child'] = [
         'source' => [
             'sql' => "TEXT NULL"
         ],
+        'aiOptimized' => [
+            'sql' => "char(1) NOT NULL default ''"
+        ],
         'updatedAt' => [
             'sql' => "int NOT NULL default 0"
         ],
