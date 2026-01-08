@@ -34,3 +34,16 @@ $GLOBALS['TL_LANG'][$strName]['donationLink'] = ['Spendenlink', 'Die URL zur Spe
 $GLOBALS['TL_LANG'][$strName]['numberOfRooms'] = ['Anzahl Räume', ''];
 $GLOBALS['TL_LANG'][$strName]['numberOfBeds'] = ['Anzahl Betten', ''];
 $GLOBALS['TL_LANG'][$strName]['equipment'] = ['Ausstattung', ''];
+
+$GLOBALS['TL_LANG'][$strName]['duration'] = ['Dauer', 'Geben Sie die Dauer der Tour an.'];
+$GLOBALS['TL_LANG'][$strName]['length'] = ['Länge', 'Geben Sie die Länge der Tour an (in km).'];
+$GLOBALS['TL_LANG'][$strName]['elevationMin'] = ['Tiefster Punkt', 'Geben Sie den tiefsten Punkt der Tour an (in m).'];
+$GLOBALS['TL_LANG'][$strName]['elevationMax'] = ['Höchster Punkt', 'Geben Sie den höchsten Punkt der Tour an (in m).'];
+$GLOBALS['TL_LANG'][$strName]['totalAscent'] = ['Aufstieg', 'Geben Sie den gesamten Aufstieg der Tour an (in m).'];
+$GLOBALS['TL_LANG'][$strName]['totalDescent'] = ['Abstieg', 'Geben Sie den gesamten Abstieg der Tour an (in m).'];
+$GLOBALS['TL_LANG'][$strName]['roundTrip'] = ['Rundtour', 'Ist die Tour eine Rundtour?'];
+$GLOBALS['TL_LANG'][$strName]['panoramaValue'] = ['Landschaft', 'Bewerten Sie die Landschaft.'];
+$GLOBALS['TL_LANG'][$strName]['fitnessValue'] = ['Kondition', 'Bewerten Sie die benötigte Kondition.'];
+$GLOBALS['TL_LANG'][$strName]['difficultyValue'] = ['Schwierigkeit', 'Bewerten Sie die Schwierigkeit.'];
+$GLOBALS['TL_LANG'][$strName]['techniqueValue'] = ['Technik', 'Bewerten Sie die benötigte Technik.'];
+$GLOBALS['TL_LANG'][$strName]['experienceValue'] = ['Erlebniswert', 'Bewerten Sie den Erlebniswert.'];
