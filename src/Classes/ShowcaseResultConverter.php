@@ -509,8 +509,17 @@ class ShowcaseResultConverter
                 }
 
                 if ($tag) {
-                    $tag['value'] = $tagId;
-                    $datum['tags'][] = $tag;
+                    $datum['tags'][] = [
+                        'value' => $tagId,
+                        'label' => $tag['label'] ?: html_entity_decode($tag['name'])
+                    ];
+                }
+            }
+
+            // hotfix labels for frontend select fields
+            foreach ($datum['tags'] as $k => $tag) {
+                if (is_array($tag) && !isset($tag['label']) && isset($tag['name'])) {
+                    $datum['tags'][$k]['label'] = html_entity_decode($tag['name']);
                 }
             }
 
@@ -826,6 +835,8 @@ class ShowcaseResultConverter
         foreach ($tagResult as $value) {
             $tag = $value;
             $tag['image'] = $this->createFileDataFromFile($tag['imageCDN'], true, $fileUtils, 600, 450, $tag['name'], $tag['name']);
+            $tag['value'] = $value['uuid'];
+            $tag['label'] = html_entity_decode($value['name']);
 
             static::$processedTags[$value['uuid']] = $tag;
         }
