@@ -635,18 +635,38 @@ class ShowcaseResultConverter
                 $datum['directory'] = $result['directory'];
             }
 
-            if ($arrOptions && key_exists('withoutCDN', $arrOptions) && $arrOptions['withoutCDN']) {
+            if (($arrOptions['withoutCDN'] ?? false) || ($arrOptions['allowLocalFallback'] ?? false)) {
                 if ($result['image']) {
                     $model = FilesModel::findByUuid(StringUtil::deserialize($result['image']));
+                    if ($model === null && !StringUtil::isSerialized($result['image'])) {
+                        // try binary uuid
+                        $model = FilesModel::findByUuid($result['image']);
+                    }
                     if ($model !== null) {
                         $datum['image'] = $this->createFileDataFromModel($model, false, $fileUtils);
+                    } else {
+                        $uuidVal = (StringUtil::isSerialized($result['image']) ? StringUtil::deserialize($result['image']) : $result['image']);
+                        if (C4GUtils::isBinary($uuidVal)) {
+                            $uuidVal = StringUtil::binToUuid($uuidVal);
+                        }
+                        C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Failed to find FilesModel for image UUID: " . $uuidVal);
                     }
                 }
 
                 if ($result['logo']) {
                     $model = FilesModel::findByUuid(StringUtil::deserialize($result['logo']));
+                    if ($model === null && !StringUtil::isSerialized($result['logo'])) {
+                        // try binary uuid
+                        $model = FilesModel::findByUuid($result['logo']);
+                    }
                     if ($model !== null) {
                         $datum['logo'] = $this->createFileDataFromModel($model, false, $fileUtils);
+                    } else {
+                        $uuidVal = (StringUtil::isSerialized($result['logo']) ? StringUtil::deserialize($result['logo']) : $result['logo']);
+                        if (C4GUtils::isBinary($uuidVal)) {
+                            $uuidVal = StringUtil::binToUuid($uuidVal);
+                        }
+                        C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Failed to find FilesModel for logo UUID: " . $uuidVal);
                     }
                 }
 
@@ -654,26 +674,35 @@ class ShowcaseResultConverter
                     $images = StringUtil::deserialize($result['imageGallery'], true);
                     $idx = 0;
                     foreach ($images as $image) {
-                        $model = FilesModel::findByUuid(StringUtil::deserialize($image));
+                        $model = FilesModel::findByUuid($image);
                         if ($model !== null) {
                             $datum['imageGallery_' . $idx] = $this->createFileDataFromModel($model, false, $fileUtils);
                             $idx++;
+                        } else {
+                            $uuidVal = $image;
+                            if (C4GUtils::isBinary($uuidVal)) {
+                                $uuidVal = StringUtil::binToUuid($uuidVal);
+                            }
+                            C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Failed to find FilesModel for gallery image UUID: " . $uuidVal);
                         }
                     }
                 }
-            } else {
+            }
+            
+            if (!($arrOptions['withoutCDN'] ?? false)) {
                 if ($result['imageCDN']) {
-                    $datum['image'] = $this->createFileDataFromFile($result['imageCDN'], false, $fileUtils, 600, 450, $result['name'], $result['name']);;
+                    $datum['image'] = $this->createFileDataFromFile($result['imageCDN'], false, $fileUtils, 600, 450, $result['name'], $result['name']);
                 }
 
                 if ($result['logoCDN']) {
-                    $datum['logo'] = $this->createFileDataFromFile($result['logoCDN'], false, $fileUtils, 0, 150, $result['name'], $result['name']);;
+                    $datum['logo'] = $this->createFileDataFromFile($result['logoCDN'], false, $fileUtils, 0, 150, $result['name'], $result['name']);
                 }
+
                 if ($result['imageGalleryCDN']) {
-                    $images = StringUtil::deserialize($result['imageGalleryCDN']);
+                    $images = StringUtil::deserialize($result['imageGalleryCDN'], true);
                     $idx = 0;
                     foreach ($images as $image) {
-                        $datum['imageGallery_' . $idx] = $this->createFileDataFromFile($image, false, $fileUtils, 600, 450, $result['name'].$idx, 'Bild '.$idx.': '.$result['name']);;
+                        $datum['imageGallery_' . $idx] = $this->createFileDataFromFile($image, false, $fileUtils, 600, 450, $result['name'].$idx, 'Bild '.$idx.': '.$result['name']);
                         $idx++;
                     }
                 }
