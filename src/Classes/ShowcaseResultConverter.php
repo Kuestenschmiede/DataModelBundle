@@ -10,6 +10,7 @@
 namespace gutesio\DataModelBundle\Classes;
 
 use con4gis\CoreBundle\Classes\C4GUtils;
+use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
 use Contao\Controller;
 use Contao\Database;
 use Contao\FilesModel;
@@ -44,7 +45,12 @@ class ShowcaseResultConverter
         $checker = new ImprintConstraintChecker();
         System::loadLanguageFile('field_translations','de');
         $objSettings = GutesioOperatorSettingsModel::findSettings();
-        $cdnUrl = $objSettings->cdnUrl;
+        $cdnUrl = $objSettings ? $objSettings->cdnUrl : 'https://cdn.con4gis.cloud';
+        if (!$cdnUrl) {
+            $cdnUrl = 'https://cdn.con4gis.cloud';
+        }
+        $cdnUrl = rtrim($cdnUrl, '/');
+        // C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Using CDN URL: " . $cdnUrl);
 
         // setup
         $this->loadTypes();
@@ -124,11 +130,13 @@ class ShowcaseResultConverter
                 'video' => html_entity_decode($result['videoLink']),
             ];
             if (key_exists('videoPreviewImageCDN', $result) && $result['videoPreviewImageCDN']) {
-//                $model = FilesModel::findByUuid(StringUtil::deserialize($result['videoPreviewImage']));
-//                if ($model !== null) {
-                    $datum['videoPreview']['videoPreviewImage'] = $this->createFileDataFromFile($result['videoPreviewImageCDN'], false, $fileUtils, 600, 450, $datum['name'], $datum['name']);
-                    $datum['videoPreviewImage'] = $datum['videoPreview']['videoPreviewImage'];
-                //}
+                $uuid = $result['videoPreviewImage'] ?? '';
+                if ($uuid) {
+                    $uuid = StringUtil::deserialize($uuid);
+                    if (C4GUtils::isBinary($uuid)) { $uuid = StringUtil::binToUuid($uuid); }
+                }
+                $datum['videoPreview']['videoPreviewImage'] = $this->createFileDataFromFile($result['videoPreviewImageCDN'], false, $fileUtils, 600, 450, $datum['name'], $datum['name'], $uuid ?: '');
+                $datum['videoPreviewImage'] = $datum['videoPreview']['videoPreviewImage'];
             }
             $datum['youtubeChannelLink'] = C4GUtils::addProtocolToLink($result['youtubeChannelLink']);
             $datum['vimeoChannelLink'] = C4GUtils::addProtocolToLink($result['vimeoChannelLink']);
@@ -221,12 +229,16 @@ class ShowcaseResultConverter
                     }
                     $datum[$fieldKey] = $resultValue;
                 } elseif (in_array($fieldKey, $this->fileUploadFields)) {
-                    if ($arrOptions && key_exists('withoutCDN', $arrOptions) && $arrOptions['withoutCDN'] && $typeElementValue['typeFieldFile']) {
-                        if (C4GUtils::isBinary($typeElementValue['typeFieldFile'])) {
-                            $uuid = StringUtil::binToUuid($typeElementValue['typeFieldFile']);
-                        } else {
-                            $uuid = $typeElementValue['typeFieldFile'];
+                    $uuid = $typeElementValue['typeFieldFile'];
+                    if ($uuid) {
+                        if (C4GUtils::isBinary($uuid)) {
+                            $uuid = StringUtil::binToUuid($uuid);
                         }
+                    } else {
+                        $uuid = '';
+                    }
+
+                    if ($arrOptions && key_exists('withoutCDN', $arrOptions) && $arrOptions['withoutCDN'] && $typeElementValue['typeFieldFile']) {
                         $fileModel = FilesModel::findByUuid($uuid);
                         if ($fileModel) {
                             $datum[$fieldKey] = [
@@ -234,6 +246,7 @@ class ShowcaseResultConverter
                                 'name' => $fileModel->name,
                                 'changed' => false,
                                 'path' => $fileModel->path,
+                                'uuid' => $uuid
                             ];
                         }
                     } else if ($typeElementValue['typeFieldFileCDN']) {
@@ -241,7 +254,8 @@ class ShowcaseResultConverter
                             'data' => [],
                             'name' => $fieldKey,
                             'changed' => false,
-                            'path' => $fileUtils->addUrlToPathAndGetImage($cdnUrl, $typeElementValue['typeFieldFileCDN'])
+                            'path' => $fileUtils->addUrlToPathAndGetImage($cdnUrl, $typeElementValue['typeFieldFileCDN']),
+                            'uuid' => $uuid
                         ];
                     }
                 } else {
@@ -635,78 +649,205 @@ class ShowcaseResultConverter
                 $datum['directory'] = $result['directory'];
             }
 
-            if (($arrOptions['withoutCDN'] ?? false) || ($arrOptions['allowLocalFallback'] ?? false)) {
-                if ($result['image']) {
-                    $model = FilesModel::findByUuid(StringUtil::deserialize($result['image']));
-                    if ($model === null && !StringUtil::isSerialized($result['image'])) {
-                        // try binary uuid
-                        $model = FilesModel::findByUuid($result['image']);
-                    }
-                    if ($model !== null) {
-                        $datum['image'] = $this->createFileDataFromModel($model, false, $fileUtils);
-                    } else {
-                        $uuidVal = (StringUtil::isSerialized($result['image']) ? StringUtil::deserialize($result['image']) : $result['image']);
-                        if (C4GUtils::isBinary($uuidVal)) {
-                            $uuidVal = StringUtil::binToUuid($uuidVal);
-                        }
-                        C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Failed to find FilesModel for image UUID: " . $uuidVal);
-                    }
-                }
-
-                if ($result['logo']) {
-                    $model = FilesModel::findByUuid(StringUtil::deserialize($result['logo']));
-                    if ($model === null && !StringUtil::isSerialized($result['logo'])) {
-                        // try binary uuid
-                        $model = FilesModel::findByUuid($result['logo']);
-                    }
-                    if ($model !== null) {
-                        $datum['logo'] = $this->createFileDataFromModel($model, false, $fileUtils);
-                    } else {
-                        $uuidVal = (StringUtil::isSerialized($result['logo']) ? StringUtil::deserialize($result['logo']) : $result['logo']);
-                        if (C4GUtils::isBinary($uuidVal)) {
-                            $uuidVal = StringUtil::binToUuid($uuidVal);
-                        }
-                        C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Failed to find FilesModel for logo UUID: " . $uuidVal);
-                    }
-                }
-
-                if ($result['imageGallery']) {
-                    $images = StringUtil::deserialize($result['imageGallery'], true);
-                    $idx = 0;
-                    foreach ($images as $image) {
-                        $model = FilesModel::findByUuid($image);
-                        if ($model !== null) {
-                            $datum['imageGallery_' . $idx] = $this->createFileDataFromModel($model, false, $fileUtils);
-                            $idx++;
-                        } else {
-                            $uuidVal = $image;
-                            if (C4GUtils::isBinary($uuidVal)) {
-                                $uuidVal = StringUtil::binToUuid($uuidVal);
-                            }
-                            C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Failed to find FilesModel for gallery image UUID: " . $uuidVal);
-                        }
-                    }
-                }
-            }
+            // --- Consolidated Image Processing ---
+            $useCDN = !($arrOptions['withoutCDN'] ?? false);
             
-            if (!($arrOptions['withoutCDN'] ?? false)) {
-                if ($result['imageCDN']) {
-                    $datum['image'] = $this->createFileDataFromFile($result['imageCDN'], false, $fileUtils, 600, 450, $result['name'], $result['name']);
+            // 1. Process Header Image
+            $datum['image'] = null;
+            $uuidVal = StringUtil::deserialize($result['image']);
+            $uuidStr = $uuidVal ? (C4GUtils::isBinary($uuidVal) ? StringUtil::binToUuid($uuidVal) : $uuidVal) : '';
+            
+            $model = null;
+            if ($uuidVal) {
+                $model = FilesModel::findByUuid($uuidVal);
+                if ($model === null && !C4GUtils::isBinary($uuidVal)) {
+                    $model = FilesModel::findByUuid(StringUtil::uuidToBin($uuidVal));
                 }
+            }
 
-                if ($result['logoCDN']) {
-                    $datum['logo'] = $this->createFileDataFromFile($result['logoCDN'], false, $fileUtils, 0, 150, $result['name'], $result['name']);
-                }
-
-                if ($result['imageGalleryCDN']) {
-                    $images = StringUtil::deserialize($result['imageGalleryCDN'], true);
-                    $idx = 0;
-                    foreach ($images as $image) {
-                        $datum['imageGallery_' . $idx] = $this->createFileDataFromFile($image, false, $fileUtils, 600, 450, $result['name'].$idx, 'Bild '.$idx.': '.$result['name']);
-                        $idx++;
+            if ($result['imageCDN'] && ($useCDN || !$model)) {
+                $datum['image'] = $this->createFileDataFromFile($result['imageCDN'], false, $fileUtils, 600, 450, $result['name'], $result['name'], $uuidStr, $arrOptions['directCDN'] ?? false);
+            } elseif ($model) {
+                $datum['image'] = $this->createFileDataFromModel($model, false, $fileUtils);
+            } else {
+                $fallbackPath = 'files/showcases/' . $uuidStr . '/';
+                $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+                if (is_dir($rootDir . '/' . $fallbackPath)) {
+                    $files = scandir($rootDir . '/' . $fallbackPath);
+                    foreach ($files as $f) {
+                        if ($f !== '.' && $f !== '..' && is_file($rootDir . '/' . $fallbackPath . $f)) {
+                            $datum['image'] = $this->createFileDataFromFile($fallbackPath . $f, false, $fileUtils, 600, 450, $result['name'], $result['name'], $uuidStr, $arrOptions['directCDN'] ?? false);
+                            if ($datum['image']) break;
+                        }
                     }
                 }
             }
+
+            // 2. Process Logo
+            $datum['logo'] = null;
+            $uuidVal = StringUtil::deserialize($result['logo']);
+            $uuidStr = $uuidVal ? (C4GUtils::isBinary($uuidVal) ? StringUtil::binToUuid($uuidVal) : $uuidVal) : '';
+            
+            $model = null;
+            if ($uuidVal) {
+                $model = FilesModel::findByUuid($uuidVal);
+                if ($model === null && !C4GUtils::isBinary($uuidVal)) {
+                    $model = FilesModel::findByUuid(StringUtil::uuidToBin($uuidVal));
+                }
+            }
+
+            if ($result['logoCDN'] && ($useCDN || !$model)) {
+                $datum['logo'] = $this->createFileDataFromFile($result['logoCDN'], false, $fileUtils, 0, 150, $result['name'], $result['name'], $uuidStr, $arrOptions['directCDN'] ?? false);
+            } elseif ($model) {
+                $datum['logo'] = $this->createFileDataFromModel($model, false, $fileUtils);
+            } else {
+                $fallbackPath = 'files/showcases/' . $uuidStr . '/';
+                $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+                if (is_dir($rootDir . '/' . $fallbackPath)) {
+                    $files = scandir($rootDir . '/' . $fallbackPath);
+                    foreach ($files as $f) {
+                        if ($f !== '.' && $f !== '..' && is_file($rootDir . '/' . $fallbackPath . $f)) {
+                            $datum['logo'] = $this->createFileDataFromFile($fallbackPath . $f, false, $fileUtils, 0, 150, $result['name'], $result['name'], $uuidStr, $arrOptions['directCDN'] ?? false);
+                            if ($datum['logo']) break;
+                        }
+                    }
+                }
+            }
+
+            // 3. Process Gallery
+            $datum['imageGallery'] = [];
+            $imagesLocal = StringUtil::deserialize($result['imageGallery'], true);
+            $imagesCDN = StringUtil::deserialize($result['imageGalleryCDN'], true);
+            $idx = 0;
+            
+            // For the gallery, we try to use CDN if available, even if withoutCDN is requested, 
+            // as a fallback for missing local files in Contao 5.3.
+            $maxCount = max(count($imagesLocal), count($imagesCDN));
+            
+            for ($i = 0; $i < $maxCount; $i++) {
+                $fileData = null;
+                $uuidRaw = $imagesLocal[$i] ?? '';
+                $uuidVal = StringUtil::deserialize($uuidRaw);
+                $uuidStr = $uuidVal ? (C4GUtils::isBinary($uuidVal) ? StringUtil::binToUuid($uuidVal) : $uuidVal) : '';
+
+                // Try CDN first if available and (CDN is requested OR local file missing)
+                $cdnPathRaw = $imagesCDN[$i] ?? '';
+                $hasCDN = !empty($cdnPathRaw);
+                $model = null;
+                if ($uuidVal) {
+                    $model = FilesModel::findByUuid($uuidVal);
+                    if ($model === null && !C4GUtils::isBinary($uuidVal)) {
+                        $model = FilesModel::findByUuid(StringUtil::uuidToBin($uuidVal));
+                    }
+                }
+
+                if ($hasCDN && ($useCDN || !$model)) {
+                    $fileData = $this->createFileDataFromFile($cdnPathRaw, false, $fileUtils, 600, 450, ($result['name'] ?? '').$idx, 'Bild '.$idx.': '.($result['name'] ?? ''), $uuidStr, $arrOptions['directCDN'] ?? false);
+                } elseif ($model) {
+                    $fileData = $this->createFileDataFromModel($model, false, $fileUtils);
+                    // For the form, we want consistent structure like createFileDataFromFile
+                    if (!($arrOptions['directCDN'] ?? false)) {
+                        $host = $_SERVER['HTTP_HOST'] ?? 'portal.nordsee.digital';
+                        $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+                        $baseUrl = $scheme . '://' . $host;
+                        
+                        // Robust path check for same-origin preview
+                        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+                        $realPath = $model->path;
+                        if (!file_exists($rootDir . '/' . $realPath)) {
+                            $alt = str_replace(['{', '}'], '', $realPath);
+                            if (file_exists($rootDir . '/' . $alt)) {
+                                $realPath = $alt;
+                            } else {
+                                $alt2 = preg_replace('#showcases/([0-9A-Fa-f\-]{36})/#', 'showcases/{\1}/', $realPath);
+                                if (file_exists($rootDir . '/' . $alt2)) {
+                                    $realPath = $alt2;
+                                }
+                            }
+                        }
+                        
+                        $fileData['src'] = $baseUrl . '/' . $realPath . '?v=' . time();
+                        $fileData['path'] = $realPath;
+                        
+                        // Sanity check for small/invalid local files - fallback to same-origin proxy instead of CDN to avoid Tainted Canvas
+                        $localExists = file_exists($rootDir . '/' . $realPath);
+                        $localSize = $localExists ? filesize($rootDir . '/' . $realPath) : 0;
+                        
+                        if (!$localExists || $localSize < 100) {
+                            $proxyBase = 'files/con4gis_import_data/images/';
+                            $scUuidRaw = $result['uuid'] ?? '';
+                            $scUuid = strtoupper(str_replace(['{', '}'], '', $scUuidRaw));
+                            
+                            $proxyFile = '';
+                            $filename = '';
+                            $ext = 'jpg';
+                            
+                            // 1. Try to extract from CDN path
+                            if ($hasCDN) {
+                                $cleanFile = ltrim($cdnPathRaw, '/');
+                                $regex = '#showcases/\{?([0-9A-Fa-f\-]{36})\}?/(.+)$#i';
+                                if (preg_match($regex, $cleanFile, $matches)) {
+                                    $rest = $matches[2];
+                                    $pathParts = pathinfo($rest);
+                                    $filename = $pathParts['filename'];
+                                    $ext = $pathParts['extension'] ?? 'jpg';
+                                }
+                            }
+                            
+                            // 2. If still no filename, try to build from image model
+                            if (empty($filename) && $model) {
+                                $pathParts = pathinfo($model->path);
+                                $filename = $pathParts['filename'];
+                                $ext = $pathParts['extension'] ?? 'jpg';
+                            }
+                            
+                            // 3. Last resort for gallery: check if we have a uuidStr from the loop
+                            if (empty($filename) && isset($uuidStr) && !empty($uuidStr)) {
+                                $filename = $uuidStr;
+                            }
+                            
+                            if (!empty($filename) && !empty($scUuid)) {
+                                // IMPORTANT: Ensure the directory has braces {UUID} as per user's working example
+                                $proxyFile = 'showcases/{' . $scUuid . '}/' . $filename . '-small.' . $ext;
+                                $fileData['src'] = $baseUrl . '/' . $proxyBase . $proxyFile . '?v=' . time();
+                                C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Using same-origin proxy URL for index $idx: " . $fileData['src']);
+                            } else {
+                                C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Could not build proxy URL for index $idx. UUID: $scUuid, Filename: $filename");
+                            }
+                        }
+                        
+                        C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Gallery index $idx Same-Origin URL: " . $fileData['src'] . " (Resolved path: $realPath)");
+                    }
+                } else {
+                    // Last resort: check if file exists on disk based on naming convention
+                    $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+                    $uuidVariants = [$uuidStr, '{' . str_replace(['{', '}'], '', $uuidStr) . '}', str_replace(['{', '}'], '', $uuidStr)];
+                    foreach ($uuidVariants as $uv) {
+                        if (empty($uv)) continue;
+                        $fallbackPath = 'files/showcases/' . $uv . '/';
+                        if (is_dir($rootDir . '/' . $fallbackPath)) {
+                            $files = scandir($rootDir . '/' . $fallbackPath);
+                            foreach ($files as $f) {
+                                if ($f !== '.' && $f !== '..' && is_file($rootDir . '/' . $fallbackPath . $f) && strpos($f, '.') !== 0) {
+                                    $fileData = $this->createFileDataFromFile($fallbackPath . $f, false, $fileUtils, 600, 450, ($result['name'] ?? '').$idx, 'Bild '.$idx.': '.($result['name'] ?? ''), $uuidStr, $arrOptions['directCDN'] ?? false);
+                                    if ($fileData) {
+                                        C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Gallery index $idx resolved via physical scan: " . ($fileData['src'] ?? 'none'));
+                                        break 2;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if ($fileData) {
+                    $datum['imageGallery_' . $idx] = $fileData;
+                    $datum['imageGallery'][] = $fileData;
+                    $idx++;
+                }
+            }
+            C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Final gallery count: " . $idx);
+            // --- End Image Processing ---
 
             // load imprint data
             $selectImprintSql = 'SELECT * FROM tl_gutesio_data_element_imprint WHERE `showcaseId` = ?';
@@ -767,21 +908,63 @@ class ShowcaseResultConverter
      */
     public function createFileDataFromModel(FilesModel $model, $svg = false, $fileUtils = new FileUtils()) : array
     {
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
         if ($svg) {
             $width = 100;
             $height = 100;
         } else {
-            list($width, $height) = $fileUtils->getImageSize($model->path);
+            $path = $model->path;
+            list($width, $height) = $fileUtils->getImageSize($path);
+            if (!$width || !$height) {
+                // Bidirectional fallback for local file size check
+                $altPaths = [
+                    str_replace(['{', '}'], '', $path),
+                    preg_replace('#showcases/([0-9A-Fa-f\-]{36})/#', 'showcases/{\1}/', $path)
+                ];
+                foreach ($altPaths as $alt) {
+                    if ($alt === $path) continue;
+                    list($width, $height) = $fileUtils->getImageSize($alt);
+                    if ($width && $height) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Add base URL for frontend previews if path is relative
+        $src = $model->path;
+        if (strpos($src, 'http') === false) {
+            // Check if physical file exists with current path, otherwise try alternatives
+            $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+            if (!file_exists($rootDir . '/' . $src)) {
+                $alt1 = str_replace(['{', '}'], '', $src);
+                if (file_exists($rootDir . '/' . $alt1)) {
+                    $src = $alt1;
+                } else {
+                    $alt2 = preg_replace('#showcases/([0-9A-Fa-f\-]{36})/#', 'showcases/{\1}/', $src);
+                    if (file_exists($rootDir . '/' . $alt2)) {
+                        $src = $alt2;
+                    }
+                }
+            }
+            
+            $proto = 'https://';
+            if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'off' || $_SERVER['HTTPS'] === '')) {
+                $proto = 'http://';
+            }
+            $host = $_SERVER['HTTP_HOST'] ?? 'portal.nordsee.digital';
+            $src = $proto . rtrim($host, '/') . '/' . ltrim($src, '/');
         }
 
         return [
-            'src' => $model->path,
-            'path' => $model->path,
+            'src' => $src,
+            'path' => $model->path, // Keep relative path for backend identification
+            'imageData' => $model->path, // Keep relative path
             'uuid' => StringUtil::binToUuid($model->uuid),
             'alt' => $model->meta && unserialize($model->meta)['de'] ? unserialize($model->meta)['de']['alt'] : $model->name,
             'name' => $model->name,
-            'height' => $height,
-            'width' => $width,
+            'height' => $height ?: 450,
+            'width' => $width ?: 600,
             'importantPart' => [
                 'x' => $model->importantPartX,
                 'y' => $model->importantPartY,
@@ -791,11 +974,14 @@ class ShowcaseResultConverter
         ];
     }
 
-    //ToDO
-    public function createFileDataFromFile($file, $svg = false, $fileUtils = new FileUtils(), $width = 600, $height = 450, $title = '', $alt = '') : array
+    public function createFileDataFromFile($file, $svg = false, $fileUtils = new FileUtils(), $width = 600, $height = 450, $title = '', $alt = '', $uuid = '', $directCDN = false) : array
     {
         $objSettings = GutesioOperatorSettingsModel::findSettings();
-        $cdnUrl = $objSettings->cdnUrl;
+        $cdnUrl = $objSettings ? $objSettings->cdnUrl : 'https://cdn.con4gis.cloud';
+        if (!$cdnUrl) {
+            $cdnUrl = 'https://cdn.con4gis.cloud';
+        }
+        $cdnUrl = rtrim($cdnUrl, '/');
 
         if ($svg) {
             $width = 100;
@@ -807,16 +993,108 @@ class ShowcaseResultConverter
             $extendedParam = '-small';
         }
 
-        $url = $fileUtils->addUrlToPathAndGetImage($cdnUrl, $file, $extendedParam, $width, $height, 172800, true);
+        if ($directCDN) {
+            $url = $fileUtils->addUrlToPath($cdnUrl, $file, $width, $height);
+            C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Direct CDN URL: " . $url);
+            
+            // For the preview to work without CORS issues, we use the CDN directly.
+            $path = $url;
+            $imageData = $url;
+        } else {
+            // For the form (editing/cropping), we MUST use a Same-Origin URL to avoid 'Tainted Canvas' errors.
+            // We try to find the actual local path from the UUID if provided.
+            $localFile = null;
+            if ($uuid) {
+                $objFile = FilesModel::findByUuid($uuid);
+                if ($objFile) {
+                    $localFile = $objFile->path;
+                }
+            }
+            
+            if (!$localFile) {
+                // Fallback: derive from CDN path
+                $localFile = ltrim($file, '/');
+                if (strpos($localFile, 'files/') !== 0) {
+                    $localFile = 'files/' . $localFile;
+                }
+            }
+            
+            // Robust path check for Contao 5.3
+            $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+            $fsPath = $rootDir . '/' . $localFile;
+            $localValid = (file_exists($fsPath) && filesize($fsPath) > 100);
+            
+            if (!$localValid) {
+                // Try variants ONLY if original is not valid
+                $alt1 = preg_replace('#showcases/([0-9A-Fa-f\-]{36})/#', 'showcases/{\1}/', $localFile);
+                if (file_exists($rootDir . '/' . $alt1) && filesize($rootDir . '/' . $alt1) > 100) {
+                    $localFile = $alt1;
+                    $localValid = true;
+                } else {
+                    $alt2 = str_replace(['{', '}'], '', $localFile);
+                    if (file_exists($rootDir . '/' . $alt2) && filesize($rootDir . '/' . $alt2) > 100) {
+                        $localFile = $alt2;
+                        $localValid = true;
+                    }
+                }
+            }
+            
+            $host = $_SERVER['HTTP_HOST'] ?? 'portal.nordsee.digital';
+            $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+            $baseUrl = $scheme . '://' . $host;
+            
+            if ($localValid) {
+                $url = $baseUrl . '/' . $localFile . '?v=' . time();
+                $path = $localFile;
+                $imageData = $localFile;
+            } else {
+                // FALLBACK to same-origin proxy URL if local file is missing/broken
+                // Format: /files/con4gis_import_data/images/<CDN_PATH_WITHOUT_LEADING_SLASH> (with potential -small suffix)
+                $cleanFile = ltrim($file, '/');
+                $proxyBase = 'files/con4gis_import_data/images/';
+                
+                // Ensure braces are preserved in proxy path
+                $dir = '';
+                if (strpos($cleanFile, '/') !== false) {
+                    $dir = substr($cleanFile, 0, strrpos($cleanFile, '/') + 1);
+                }
+                
+                $pathParts = pathinfo($cleanFile);
+                $ext = $pathParts['extension'] ?? 'jpg';
+                $filename = $pathParts['filename'];
+                
+                // If it is already a proxy path, don't double it
+                if (strpos($cleanFile, $proxyBase) === 0) {
+                    $proxyFile = substr($cleanFile, strlen($proxyBase));
+                } else {
+                    $proxyFile = $dir . $filename . $extendedParam . '.' . $ext;
+                }
+                
+                $url = $baseUrl . '/' . $proxyBase . $proxyFile . '?v=' . time();
+                $path = $proxyBase . $proxyFile;
+                $imageData = $proxyBase . $proxyFile;
+                
+                C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Local file missing or broken ($localFile). Falling back to same-origin proxy: $url (Base: $file, Dir: $dir)");
+            }
+            
+            C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Form URL: " . $url . " (uuid: $uuid)");
+        }
 
         return [
             'src' => $url,
-            'path' => $url,
-            'uuid' => '',
+            'path' => $path,
+            'imageData' => $imageData,
+            'uuid' => $uuid,
             'alt' => $alt,
             'name' => $title,
             'height' => $height,
-            'width' => $width
+            'width' => $width,
+            'importantPart' => [ // Add dummy important part for consistency
+                'x' => 0,
+                'y' => 0,
+                'width' => 1,
+                'height' => 1,
+            ]
         ];
     }
 
