@@ -270,6 +270,9 @@ class ShowcaseResultConverter
                 ->execute($result['uuid'])->fetchEach('tagId');
 
             foreach ($arrTagIds as $tagId) {
+                if (!isset(static::$processedTags[$tagId])) {
+                    continue;
+                }
                 $tag = static::$processedTags[$tagId];
 
                 switch ($tag['technicalKey']) {
@@ -523,10 +526,7 @@ class ShowcaseResultConverter
                 }
 
                 if ($tag) {
-                    $datum['tags'][] = [
-                        'value' => $tagId,
-                        'label' => $tag['label'] ?: html_entity_decode($tag['name'])
-                    ];
+                    $datum['tags'][] = $tag;
                 }
             }
 
@@ -976,6 +976,10 @@ class ShowcaseResultConverter
 
     public function createFileDataFromFile($file, $svg = false, $fileUtils = new FileUtils(), $width = 600, $height = 450, $title = '', $alt = '', $uuid = '', $directCDN = false) : array
     {
+        if (!$file && !$uuid) {
+            return [];
+        }
+
         $objSettings = GutesioOperatorSettingsModel::findSettings();
         $cdnUrl = $objSettings ? $objSettings->cdnUrl : 'https://cdn.con4gis.cloud';
         if (!$cdnUrl) {
@@ -1118,6 +1122,9 @@ class ShowcaseResultConverter
 
     private function loadTypes()
     {
+        if (!empty(static::$cachedTypes)) {
+            return;
+        }
         $db = Database::getInstance();
 
         $typeResult = $db->prepare("SELECT `id`, `name`, `uuid` FROM tl_gutesio_data_type")
@@ -1134,6 +1141,9 @@ class ShowcaseResultConverter
 
     private function loadTags()
     {
+        if (!empty(static::$processedTags)) {
+            return;
+        }
         $fileUtils = new FileUtils();
         $db = Database::getInstance();
         $tagResult = $db->prepare("SELECT * FROM tl_gutesio_data_tag WHERE `published` = 1")
@@ -1141,7 +1151,10 @@ class ShowcaseResultConverter
 
         foreach ($tagResult as $value) {
             $tag = $value;
-            $tag['image'] = $this->createFileDataFromFile($tag['imageCDN'], true, $fileUtils, 600, 450, $tag['name'], $tag['name']);
+            $tag['image'] = [];
+            if ($tag['imageCDN']) {
+                $tag['image'] = $this->createFileDataFromFile($tag['imageCDN'], true, $fileUtils, 100, 100, $tag['name'], $tag['name'], '', true);
+            }
             $tag['value'] = $value['uuid'];
             $tag['label'] = html_entity_decode($value['name']);
 

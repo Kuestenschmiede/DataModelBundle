@@ -50,11 +50,15 @@ class FileUtils
     }
 
     //caching 4h
-    public function addUrlToPathAndGetImage($url, $path, $extendedParam = '', $cropWidth = 0, $cropHeight = 0, $time=172800, $ignoreExpiry = false) {
+    public function addUrlToPathAndGetImage($url, $path, $extendedParam = '', $cropWidth = 0, $cropHeight = 0, $time=172800, $ignoreExpiry = false, $directCDN = false) {
         if (strpos($path, 'http') !== false) {
             return $path;
         }
         $result = $this->addUrlToPath($url, $path, $cropWidth, $cropHeight);
+        
+        if ($directCDN) {
+            return $result;
+        }
 
         // Diagnostics logging disabled by default. Enable only if explicitly requested via ENV.
         // Set IMAGECACHE_LOG=1 to turn on temporary diagnostics in non-production environments.

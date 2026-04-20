@@ -20,8 +20,12 @@ use con4gis\FrameworkBundle\Classes\DetailFields\DetailTextField;
  */
 class TagDetailFieldGenerator
 {
-    public static function getFieldsForTag(string $technicalKey)
+    public static function getFieldsForTag(?string $technicalKey)
     {
+        if (!$technicalKey) {
+            return [];
+        }
+
         switch ($technicalKey) {
             case 'tag_delivery':
                 return static::createFieldForDeliveryTag();
@@ -48,7 +52,9 @@ class TagDetailFieldGenerator
     {
         $fields = [];
         foreach ($technicalKeys as $technicalKey) {
-            $fields = array_merge($fields, static::getFieldsForTag($technicalKey));
+            if ($technicalKey) {
+                $fields = array_merge($fields, static::getFieldsForTag($technicalKey));
+            }
         }
 
         return $fields;
