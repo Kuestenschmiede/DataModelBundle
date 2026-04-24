@@ -741,8 +741,18 @@ class ShowcaseResultConverter
                     }
                 }
 
-                if ($hasCDN && ($useCDN || !$model)) {
+                // Check if local file exists if model is found
+                $localFileExists = false;
+                if ($model) {
+                    $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+                    if (file_exists($rootDir . '/' . $model->path)) {
+                        $localFileExists = true;
+                    }
+                }
+
+                if ($hasCDN && ($useCDN || !$model || !$localFileExists)) {
                     $fileData = $this->createFileDataFromFile($cdnPathRaw, false, $fileUtils, 600, 450, ($result['name'] ?? '').$idx, 'Bild '.$idx.': '.($result['name'] ?? ''), $uuidStr, $arrOptions['directCDN'] ?? false);
+                // 2. Try same-origin local file/proxy if model exists
                 } elseif ($model) {
                     $fileData = $this->createFileDataFromModel($model, false, $fileUtils);
                     // For the form, we want consistent structure like createFileDataFromFile
@@ -774,52 +784,46 @@ class ShowcaseResultConverter
                         $localSize = $localExists ? filesize($rootDir . '/' . $realPath) : 0;
                         
                         if (!$localExists || $localSize < 100) {
-                            $proxyBase = 'files/con4gis_import_data/images/';
-                            $scUuidRaw = $result['uuid'] ?? '';
-                            $scUuid = strtoupper(str_replace(['{', '}'], '', $scUuidRaw));
-                            
-                            $proxyFile = '';
-                            $filename = '';
-                            $ext = 'jpg';
-                            
-                            // 1. Try to extract from CDN path
                             if ($hasCDN) {
-                                $cleanFile = ltrim($cdnPathRaw, '/');
-                                $regex = '#showcases/\{?([0-9A-Fa-f\-]{36})\}?/(.+)$#i';
-                                if (preg_match($regex, $cleanFile, $matches)) {
-                                    $rest = $matches[2];
-                                    $pathParts = pathinfo($rest);
+                                $fileData['src'] = $fileUtils->addUrlToPath($cdnUrl, $cdnPathRaw, 600, 450);
+                                $fileData['path'] = $fileData['src'];
+                                C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Local file missing or broken. Falling back to CDN for index $idx: " . $fileData['src']);
+                            } else {
+                                // Last resort: same-origin proxy (deprecated if no CDN available)
+                                $proxyBase = 'files/con4gis_import_data/images/';
+                                $scUuidRaw = $result['uuid'] ?? '';
+                                $scUuid = strtoupper(str_replace(['{', '}'], '', $scUuidRaw));
+                                
+                                $proxyFile = '';
+                                $filename = '';
+                                $ext = 'jpg';
+                                
+                                // Try to build from image model
+                                if ($model) {
+                                    $pathParts = pathinfo($model->path);
                                     $filename = $pathParts['filename'];
                                     $ext = $pathParts['extension'] ?? 'jpg';
                                 }
-                            }
-                            
-                            // 2. If still no filename, try to build from image model
-                            if (empty($filename) && $model) {
-                                $pathParts = pathinfo($model->path);
-                                $filename = $pathParts['filename'];
-                                $ext = $pathParts['extension'] ?? 'jpg';
-                            }
-                            
-                            // 3. Last resort for gallery: check if we have a uuidStr from the loop
-                            if (empty($filename) && isset($uuidStr) && !empty($uuidStr)) {
-                                $filename = $uuidStr;
-                            }
-                            
-                            if (!empty($filename) && !empty($scUuid)) {
-                                // IMPORTANT: Ensure the directory has braces {UUID} as per user's working example
-                                $proxyFile = 'showcases/{' . $scUuid . '}/' . $filename . '-small.' . $ext;
-                                $fileData['src'] = $baseUrl . '/' . $proxyBase . $proxyFile . '?v=' . time();
-                                C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Using same-origin proxy URL for index $idx: " . $fileData['src']);
-                            } else {
-                                C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Could not build proxy URL for index $idx. UUID: $scUuid, Filename: $filename");
+                                
+                                if (!empty($filename) && !empty($scUuid)) {
+                                    $proxyFile = 'showcases/{' . $scUuid . '}/' . $filename . '-small.' . $ext;
+                                    $fileData['src'] = $baseUrl . '/' . $proxyBase . $proxyFile . '?v=' . time();
+                                    C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Using same-origin proxy URL for index $idx: " . $fileData['src']);
+                                }
                             }
                         }
                         
                         C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Gallery index $idx Same-Origin URL: " . $fileData['src'] . " (Resolved path: $realPath)");
                     }
-                } else {
-                    // Last resort: check if file exists on disk based on naming convention
+                }
+
+                // 3. Final Fallback to CDN if nothing found yet
+                if (!$fileData && $hasCDN) {
+                    $fileData = $this->createFileDataFromFile($cdnPathRaw, false, $fileUtils, 600, 450, ($result['name'] ?? '').$idx, 'Bild '.$idx.': '.($result['name'] ?? ''), $uuidStr, $arrOptions['directCDN'] ?? false);
+                }
+
+                // 4. Last resort: check if file exists on disk based on naming convention
+                if (!$fileData) {
                     $rootDir = System::getContainer()->getParameter('kernel.project_dir');
                     $uuidVariants = [$uuidStr, '{' . str_replace(['{', '}'], '', $uuidStr) . '}', str_replace(['{', '}'], '', $uuidStr)];
                     foreach ($uuidVariants as $uv) {
@@ -1052,33 +1056,12 @@ class ShowcaseResultConverter
                 $path = $localFile;
                 $imageData = $localFile;
             } else {
-                // FALLBACK to same-origin proxy URL if local file is missing/broken
-                // Format: /files/con4gis_import_data/images/<CDN_PATH_WITHOUT_LEADING_SLASH> (with potential -small suffix)
-                $cleanFile = ltrim($file, '/');
-                $proxyBase = 'files/con4gis_import_data/images/';
+                // FALLBACK to CDN URL if local file is missing/broken
+                $url = $fileUtils->addUrlToPath($cdnUrl, $file, $width, $height);
+                $path = $url;
+                $imageData = $url;
                 
-                // Ensure braces are preserved in proxy path
-                $dir = '';
-                if (strpos($cleanFile, '/') !== false) {
-                    $dir = substr($cleanFile, 0, strrpos($cleanFile, '/') + 1);
-                }
-                
-                $pathParts = pathinfo($cleanFile);
-                $ext = $pathParts['extension'] ?? 'jpg';
-                $filename = $pathParts['filename'];
-                
-                // If it is already a proxy path, don't double it
-                if (strpos($cleanFile, $proxyBase) === 0) {
-                    $proxyFile = substr($cleanFile, strlen($proxyBase));
-                } else {
-                    $proxyFile = $dir . $filename . $extendedParam . '.' . $ext;
-                }
-                
-                $url = $baseUrl . '/' . $proxyBase . $proxyFile . '?v=' . time();
-                $path = $proxyBase . $proxyFile;
-                $imageData = $proxyBase . $proxyFile;
-                
-                C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Local file missing or broken ($localFile). Falling back to same-origin proxy: $url (Base: $file, Dir: $dir)");
+                C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Local file missing or broken ($localFile). Falling back to CDN: $url");
             }
             
             C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Form URL: " . $url . " (uuid: $uuid)");
