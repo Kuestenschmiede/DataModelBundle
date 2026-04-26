@@ -92,8 +92,8 @@ class ShowcaseResultConverter
             $datum['equipment'] = key_exists('equipment', $result) ? html_entity_decode($result['equipment']) : '';
             $datum['admissionPrices'] = key_exists('admissionPrices', $result) ? html_entity_decode($result['admissionPrices']) : '';
             $datum['alias'] = $result['alias'];
-            $datum['geox'] = $result['geox'];
-            $datum['geoy'] = $result['geoy'];
+            $datum['geox'] = (!empty($result['geox']) && $result['geox'] != 0) ? $result['geox'] : '';
+            $datum['geoy'] = (!empty($result['geoy']) && $result['geoy'] != 0) ? $result['geoy'] : '';
             $datum['geojson'] = key_exists('geojson',$result) ? html_entity_decode($result['geojson']) : '';
             $datum['email'] = html_entity_decode($result['email']);
             $datum['phone'] = html_entity_decode($result['phone']);
