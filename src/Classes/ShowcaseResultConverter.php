@@ -902,6 +902,10 @@ class ShowcaseResultConverter
             $data[] = $datum;
         }
 
+        if (count($data) === 0) {
+            return [];
+        }
+
         return count($data) > 1 ? $data : $data[0];
     }
 
