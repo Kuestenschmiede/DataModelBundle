@@ -671,13 +671,15 @@ class ShowcaseResultConverter
                 $datum['image'] = $this->createFileDataFromModel($model, false, $fileUtils);
             } else {
                 $fallbackPath = 'files/showcases/' . $uuidStr . '/';
-                $rootDir = System::getContainer()->getParameter('kernel.project_dir');
-                if (is_dir($rootDir . '/' . $fallbackPath)) {
-                    $files = scandir($rootDir . '/' . $fallbackPath);
-                    foreach ($files as $f) {
-                        if ($f !== '.' && $f !== '..' && is_file($rootDir . '/' . $fallbackPath . $f)) {
-                            $datum['image'] = $this->createFileDataFromFile($fallbackPath . $f, false, $fileUtils, 600, 450, $result['name'], $result['name'], $uuidStr, $arrOptions['directCDN'] ?? false);
-                            if ($datum['image']) break;
+                if ($uuidStr) {
+                    $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+                    if (is_dir($rootDir . '/' . $fallbackPath)) {
+                        $files = scandir($rootDir . '/' . $fallbackPath);
+                        foreach ($files as $f) {
+                            if ($f !== '.' && $f !== '..' && is_file($rootDir . '/' . $fallbackPath . $f)) {
+                                $datum['image'] = $this->createFileDataFromFile($fallbackPath . $f, false, $fileUtils, 600, 450, $result['name'], $result['name'], $uuidStr, $arrOptions['directCDN'] ?? false);
+                                if ($datum['image']) break;
+                            }
                         }
                     }
                 }
@@ -702,13 +704,15 @@ class ShowcaseResultConverter
                 $datum['logo'] = $this->createFileDataFromModel($model, false, $fileUtils);
             } else {
                 $fallbackPath = 'files/showcases/' . $uuidStr . '/';
-                $rootDir = System::getContainer()->getParameter('kernel.project_dir');
-                if (is_dir($rootDir . '/' . $fallbackPath)) {
-                    $files = scandir($rootDir . '/' . $fallbackPath);
-                    foreach ($files as $f) {
-                        if ($f !== '.' && $f !== '..' && is_file($rootDir . '/' . $fallbackPath . $f)) {
-                            $datum['logo'] = $this->createFileDataFromFile($fallbackPath . $f, false, $fileUtils, 0, 150, $result['name'], $result['name'], $uuidStr, $arrOptions['directCDN'] ?? false);
-                            if ($datum['logo']) break;
+                if ($uuidStr) {
+                    $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+                    if (is_dir($rootDir . '/' . $fallbackPath)) {
+                        $files = scandir($rootDir . '/' . $fallbackPath);
+                        foreach ($files as $f) {
+                            if ($f !== '.' && $f !== '..' && is_file($rootDir . '/' . $fallbackPath . $f)) {
+                                $datum['logo'] = $this->createFileDataFromFile($fallbackPath . $f, false, $fileUtils, 0, 150, $result['name'], $result['name'], $uuidStr, $arrOptions['directCDN'] ?? false);
+                                if ($datum['logo']) break;
+                            }
                         }
                     }
                 }
@@ -823,7 +827,7 @@ class ShowcaseResultConverter
                 }
 
                 // 4. Last resort: check if file exists on disk based on naming convention
-                if (!$fileData) {
+                if (!$fileData && $uuidStr) {
                     $rootDir = System::getContainer()->getParameter('kernel.project_dir');
                     $uuidVariants = [$uuidStr, '{' . str_replace(['{', '}'], '', $uuidStr) . '}', str_replace(['{', '}'], '', $uuidStr)];
                     foreach ($uuidVariants as $uv) {
