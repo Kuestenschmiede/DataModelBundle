@@ -8,6 +8,7 @@
  * @link       https://gutes.digital
  */
 namespace gutesio\DataModelBundle\ContaoManager;
+use Symfony\Component\Routing\RouteCollection;
 
 use con4gis\FrameworkBundle\con4gisFrameworkBundle;
 use gutesio\DataModelBundle\gutesioDataModelBundle;
@@ -26,7 +27,7 @@ class Plugin implements RoutingPluginInterface, BundlePluginInterface
     /**
      * {@inheritdoc}
      */
-    public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
+    public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel): ?RouteCollection
     {
         return $resolver
             ->resolve(__DIR__.'/../Resources/config/routing.yml')
@@ -40,7 +41,7 @@ class Plugin implements RoutingPluginInterface, BundlePluginInterface
      *
      * @return ConfigInterface[]
      */
-    public function getBundles(ParserInterface $parser)
+    public function getBundles(ParserInterface $parser): array
     {
         return [
             BundleConfig::create(gutesioDataModelBundle::class)
