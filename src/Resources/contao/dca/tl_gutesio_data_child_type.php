@@ -40,10 +40,10 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_type'] = [
             'sql' => "varchar(100) NOT NULL default ''"
         ],
         'description' => [
-            'sql' => "TEXT NULL'"
+            'sql' => "TEXT NULL"
         ],
         'sortFields' => [
-            'sql' => "TEXT NULL'"
+            'sql' => "TEXT NULL"
         ],
         'importId' => [
             'sql' => "int(20) unsigned NOT NULL default '0'"
