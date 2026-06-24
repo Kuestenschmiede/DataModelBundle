@@ -16,6 +16,7 @@ use Contao\Database;
 use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\System;
+use gutesio\MainInstanceBundle\Classes\Models\GutesioDataSettingModel;
 use gutesio\OperatorBundle\Classes\Models\GutesioOperatorSettingsModel;
 
 /**
@@ -45,10 +46,14 @@ class ShowcaseResultConverter
         $checker = new ImprintConstraintChecker();
         System::loadLanguageFile('field_translations','de');
         $objSettings = GutesioOperatorSettingsModel::findSettings();
-        $cdnUrl = $objSettings ? $objSettings->cdnUrl : 'https://cdn.con4gis.cloud';
+        if (!$objSettings || !$objSettings->cdnUrl) {
+            $objSettings = GutesioDataSettingModel::findSettings();
+        }
+        $cdnUrl = ($objSettings && isset($objSettings->cdnUrl)) ? $objSettings->cdnUrl : 'https://cdn.con4gis.cloud';
         if (!$cdnUrl) {
             $cdnUrl = 'https://cdn.con4gis.cloud';
         }
+        // C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter::convertDbResult: Using CDN URL: " . $cdnUrl . " (from " . ($objSettings ? get_class($objSettings) : 'default') . ")");
         $cdnUrl = rtrim($cdnUrl, '/');
         // C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Using CDN URL: " . $cdnUrl);
 
@@ -737,6 +742,9 @@ class ShowcaseResultConverter
                 // Try CDN first if available and (CDN is requested OR local file missing)
                 $cdnPathRaw = $imagesCDN[$i] ?? '';
                 $hasCDN = !empty($cdnPathRaw);
+                
+                // C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Gallery index $i - CDN Path: " . ($cdnPathRaw ?: 'none') . ", UUID: $uuidStr");
+
                 $model = null;
                 if ($uuidVal) {
                     $model = FilesModel::findByUuid($uuidVal);
@@ -756,8 +764,14 @@ class ShowcaseResultConverter
 
                 if ($hasCDN && ($useCDN || !$model || !$localFileExists)) {
                     $fileData = $this->createFileDataFromFile($cdnPathRaw, false, $fileUtils, 600, 450, ($result['name'] ?? '').$idx, 'Bild '.$idx.': '.($result['name'] ?? ''), $uuidStr, $arrOptions['directCDN'] ?? false);
-                // 2. Try same-origin local file/proxy if model exists
-                } elseif ($model) {
+                    
+                    // Validation: if directCDN is on but src is just the CDN base (invalid), try fallback
+                    if ($fileData && isset($fileData['src']) && ($fileData['src'] === $cdnUrl || $fileData['src'] === $cdnUrl . '/')) {
+                        $fileData = null;
+                    }
+                } 
+                
+                if (!$fileData && $model) {
                     $fileData = $this->createFileDataFromModel($model, false, $fileUtils);
                     // For the form, we want consistent structure like createFileDataFromFile
                     if (!($arrOptions['directCDN'] ?? false)) {
@@ -817,7 +831,7 @@ class ShowcaseResultConverter
                             }
                         }
                         
-                        C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Gallery index $idx Same-Origin URL: " . $fileData['src'] . " (Resolved path: $realPath)");
+                        // C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Gallery index $idx Same-Origin URL: " . $fileData['src'] . " (Resolved path: $realPath)");
                     }
                 }
 
@@ -839,7 +853,7 @@ class ShowcaseResultConverter
                                 if ($f !== '.' && $f !== '..' && is_file($rootDir . '/' . $fallbackPath . $f) && strpos($f, '.') !== 0) {
                                     $fileData = $this->createFileDataFromFile($fallbackPath . $f, false, $fileUtils, 600, 450, ($result['name'] ?? '').$idx, 'Bild '.$idx.': '.($result['name'] ?? ''), $uuidStr, $arrOptions['directCDN'] ?? false);
                                     if ($fileData) {
-                                        C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Gallery index $idx resolved via physical scan: " . ($fileData['src'] ?? 'none'));
+                                        // C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Gallery index $idx resolved via physical scan: " . ($fileData['src'] ?? 'none'));
                                         break 2;
                                     }
                                 }
@@ -848,13 +862,17 @@ class ShowcaseResultConverter
                     }
                 }
                 
-                if ($fileData) {
+            if ($fileData && isset($fileData['src']) && $fileData['src'] !== '') {
+                    if (empty($fileData['path'])) {
+                        $fileData['path'] = $fileData['src'];
+                    }
+                    // C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Assigning gallery index $idx - SRC: " . $fileData['src']);
                     $datum['imageGallery_' . $idx] = $fileData;
                     $datum['imageGallery'][] = $fileData;
                     $idx++;
                 }
             }
-            C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Final gallery count: " . $idx);
+            // C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Final gallery count: $idx for " . ($result['name'] ?? 'unknown'));
             // --- End Image Processing ---
 
             // load imprint data
@@ -993,10 +1011,14 @@ class ShowcaseResultConverter
         }
 
         $objSettings = GutesioOperatorSettingsModel::findSettings();
-        $cdnUrl = $objSettings ? $objSettings->cdnUrl : 'https://cdn.con4gis.cloud';
+        if (!$objSettings || !$objSettings->cdnUrl) {
+            $objSettings = GutesioDataSettingModel::findSettings();
+        }
+        $cdnUrl = ($objSettings && isset($objSettings->cdnUrl)) ? $objSettings->cdnUrl : 'https://cdn.con4gis.cloud';
         if (!$cdnUrl) {
             $cdnUrl = 'https://cdn.con4gis.cloud';
         }
+        // C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter::createFileDataFromFile: Using CDN URL: " . $cdnUrl . " (from " . ($objSettings ? get_class($objSettings) : 'default') . ")");
         $cdnUrl = rtrim($cdnUrl, '/');
 
         if ($svg) {
@@ -1011,13 +1033,19 @@ class ShowcaseResultConverter
 
         if ($directCDN) {
             $url = $fileUtils->addUrlToPath($cdnUrl, $file, $width, $height);
-            C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Direct CDN URL: " . $url);
             
-            // For the preview to work without CORS issues, we use the CDN directly.
-            $path = $url;
-            $imageData = $url;
-        } else {
-            // For the form (editing/cropping), we MUST use a Same-Origin URL to avoid 'Tainted Canvas' errors.
+            // If CDN URL is invalid or empty, and we have a UUID, try to fall back to local/same-origin logic
+            if ((!$url || $url === $cdnUrl . '/') && $uuid) {
+                $directCDN = false; // Switch to local logic below
+            } else {
+                // For the preview to work without CORS issues, we use the CDN directly.
+                $path = $url;
+                $imageData = $url;
+            }
+        }
+
+        if (!$directCDN) {
+            // For the form (editing/cropping) or fallback, we MUST use a Same-Origin URL to avoid 'Tainted Canvas' errors.
             // We try to find the actual local path from the UUID if provided.
             $localFile = null;
             if ($uuid) {
@@ -1068,11 +1096,7 @@ class ShowcaseResultConverter
                 $url = $fileUtils->addUrlToPath($cdnUrl, $file, $width, $height);
                 $path = $url;
                 $imageData = $url;
-                
-                C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Local file missing or broken ($localFile). Falling back to CDN: $url");
             }
-            
-            C4gLogModel::addLogEntry('data-model', "ShowcaseResultConverter: Form URL: " . $url . " (uuid: $uuid)");
         }
 
         return [
