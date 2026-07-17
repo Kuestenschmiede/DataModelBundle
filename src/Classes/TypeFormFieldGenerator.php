@@ -158,6 +158,14 @@ class TypeFormFieldGenerator
         $field->setEmptyOptionLabel('');
         $fields['diet'] = $field;
 
+        $field = new SelectFormField();
+        $field->setName('allowedPaymentMethods');
+        $fields['allowedPaymentMethods'] = $field;
+
+        $field = new CheckboxFormField();
+        $field->setName('cashOnlyIfPickup');
+        $fields['cashOnlyIfPickup'] = $field;
+
         return $fields;
     }
 
@@ -331,6 +339,11 @@ class TypeFormFieldGenerator
         $field->setDescription($GLOBALS['TL_LANG'][$strName]['experienceValue'] && (count($GLOBALS['TL_LANG'][$strName]['experienceValue']) > 0) ? $GLOBALS['TL_LANG'][$strName]['experienceValue'][1] : '');
         $fields['experienceValue'] = $field;
 
+        // Add geojson field name to the list of visible fields for tours
+        $field = new HiddenFormField();
+        $field->setName('geojson');
+        $fields['geojson'] = $field;
+
         return $fields;
     }
 
@@ -347,6 +360,14 @@ class TypeFormFieldGenerator
         $field->setParagraphLabel($GLOBALS['TL_LANG'][$strName]['frontend']['paragraph'] ?: "Absatz");
         $field->setHeadingLabel($GLOBALS['TL_LANG'][$strName]['frontend']['heading'] ?: ['Titel', 'Untertitel']);
         $fields['admissionPrices'] = $field;
+
+        $field = new SelectFormField();
+        $field->setName('allowedPaymentMethods');
+        $fields['allowedPaymentMethods'] = $field;
+
+        $field = new CheckboxFormField();
+        $field->setName('cashOnlyIfPickup');
+        $fields['cashOnlyIfPickup'] = $field;
 
         return $fields;
     }
