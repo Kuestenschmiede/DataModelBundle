@@ -907,7 +907,7 @@ class ShowcaseResultConverter
                 }
             }
 
-            $datum['releaseType'] = $result['releaseType'];
+            $datum['releaseType'] = $result['releaseType'] ?? '';
             $datum['foreignLink'] = $result['foreignLink'];
             $datum['directLink'] = $result['foreignLink'] ? '1' : '0';
             $datum['aiOptimized'] = $result['aiOptimized'];
@@ -1166,6 +1166,7 @@ class ShowcaseResultConverter
 
         foreach ($tagResult as $value) {
             $tag = $value;
+            $tag['technicalKey'] = $tag['technicalKey'] ?? '';
             $tag['image'] = [];
             if ($tag['imageCDN']) {
                 $tag['image'] = $this->createFileDataFromFile($tag['imageCDN'], true, $fileUtils, 100, 100, $tag['name'], $tag['name'], '', true);
