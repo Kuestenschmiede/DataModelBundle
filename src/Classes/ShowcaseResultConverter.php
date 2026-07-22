@@ -76,15 +76,15 @@ class ShowcaseResultConverter
             if (key_exists('internal_type',$result)) {
                 $datum['internal_type'] = $result['internal_type'];
             }
-            $datum['name'] = html_entity_decode($result['name']);
+            $datum['name'] = html_entity_decode($result['name'] ?? '');
             //hotfix special char
             $datum['name'] = str_replace('&#39;', "'", $datum["name"]);
 
-            $datum['id'] = $result['id'];
-            $datum['uuid'] = $result['uuid'];
-            $datum['ownerGroupId'] = $result['ownerGroupId'];
-            $datum['ownerMemberId'] = $result['ownerMemberId'];
-            $datum['description'] = html_entity_decode(C4GUtils::replaceInsertTags($result['description']));
+            $datum['id'] = $result['id'] ?? 0;
+            $datum['uuid'] = $result['uuid'] ?? '';
+            $datum['ownerGroupId'] = $result['ownerGroupId'] ?? 0;
+            $datum['ownerMemberId'] = $result['ownerMemberId'] ?? 0;
+            $datum['description'] = html_entity_decode(C4GUtils::replaceInsertTags($result['description'] ?? ''));
             $datum['directions'] = html_entity_decode($result['directions']);
             $datum['surroundings'] = html_entity_decode($result['surroundings']);
             $datum['internalDescription'] = key_exists('internalDescription', $result) ? html_entity_decode($result['internalDescription']) : '';
@@ -96,7 +96,7 @@ class ShowcaseResultConverter
             $datum['technicalEquipment'] = key_exists('technicalEquipment', $result) ? html_entity_decode($result['technicalEquipment']) : '';
             $datum['equipment'] = key_exists('equipment', $result) ? html_entity_decode($result['equipment']) : '';
             $datum['admissionPrices'] = key_exists('admissionPrices', $result) ? html_entity_decode($result['admissionPrices']) : '';
-            $datum['alias'] = $result['alias'];
+            $datum['alias'] = $result['alias'] ?? '';
             $datum['geox'] = (!empty($result['geox']) && $result['geox'] != 0) ? $result['geox'] : '';
             $datum['geoy'] = (!empty($result['geoy']) && $result['geoy'] != 0) ? $result['geoy'] : '';
             $datum['geojson'] = key_exists('geojson',$result) ? html_entity_decode($result['geojson']) : '';
@@ -659,7 +659,7 @@ class ShowcaseResultConverter
             
             // 1. Process Header Image
             $datum['image'] = null;
-            $uuidVal = StringUtil::deserialize($result['image']);
+            $uuidVal = StringUtil::deserialize($result['image'] ?? null);
             $uuidStr = $uuidVal ? (C4GUtils::isBinary($uuidVal) ? StringUtil::binToUuid($uuidVal) : $uuidVal) : '';
             
             $model = null;
@@ -692,7 +692,7 @@ class ShowcaseResultConverter
 
             // 2. Process Logo
             $datum['logo'] = null;
-            $uuidVal = StringUtil::deserialize($result['logo']);
+            $uuidVal = StringUtil::deserialize($result['logo'] ?? null);
             $uuidStr = $uuidVal ? (C4GUtils::isBinary($uuidVal) ? StringUtil::binToUuid($uuidVal) : $uuidVal) : '';
             
             $model = null;
@@ -725,8 +725,8 @@ class ShowcaseResultConverter
 
             // 3. Process Gallery
             $datum['imageGallery'] = [];
-            $imagesLocal = StringUtil::deserialize($result['imageGallery'], true);
-            $imagesCDN = StringUtil::deserialize($result['imageGalleryCDN'], true);
+            $imagesLocal = StringUtil::deserialize($result['imageGallery'] ?? null, true);
+            $imagesCDN = StringUtil::deserialize($result['imageGalleryCDN'] ?? null, true);
             $idx = 0;
             
             // For the gallery, we try to use CDN if available, even if withoutCDN is requested, 
