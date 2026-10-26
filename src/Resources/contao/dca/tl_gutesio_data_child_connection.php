@@ -18,7 +18,8 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_connection'] = [
                 'id' => 'primary',
                 'uuid' => 'index',
                 'childId' => 'index',
-                'elementId' => 'index'
+                'elementId' => 'index',
+                'connectionType' => 'index'
             ],
         ],
     ],
@@ -40,6 +41,9 @@ $GLOBALS['TL_DCA']['tl_gutesio_data_child_connection'] = [
         ],
         'childTypeId' => [
             'sql' => 'varchar(50) NOT NULL default \'\''
+        ],
+        'connectionType' => [
+            'sql' => "varchar(50) NOT NULL default 'default'"
         ],
         'importId' => [
             'sql' => "int(20) unsigned NOT NULL default '0'"
