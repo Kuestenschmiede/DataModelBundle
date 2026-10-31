@@ -640,16 +640,29 @@ class ShowcaseResultConverter
             $datum['locationStreetNumber'] = $result['locationStreetNumber'];
             $datum['locationStreetSuffix'] = $result['locationStreetSuffix'];
 
-            $datum['contactable'] = $result['contactable'];
-            $datum['contactName'] = html_entity_decode($result['contactName']);
-            $datum['contactAdditionalName'] = html_entity_decode($result['contactAdditionalName']);
-            if (!$datum['contactName'] && !$datum['contactAdditionalName']) {
-                $datum['contactName'] = $datum['name'];
+            $datum['contactable'] = $result['contactable'] ?? 0;
+            if (!empty($datum['contactable'])) {
+                $datum['contactName'] = html_entity_decode($result['contactName'] ?? '');
+                $datum['contactAdditionalName'] = html_entity_decode($result['contactAdditionalName'] ?? '');
+                if (!$datum['contactName'] && !$datum['contactAdditionalName']) {
+                    $datum['contactName'] = $datum['name'];
+                }
+                $datum['contactZip'] = $result['contactZip'] ?? '';
+                $datum['contactCity'] = $result['contactCity'] ?? '';
+                $datum['contactStreet'] = $result['contactStreet'] ?? '';
+                $datum['contactStreetNumber'] = $result['contactStreetNumber'] ?? '';
+            } else {
+                $datum['contactName'] = '';
+                $datum['contactAdditionalName'] = '';
+                $datum['contactZip'] = '';
+                $datum['contactCity'] = '';
+                $datum['contactStreet'] = '';
+                $datum['contactStreetNumber'] = '';
+                $datum['contactEmail'] = '';
+                $datum['contactPhone'] = '';
+                $datum['contactMobile'] = '';
+                $datum['contactFax'] = '';
             }
-            $datum['contactZip'] = $result['contactZip'];
-            $datum['contactCity'] = $result['contactCity'];
-            $datum['contactStreet'] = $result['contactStreet'];
-            $datum['contactStreetNumber'] = $result['contactStreetNumber'];
             if (key_exists('directory', $result) && $result['directory']) {
                 $datum['directory'] = $result['directory'];
             }
@@ -900,9 +913,15 @@ class ShowcaseResultConverter
                     if (key_exists('companyForm', $filledImprintData) && $filledImprintData['companyForm'] !== 'noImprintRequired') {
                         $datum['imprintData'] = $filledImprintData;
                     }
+                    if (empty($datum['contactable'])) {
+                        unset($filledImprintData['contactEmail'], $filledImprintData['contactPhone'], $filledImprintData['contactFax'], $filledImprintData['contactMobile'], $filledImprintData['contactName']);
+                    }
                     $datum = array_merge($datum, $filledImprintData);
                 } else {
                     // still load data from imprint, even if incomplete
+                    if (empty($datum['contactable'])) {
+                        unset($filledImprintData['contactEmail'], $filledImprintData['contactPhone'], $filledImprintData['contactFax'], $filledImprintData['contactMobile'], $filledImprintData['contactName']);
+                    }
                     $datum = array_merge($datum, $filledImprintData);
                 }
             }
